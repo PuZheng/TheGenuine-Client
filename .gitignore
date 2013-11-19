@@ -34,3 +34,9 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+.gradle
+/local.properties
+/.idea/workspace.xml
+.DS_Store
+
