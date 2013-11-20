@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
+import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
 
 public class MainActivity extends Activity {
@@ -97,34 +98,15 @@ public class MainActivity extends Activity {
 
     private void handleIntent(Intent intent) {
         String action = intent.getAction();
-        //TODO read the tag information
-        /*
-        if ((NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) ||
-                (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)))
-        {
-            Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
-            Parcelable[] rawMsgs = intent
-                    .getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-            NdefMessage msg = (NdefMessage) rawMsgs[0];
-            byte[] data = msg.getRecords()[0].getPayload();
-            StringBuilder sb = new StringBuilder(data.length);
-            for (int i = 0; i < data.length; ++ i) {
-                if (data[i] < 0) throw new IllegalArgumentException();
-                sb.append((char) data[i]);
-            }
-            String displaystring = sb.toString();
-        }
-        */
+        final String code = extractNFCMessage();
+
         PoliteBackgroundTask.Builder<VerificationInfo> builder = new PoliteBackgroundTask.Builder<VerificationInfo>(this);
         builder.msg("已读取NFC信息，正在验证真伪");
         builder.run(new PoliteBackgroundTask.XRunnable<VerificationInfo>() {
             @Override
             public VerificationInfo run() throws Exception {
-                //TODO to validate it
-                Thread.sleep(1000);
-
-                return null;
+                return WebService.getInstance(MainActivity.this).verify(code);
             }
         });
         builder.after(new PoliteBackgroundTask.OnAfter<VerificationInfo>() {
@@ -143,6 +125,29 @@ public class MainActivity extends Activity {
             }
         });
         builder.create().start();
+    }
+
+    private String extractNFCMessage() {
+        //TODO unimplmented
+        return "foo";
+                /*
+        if ((NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) ||
+                (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)))
+        {
+            Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+
+            Parcelable[] rawMsgs = intent
+                    .getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+            NdefMessage msg = (NdefMessage) rawMsgs[0];
+            byte[] data = msg.getRecords()[0].getPayload();
+            StringBuilder sb = new StringBuilder(data.length);
+            for (int i = 0; i < data.length; ++ i) {
+                if (data[i] < 0) throw new IllegalArgumentException();
+                sb.append((char) data[i]);
+            }
+            String displaystring = sb.toString();
+        }
+        */
     }
 
     public static void stopForegroundDispatch(final Activity activity, NfcAdapter adapter) {
