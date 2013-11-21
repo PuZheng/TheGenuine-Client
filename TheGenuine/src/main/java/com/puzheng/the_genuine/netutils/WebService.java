@@ -35,7 +35,7 @@ public class WebService {
         }
         List<String> picUrlList = new ArrayList<String>();
         picUrlList.add("http://pmgs.kongfz.com/data/pre_show_pic/78/236/2490.jpg");
-        return new VerificationInfo("茅台酒", "123456", new Date(1384935011000L), new Date(1385935011000L),
-                "贵州茅台酒业", "深圳腾飞烟酒专卖", picUrlList);
+        return new VerificationInfo(1, "茅台酒", "123456", new Date(1384935011000L), new Date(1385935011000L),
+                "深圳腾飞烟酒专卖", 1, "贵州茅台酒业",  picUrlList);
     }
 }

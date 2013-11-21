@@ -1,6 +1,5 @@
 package com.puzheng.the_genuine;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,12 +20,14 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
 
     private ViewPager viewPager;
     private TabHost tabHost;
+    private VerificationInfo verificationInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
 
+        verificationInfo = getIntent().getParcelableExtra(MainActivity.TAG_VERIFICATION_INFO);
         tabHost = (TabHost) findViewById(R.id.tabHost);
         tabHost.setup();
         TabHost.TabSpec tabSpec1 = tabHost.newTabSpec("verification_info").setIndicator("验证信息");
@@ -42,7 +43,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         tabHost.setOnTabChangedListener(this);
 
         viewPager = (ViewPager) findViewById(R.id.pager);
-        viewPager.setAdapter();
+        viewPager.setAdapter(new MyPageAdapter(getSupportFragmentManager()));
         viewPager.setOnPageChangeListener(this);
     }
 
@@ -92,8 +93,9 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
             super(fm);
             fragments = new ArrayList<Fragment>();
             fragments.add(VerificationInfoFragment.getInstance(ProductActivity.this));
-            fragments.add(ProductionListFragment.getInstance(ProductActivity.this));
-            fragments.add(ProductionListFragment.getInstance(ProductActivity.this));
+            fragments.add(ProductionFragment.createNearByProductsFragment(ProductActivity.this));
+            fragments.add(ProductionFragment.createSameVendorProductsFragment(ProductActivity.this,
+                    verificationInfo.getVendorId(), verificationInfo.getId()));
         }
 
         @Override

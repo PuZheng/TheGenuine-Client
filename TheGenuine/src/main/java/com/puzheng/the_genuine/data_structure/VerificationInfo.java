@@ -12,33 +12,39 @@ import java.util.List;
  */
 public class VerificationInfo implements Parcelable {
 
+    private int id;
     private String name;
-    private String id;
+    private String code;
     private Date manufactureDate;
     private Date expiredDate;
     private String retailer;
-    private String vendor;
+    private int vendorId;
+    private String vendorName;
     private List<String> picUrlList;
 
-    public VerificationInfo(String name, String id, Date manufactureDate, Date expiredDate,
-                            String retailer, String vendor, List<String> picUrlList) {
-        this.name = name;
+    public VerificationInfo(int id, String name, String code, Date manufactureDate, Date expiredDate,
+                            String retailer, int vendorId, String vendor, List<String> picUrlList) {
         this.id = id;
+        this.name = name;
+        this.code = code;
         this.manufactureDate = manufactureDate;
         this.expiredDate = expiredDate;
         this.retailer = retailer;
-        this.vendor = vendor;
+        this.vendorId = vendorId;
+        this.vendorName = vendor;
         this.picUrlList = new ArrayList<String>();
         this.picUrlList.addAll(picUrlList);
     }
 
     public VerificationInfo(Parcel source) {
+        id = source.readInt();
         name = source.readString();
-        id = source.readString();
+        code = source.readString();
         manufactureDate = new Date(source.readLong());
         expiredDate = new Date(source.readLong());
         retailer = source.readString();
-        vendor = source.readString();
+        vendorId = source.readInt();
+        vendorName = source.readString();
         picUrlList = new ArrayList<String>();
         source.readStringList(picUrlList);
     }
@@ -50,12 +56,14 @@ public class VerificationInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeString(name);
-        dest.writeString(id);
+        dest.writeString(code);
         dest.writeLong(manufactureDate.getTime());
         dest.writeLong(expiredDate.getTime());
         dest.writeString(retailer);
-        dest.writeString(vendor);
+        dest.writeInt(vendorId);
+        dest.writeString(vendorName);
         dest.writeStringList(picUrlList);
     }
 
@@ -70,4 +78,12 @@ public class VerificationInfo implements Parcelable {
             return new VerificationInfo[0];
         }
     };
+
+    public int getVendorId() {
+        return vendorId;
+    }
+
+    public int getId() {
+        return id;
+    }
 }
