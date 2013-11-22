@@ -1,60 +1,70 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<!--
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".ProductActivity">
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ProductActivity"
+    android:weightSum="2">
 
-    <ImageView
-        android:layout_width="180dp"
-        android:layout_height="180dp"
-        android:id="@+id/imageView"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        android:src="@drawable/content_picture" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/imageView"
+            android:src="@drawable/content_picture" />
 
-        <TextView
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="3.8分"
-            android:id="@+id/textView" />
+            android:layout_height="fill_parent"
+            android:layout_gravity="right">
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageButton"
-            android:src="@drawable/social_share" />
+            <TextView
+                android:layout_width="27dp"
+                android:layout_height="40dp"
+                android:textAlignment="center"
+                android:text="3.8分"
+                android:textSize="12dp"
+                android:id="@+id/textView"
+                android:background="@drawable/product_small_button_bg"
+                android:gravity="center" />
 
-        <ImageButton
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageButton2"
-            android:src="@drawable/rating_favorite" />
+            <ImageButton
+                android:layout_width="27dp"
+                android:layout_height="40dp"
+                android:id="@+id/imageButton"
+                android:src="@drawable/social_share" />
 
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="评论"
-            android:id="@+id/button" />
-    </LinearLayout>
+            <ImageButton
+                android:layout_width="27dp"
+                android:layout_height="40dp"
+                android:id="@+id/imageButton2"
+                android:src="@drawable/rating_favorite" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="评论"
+                android:id="@+id/button" />
+        </LinearLayout>
+    </FrameLayout>
 
     <TabHost
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/tabHost"
-        android:layout_below="@+id/imageView"
-        android:layout_alignParentLeft="true">
+        android:layout_height="0px"
+        android:layout_weight="1"
+        android:visibility="gone"
+        android:id="@+id/tabHost">
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -78,4 +88,12 @@
             </FrameLayout>
         </LinearLayout>
     </TabHost>
-</RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="46dp"
+        android:background="#3c3c3c">
+
+        </LinearLayout>
+
+</LinearLayout>

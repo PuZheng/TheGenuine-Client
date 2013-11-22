@@ -92,9 +92,9 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         public MyPageAdapter(FragmentManager fm) {
             super(fm);
             fragments = new ArrayList<Fragment>();
-            fragments.add(VerificationInfoFragment.getInstance(ProductActivity.this));
-            fragments.add(ProductionFragment.createNearByProductsFragment(ProductActivity.this));
-            fragments.add(ProductionFragment.createSameVendorProductsFragment(ProductActivity.this,
+            fragments.add(VerificationInfoFragment.getInstance(ProductActivity.this, verificationInfo));
+            fragments.add(ProductsFragment.createNearByProductsFragment(ProductActivity.this));
+            fragments.add(ProductsFragment.createSameVendorProductsFragment(ProductActivity.this,
                     verificationInfo.getVendorId(), verificationInfo.getId()));
         }
 
