@@ -1,50 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+
 
     <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:id="@+id/imageView"
-        android:src="@drawable/content_picture" />
+        android:scaleType="fitCenter"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/content_picture"
+        android:layout_alignParentLeft="true"/>
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton"
+        android:src="@drawable/view_retailer"
+        android:background="@null"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imageView"
+        android:layout_toLeftOf="@id/imageButton"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:layout_centerVertical="true">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Large Text"
             android:id="@+id/textViewProductName" />
 
-        <LinearLayout
+        <RelativeLayout
             android:orientation="horizontal"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
                 android:id="@+id/textViewFavorCnt" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textViewDistance" />
+                android:id="@+id/textViewDistance"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="right" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="查看商家"
-        android:id="@+id/button" />
 
-</LinearLayout>
+
+</RelativeLayout>

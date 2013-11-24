@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,7 +28,7 @@ import java.util.List;
 public class RecommendationsFragment extends ListFragment implements Maskable {
 
 
-    private static final int NEARY_BY = 1;
+    private static final int NEARYBY = 1;
     private static final int SAME_VENDOR = 2;
     private Context context;
     private int queryType;
@@ -74,7 +75,7 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
     }
 
     public static RecommendationsFragment createNearByProductsFragment(Context context) {
-        return new RecommendationsFragment(context, NEARY_BY);
+        return new RecommendationsFragment(context, NEARYBY);
     }
 
     public static RecommendationsFragment createSameVendorProductsFragment(Context context, int vendorId,
@@ -104,7 +105,7 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
 
         GetRecommendationsTask(ListFragment listFragment, int queryType, List<Object> args) {
             this.maskable = (Maskable)listFragment;
-            this.listFragment = (ListFragment)listFragment;
+            this.listFragment = listFragment;
             this.queryType = queryType;
             this.args = new ArrayList<Object>();
             if (args != null) {
@@ -140,10 +141,10 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
         TextView textViewProductName;
         TextView textViewDistance;
         TextView textViewFavorCnt;
-        Button button;
+        ImageButton button;
 
         ViewHolder(ImageView imageView, TextView textViewProductName, TextView textViewDistance,
-                   TextView textViewFavorCnt, Button button) {
+                   TextView textViewFavorCnt, ImageButton button) {
             this.imageView = imageView;
             this.textViewProductName = textViewProductName;
             this.textViewDistance = textViewDistance;
@@ -188,7 +189,7 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
                         (TextView)convertView.findViewById(R.id.textViewProductName),
                         (TextView)convertView.findViewById(R.id.textViewDistance),
                         (TextView)convertView.findViewById(R.id.textViewFavorCnt),
-                        (Button)convertView.findViewById(R.id.button));
+                        (ImageButton)convertView.findViewById(R.id.imageButton));
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();

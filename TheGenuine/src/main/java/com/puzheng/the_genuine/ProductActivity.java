@@ -68,6 +68,17 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         tabHost.addTab(tabSpec);
         tabHost.setOnTabChangedListener(this);
 
+        for (int i=0; i < tabHost.getTabWidget().getChildCount(); ++i) {
+            View v = tabHost.getTabWidget().getChildTabViewAt(i);
+            v.setBackground(getResources().getDrawable(R.drawable.tab_indicator_holo));
+            TextView title = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+            int color = getResources().getColor(android.R.color.darker_gray);
+            if (i == 0) {
+                color = getResources().getColor(R.color.highlighted_tab);
+            }
+            title.setTextColor(color);
+        }
+
         viewPager = (ViewPager) findViewById(R.id.viewPagerBottom);
         viewPager.setAdapter(new MyPageAdapter(getSupportFragmentManager()));
         viewPager.setOnPageChangeListener(this);
@@ -92,6 +103,14 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
     @Override
     public void onTabChanged(String s) {
         int pos = tabHost.getCurrentTab();
+        for (int i=0; i < tabHost.getTabWidget().getChildCount(); ++i) {
+            int color = getResources().getColor(android.R.color.darker_gray);
+            if (i == pos) {
+                color = getResources().getColor(R.color.highlighted_tab);
+            }
+            TextView title = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+            title.setTextColor(color);
+        }
         viewPager.setCurrentItem(pos);
     }
 
@@ -119,8 +138,8 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
             super(fm);
             fragments = new ArrayList<Fragment>();
             fragments.add(VerificationInfoFragment.getInstance(ProductActivity.this, verificationInfo));
-            fragments.add(ProductsFragment.createNearByProductsFragment(ProductActivity.this));
-            fragments.add(ProductsFragment.createSameVendorProductsFragment(ProductActivity.this,
+            fragments.add(RecommendationsFragment.createNearByProductsFragment(ProductActivity.this));
+            fragments.add(RecommendationsFragment.createSameVendorProductsFragment(ProductActivity.this,
                     verificationInfo.getVendorId(), verificationInfo.getId()));
         }
 

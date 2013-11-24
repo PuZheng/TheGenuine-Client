@@ -52,6 +52,7 @@ public class WebService {
     public List<Recommendation> getRecommendations(int queryType, List<Object> args) {
         List<Recommendation> ret = new ArrayList<Recommendation>();
         ret.add(new Recommendation(2, "五粮液", 100, 120, "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4));
+        ret.add(new Recommendation(2, "五粮液", 100, 120, "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4));
         return ret;
     }
 }
