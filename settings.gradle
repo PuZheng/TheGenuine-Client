@@ -1,1 +1,1 @@
-include ':TheGenuine'
+include ':TheGenuine', ':MyLibrary'

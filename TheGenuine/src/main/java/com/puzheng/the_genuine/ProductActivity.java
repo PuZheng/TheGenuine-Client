@@ -6,43 +6,69 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TabHost;
+import android.widget.TextView;
 
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
+import com.puzheng.the_genuine.utils.Misc;
+import com.viewpagerindicator.CirclePageIndicator;
+import com.viewpagerindicator.TabPageIndicator;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductActivity extends FragmentActivity implements ViewPager.OnPageChangeListener, TabHost.OnTabChangeListener {
 
+    private static final String TAG = "ProductActivity";
     private ViewPager viewPager;
-    private TabHost tabHost;
     private VerificationInfo verificationInfo;
+    private ViewPager viewPagerCover;
+    private TabHost tabHost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
-
         verificationInfo = getIntent().getParcelableExtra(MainActivity.TAG_VERIFICATION_INFO);
+
+        TextView tv = (TextView) findViewById(R.id.textViewRating);
+        tv.setText(verificationInfo.getRating() + "分");
+        Button button = (Button) findViewById(R.id.buttonComment);
+        button.setText("评论\n(" + Misc.humanizeFavorCnt(verificationInfo.getCommentsCnt()) + ")");
+
+        viewPagerCover = (ViewPager) findViewById(R.id.viewPagerCover);
+        viewPagerCover.setAdapter(new MyCoverAdapter(getSupportFragmentManager(), verificationInfo.getPicUrlList()));
+        CirclePageIndicator titleIndicator = (CirclePageIndicator)findViewById(R.id.titles);
+        titleIndicator.setViewPager(viewPagerCover);
+
+
         tabHost = (TabHost) findViewById(R.id.tabHost);
         tabHost.setup();
-        TabHost.TabSpec tabSpec1 = tabHost.newTabSpec("verification_info").setIndicator("验证信息");
-        tabSpec1.setContent(new MyTabFactory(this));
-        tabHost.addTab(tabSpec1);
-        TabHost.TabSpec tabSpec2 = tabHost.newTabSpec("near_by_recommendation").setIndicator("附近同类真品");
-        tabSpec2.setContent(new MyTabFactory(this));
-        tabHost.addTab(tabSpec2);
-        TabHost.TabSpec tabSpec3 = tabHost.newTabSpec("same_vendor_recommendation").setIndicator("同厂家真品");
-        tabSpec3.setContent(new MyTabFactory(this));
-        tabHost.addTab(tabSpec3);
+        TabHost.TabSpec tabSpec = tabHost.newTabSpec("tab1").setIndicator("验证信息");
+        tabSpec.setContent(new MyTabFactory(this));
+        tabHost.addTab(tabSpec);
 
+        String s = "周边推荐(" + verificationInfo.getNearbyRecommendationsCnt() + ")";
+        tabSpec = tabHost.newTabSpec("tab2").setIndicator(s);
+        tabSpec.setContent(new MyTabFactory(this));
+        tabHost.addTab(tabSpec);
+
+        s = "同厂推荐(" + verificationInfo.getSameVendorRecommendationsCnt() + ")";
+        tabSpec = tabHost.newTabSpec("tab3").setIndicator(s);
+        tabSpec.setContent(new MyTabFactory(this));
+        tabHost.addTab(tabSpec);
         tabHost.setOnTabChangedListener(this);
 
-        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager = (ViewPager) findViewById(R.id.viewPagerBottom);
         viewPager.setAdapter(new MyPageAdapter(getSupportFragmentManager()));
         viewPager.setOnPageChangeListener(this);
     }
@@ -64,7 +90,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
     }
 
     @Override
-    public void onTabChanged(String tabId) {
+    public void onTabChanged(String s) {
         int pos = tabHost.getCurrentTab();
         viewPager.setCurrentItem(pos);
     }
@@ -109,12 +135,34 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         }
     }
 
+    class MyCoverAdapter extends  FragmentPagerAdapter {
+        private List<Fragment> fragments;
+
+        public MyCoverAdapter(FragmentManager fm, List<String> picUrlList) {
+            super(fm);
+            fragments = new ArrayList<Fragment>();
+            for (String url: picUrlList) {
+                fragments.add(new CoverFragment(ProductActivity.this, url));
+                Log.d(TAG, url);
+            }
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+            return fragments.get(i);
+        }
+
+        @Override
+        public int getCount() {
+            return fragments.size();
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.product, menu);
         return true;
     }
-
 
 }

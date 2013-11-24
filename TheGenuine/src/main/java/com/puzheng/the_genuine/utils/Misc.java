@@ -61,8 +61,9 @@ public class Misc {
                 return ret;
             }
         }
-        return new File(getStorageDir() + "cache/");
-
+        File ret = new File(getStorageDir() + "cache/");
+        ret.mkdirs();
+        return ret;
     }
 
     public static boolean hasExternalCacheDir() {
@@ -70,6 +71,6 @@ public class Misc {
     }
 
     public static String getStorageDir() {
-        return Environment.getExternalStorageDirectory() + "/Android/data/the-genuine/";
+        return Environment.getExternalStorageDirectory() + "/Android/data/TheGenium/";
     }
 }
