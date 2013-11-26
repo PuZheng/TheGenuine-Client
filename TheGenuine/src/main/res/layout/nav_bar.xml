@@ -5,7 +5,7 @@
 
     <ImageButton
         android:id="@+id/go_home"
-        android:padding="10dp"
+        android:padding="8dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
@@ -16,7 +16,7 @@
 
     <ImageButton
         android:id="@+id/genuines"
-        android:padding="10dp"
+        android:padding="8dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
@@ -26,7 +26,7 @@
 
     <ImageButton
         android:id="@+id/around"
-        android:padding="10dp"
+        android:padding="8dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
@@ -36,7 +36,7 @@
 
     <ImageButton
         android:id="@+id/favor"
-        android:padding="10dp"
+        android:padding="8dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
@@ -46,7 +46,7 @@
 
     <ImageButton
         android:id="@+id/account"
-        android:padding="10dp"
+        android:padding="8dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
