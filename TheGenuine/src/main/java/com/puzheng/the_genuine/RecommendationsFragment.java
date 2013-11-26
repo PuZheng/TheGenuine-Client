@@ -1,6 +1,7 @@
 package com.puzheng.the_genuine;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -205,7 +206,9 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
             viewHolder.button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO goto retailer list
+                    Intent intent = new Intent(getActivity(), NearbyActivity.class);
+                    intent.putExtra("current", NearbyActivity.NEARBY_LIST);
+                    getActivity().startActivity(intent);
                 }
             });
             return convertView;
