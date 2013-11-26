@@ -1,29 +1,23 @@
 package com.puzheng.the_genuine;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RatingBar;
 import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.utils.Misc;
 import com.viewpagerindicator.CirclePageIndicator;
-import com.viewpagerindicator.TabPageIndicator;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +37,9 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
 
         verificationInfo = getIntent().getParcelableExtra(MainActivity.TAG_VERIFICATION_INFO);
 
-        TextView tv = (TextView) findViewById(R.id.textViewRating);
-        tv.setText(verificationInfo.getRating() + "分");
+        RatingBar rb = (RatingBar) findViewById(R.id.productRatingBar);
+        rb.setRating(verificationInfo.getRating());
+
         Button button = (Button) findViewById(R.id.buttonComment);
         button.setText("评论\n(" + Misc.humanizeFavorCnt(verificationInfo.getCommentsCnt()) + ")");
 
@@ -143,7 +138,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
             fragments.add(VerificationInfoFragment.getInstance(ProductActivity.this, verificationInfo));
             fragments.add(RecommendationsFragment.createNearByProductsFragment(ProductActivity.this));
             fragments.add(RecommendationsFragment.createSameVendorProductsFragment(ProductActivity.this,
-                    verificationInfo.getVendorId(), verificationInfo.getId()));
+                    verificationInfo.getVendorId(), verificationInfo.getProductId()));
         }
 
         @Override
