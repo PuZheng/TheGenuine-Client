@@ -54,8 +54,11 @@
         </activity>
         <activity
             android:name="com.puzheng.the_genuine.ProductActivity"
-            android:label="@string/title_activity_product" >
+            android:label="@string/title_activity_product" android:uiOptions="splitActionBarWhenNarrow">
+            <meta-data android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
         </activity>
+
         <activity
             android:name="com.puzheng.the_genuine.CounterfeitActivity"
             android:label="@string/title_activity_counterfeit" >
