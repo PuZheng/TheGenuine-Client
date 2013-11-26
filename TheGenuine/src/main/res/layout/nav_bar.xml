@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <ImageButton
+        android:id="@+id/go_home"
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:src="@drawable/home"
+        android:scaleType="fitCenter"
+        android:layout_weight="1"/>
+
+
+    <ImageButton
+        android:id="@+id/genuines"
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:src="@drawable/the_genuine"
+        android:scaleType="fitCenter"
+        android:layout_weight="1"/>
+
+    <ImageButton
+        android:id="@+id/around"
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:src="@drawable/around"
+        android:scaleType="fitCenter"
+        android:layout_weight="1"/>
+
+    <ImageButton
+        android:id="@+id/favor"
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:src="@drawable/favor"
+        android:scaleType="fitCenter"
+        android:layout_weight="1"/>
+
+    <ImageButton
+        android:id="@+id/account"
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:src="@drawable/account"
+        android:scaleType="fitCenter"
+        android:layout_weight="1"/>
+
+</LinearLayout>
