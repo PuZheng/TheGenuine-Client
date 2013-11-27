@@ -10,15 +10,18 @@ public class Recommendation {
     private int distance;
     private int favorCnt;
     private String picUrl;
-    private float rate;
+    private int priceInCents;
+    private float rating;
 
-    public Recommendation(int productId, String productName, int distance, int favorCnt, String picUrl, float rate) {
+    public Recommendation(int productId, String productName, int distance, int favorCnt,
+                          String picUrl, float rateing, int priceInCents) {
         this.productId = productId;
         this.productName = productName;
         this.distance = distance;
         this.favorCnt = favorCnt;
         this.picUrl = picUrl;
-        this.rate = rate;
+        this.rating = rateing;
+        this.priceInCents = priceInCents;
     }
 
     public int getProductId() {
@@ -39,5 +42,13 @@ public class Recommendation {
 
     public String getPicUrl() {
         return picUrl;
+    }
+
+    public int getPriceInYuan() {
+        return priceInCents;
+    }
+
+    public float getRating() {
+        return rating;
     }
 }

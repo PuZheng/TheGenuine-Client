@@ -12,12 +12,11 @@ import java.util.List;
  */
 public class VerificationInfo implements Parcelable {
 
-    private int id;
+    private int productId;
     private String name;
     private String code;
     private Date manufactureDate;
     private Date expiredDate;
-    private String retailer;
     private int vendorId;
     private String vendorName;
     private List<String> picUrlList;
@@ -26,15 +25,14 @@ public class VerificationInfo implements Parcelable {
     private int sameVendorRecommendationsCnt;
     private int commentsCnt;
 
-    public VerificationInfo(int id, String name, String code, Date manufactureDate, Date expiredDate,
-                            String retailer, int vendorId, String vendor, List<String> picUrlList,
+    public VerificationInfo(int productId, String name, String code, Date manufactureDate, Date expiredDate,
+                            int vendorId, String vendor, List<String> picUrlList,
                             float rating, int nearbyRecommendationsCnt, int sameVendorRecommendationsCnt, int commentsCnt) {
-        this.id = id;
+        this.productId = productId;
         this.name = name;
         this.code = code;
         this.manufactureDate = manufactureDate;
         this.expiredDate = expiredDate;
-        this.retailer = retailer;
         this.vendorId = vendorId;
         this.vendorName = vendor;
         this.picUrlList = new ArrayList<String>();
@@ -46,12 +44,11 @@ public class VerificationInfo implements Parcelable {
     }
 
     public VerificationInfo(Parcel source) {
-        id = source.readInt();
+        code = source.readString();
         name = source.readString();
         code = source.readString();
         manufactureDate = new Date(source.readLong());
         expiredDate = new Date(source.readLong());
-        retailer = source.readString();
         vendorId = source.readInt();
         vendorName = source.readString();
         picUrlList = new ArrayList<String>();
@@ -69,12 +66,11 @@ public class VerificationInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
+        dest.writeString(code);
         dest.writeString(name);
         dest.writeString(code);
         dest.writeLong(manufactureDate.getTime());
         dest.writeLong(expiredDate.getTime());
-        dest.writeString(retailer);
         dest.writeInt(vendorId);
         dest.writeString(vendorName);
         dest.writeStringList(picUrlList);
@@ -100,8 +96,8 @@ public class VerificationInfo implements Parcelable {
         return vendorId;
     }
 
-    public int getId() {
-        return id;
+    public String getCode() {
+        return code;
     }
 
     public float getRating() {
@@ -122,5 +118,25 @@ public class VerificationInfo implements Parcelable {
 
     public List<String> getPicUrlList() {
         return picUrlList;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getVendorName() {
+        return vendorName;
+    }
+
+    public Date getManufactureDate() {
+        return manufactureDate;
+    }
+
+    public Date getExpiredDate() {
+        return expiredDate;
+    }
+
+    public int getProductId() {
+        return productId;
     }
 }
