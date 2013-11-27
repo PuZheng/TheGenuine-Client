@@ -11,8 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.puzheng.the_genuine.data_structure.Recommendation;
@@ -140,17 +140,21 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
     class ViewHolder {
         ImageView imageView;
         TextView textViewProductName;
+        TextView textViewPrice;
         TextView textViewDistance;
         TextView textViewFavorCnt;
-        ImageButton button;
+        Button button;
+        RatingBar ratingBar;
 
         ViewHolder(ImageView imageView, TextView textViewProductName, TextView textViewDistance,
-                   TextView textViewFavorCnt, ImageButton button) {
+                   TextView textViewFavorCnt, TextView textViewPrice, Button button, RatingBar ratingBar) {
             this.imageView = imageView;
             this.textViewProductName = textViewProductName;
             this.textViewDistance = textViewDistance;
             this.textViewFavorCnt = textViewFavorCnt;
+            this.textViewPrice = textViewPrice;
             this.button = button;
+            this.ratingBar = ratingBar;
         }
     }
 
@@ -190,7 +194,9 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
                         (TextView)convertView.findViewById(R.id.textViewProductName),
                         (TextView)convertView.findViewById(R.id.textViewDistance),
                         (TextView)convertView.findViewById(R.id.textViewFavorCnt),
-                        (ImageButton)convertView.findViewById(R.id.imageButton));
+                        (TextView)convertView.findViewById(R.id.textViewPrice),
+                        (Button)convertView.findViewById(R.id.button),
+                        (RatingBar)convertView.findViewById(R.id.ratingBar));
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -203,6 +209,8 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
             viewHolder.textViewProductName.setText(recommendation.getProductName());
             viewHolder.textViewDistance.setText(Misc.humanizeDistance(recommendation.getDistance()));
             viewHolder.textViewFavorCnt.setText("人气" + Misc.humanizeFavorCnt(recommendation.getFavorCnt()));
+            viewHolder.textViewPrice.setText(String.valueOf(recommendation.getPriceInYuan()));
+            viewHolder.ratingBar.setRating(recommendation.getRating());
             viewHolder.button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

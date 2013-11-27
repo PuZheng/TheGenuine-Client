@@ -41,7 +41,7 @@ public class WebService {
         picUrlList.add("http://pmgs.kongfz.com/data/pre_show_pic/78/236/2490.jpg");
         picUrlList.add("http://t1.baidu.com/it/u=1193376269,1094496181&fm=21&gp=0.jpg");
         return new VerificationInfo(1, "茅台酒", "123456", new Date(1384935011000L), new Date(1385935011000L),
-                "深圳腾飞烟酒专卖", 1, "贵州茅台酒业",  picUrlList, 4.3F, 10, 20, 100);
+                1, "贵州茅台酒业",  picUrlList, 4.5F, 10, 20, 100);
     }
 
     public InputStream getStreamFromUrl(String sUrl) throws IOException {
@@ -51,8 +51,10 @@ public class WebService {
 
     public List<Recommendation> getRecommendations(int queryType, List<Object> args) {
         List<Recommendation> ret = new ArrayList<Recommendation>();
-        ret.add(new Recommendation(2, "五粮液", 100, 120, "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4));
-        ret.add(new Recommendation(2, "五粮液", 100, 120, "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4));
+        ret.add(new Recommendation(2, "五粮液", 100, 120,
+                "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 500));
+        ret.add(new Recommendation(2, "五粮液", 100, 120,
+                "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 500));
         return ret;
     }
 }
