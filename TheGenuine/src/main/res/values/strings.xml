@@ -6,5 +6,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_product">ProductActivity</string>
     <string name="title_activity_counterfeit">CouterfeitActivity</string>
+    <string name="nearby_list">列表</string>
+    <string name="nearby_map">地图</string>
 
 </resources>

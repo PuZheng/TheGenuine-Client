@@ -1,15 +1,12 @@
 package com.puzheng.the_genuine;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
 import android.nfc.tech.NfcA;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -55,15 +52,17 @@ public class MainActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        if (!mNfcAdapter.isEnabled()) {
-            enableNFCButton.setVisibility(View.VISIBLE);
-        } else {
-            enableNFCButton.setVisibility(View.GONE);
-            /**
-             * It's important, that the activity is in the foreground (resumed). Otherwise
-             * an IllegalStateException is thrown.
-             */
-            setupForegroundDispatch(this, mNfcAdapter);
+        if (mNfcAdapter != null) {
+            if (!mNfcAdapter.isEnabled()) {
+                enableNFCButton.setVisibility(View.VISIBLE);
+            } else {
+                enableNFCButton.setVisibility(View.GONE);
+                /**
+                 * It's important, that the activity is in the foreground (resumed). Otherwise
+                 * an IllegalStateException is thrown.
+                 */
+                setupForegroundDispatch(this, mNfcAdapter);
+            }
         }
     }
 
@@ -72,7 +71,9 @@ public class MainActivity extends Activity {
         /**
          * Call this before onPause, otherwise an IllegalArgumentException is thrown as well.
          */
-        stopForegroundDispatch(this, mNfcAdapter);
+        if (mNfcAdapter != null) {
+            stopForegroundDispatch(this, mNfcAdapter);
+        }
         super.onPause();
     }
 
@@ -86,7 +87,7 @@ public class MainActivity extends Activity {
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         final PendingIntent pendingIntent = PendingIntent.getActivity(activity.getApplicationContext(), 0, intent, 0);
         IntentFilter[] filters = new IntentFilter[1];
-        String[][] techList = new String[][]{new String[] {NfcA.class.getName()}};
+        String[][] techList = new String[][]{new String[]{NfcA.class.getName()}};
         // Notice that this is the same filter as in our manifest.
         filters[0] = new IntentFilter();
         filters[0].addAction(NfcAdapter.ACTION_TECH_DISCOVERED);
@@ -165,5 +166,5 @@ public class MainActivity extends Activity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-    
+
 }
