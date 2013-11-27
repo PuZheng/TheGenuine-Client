@@ -90,7 +90,7 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_recommendations, container, false);
+        View rootView = inflater.inflate(R.layout.list_fragment_base, container, false);
         mask = rootView.findViewById(R.id.mask);
         error = rootView.findViewById(R.id.error);
         return rootView;

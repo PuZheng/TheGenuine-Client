@@ -31,6 +31,9 @@ public class Misc {
     }
 
     public static String getMd5Hash(String input) {
+        if (isEmptyString(input)) {
+            return null;
+        }
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] messageDigest = md.digest(input.getBytes());
