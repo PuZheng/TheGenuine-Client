@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.puzheng.the_genuine"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0">
 
     <uses-sdk
         android:minSdkVersion="10"
@@ -12,7 +12,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
 
     <uses-feature
         android:name="android.hardware.nfc"
@@ -25,7 +24,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name="com.puzheng.the_genuine.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -54,14 +53,23 @@
         </activity>
         <activity
             android:name="com.puzheng.the_genuine.ProductActivity"
-            android:label="@string/title_activity_product" android:uiOptions="splitActionBarWhenNarrow">
-            <meta-data android:name="android.support.UI_OPTIONS"
-                android:value="splitActionBarWhenNarrow" />
+            android:label="@string/title_activity_product"
+            android:uiOptions="splitActionBarWhenNarrow">
+            android:parentActivityName="com.puzheng.the_genuine.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.puzheng.the_genuine.MainActivity" />
         </activity>
-
         <activity
             android:name="com.puzheng.the_genuine.CounterfeitActivity"
-            android:label="@string/title_activity_counterfeit" >
+            android:label="@string/title_activity_counterfeit"></activity>
+        <activity
+            android:name="com.puzheng.the_genuine.CommentsActivity"
+            android:label="@string/title_activity_comments"
+            android:parentActivityName="com.puzheng.the_genuine.ProductActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.puzheng.the_genuine.ProductActivity" />
         </activity>
     </application>
 

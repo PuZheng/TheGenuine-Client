@@ -1,6 +1,10 @@
 package com.puzheng.the_genuine;
 
+import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -11,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -25,6 +30,8 @@ import java.util.List;
 public class ProductActivity extends FragmentActivity implements ViewPager.OnPageChangeListener, TabHost.OnTabChangeListener {
 
     private static final String TAG = "ProductActivity";
+    public static final String TAG_PRODUCT_ID = "ProductId";
+    public static final String TAG_COMMENTS_CNT = "CommentsCnt";
     private ViewPager viewPager;
     private VerificationInfo verificationInfo;
     private ViewPager viewPagerCover;
@@ -34,18 +41,29 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
-
         verificationInfo = getIntent().getParcelableExtra(MainActivity.TAG_VERIFICATION_INFO);
+        setupActionBar();
+
 
         RatingBar rb = (RatingBar) findViewById(R.id.productRatingBar);
         rb.setRating(verificationInfo.getRating());
 
         Button button = (Button) findViewById(R.id.buttonComment);
-        button.setText("评论\n(" + Misc.humanizeFavorCnt(verificationInfo.getCommentsCnt()) + ")");
+        button.setText("评论\n(" + Misc.humanizeNum(verificationInfo.getCommentsCnt()) + ")");
+        button.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProductActivity.this, CommentsActivity.class);
+                intent.putExtra(TAG_PRODUCT_ID, verificationInfo.getProductId());
+                intent.putExtra(TAG_COMMENTS_CNT, verificationInfo.getCommentsCnt());
+                startActivity(intent);
+            }
+        });
 
         viewPagerCover = (ViewPager) findViewById(R.id.viewPagerCover);
         viewPagerCover.setAdapter(new MyCoverAdapter(getSupportFragmentManager(), verificationInfo.getPicUrlList()));
-        CirclePageIndicator titleIndicator = (CirclePageIndicator)findViewById(R.id.titles);
+        CirclePageIndicator titleIndicator = (CirclePageIndicator) findViewById(R.id.titles);
         titleIndicator.setViewPager(viewPagerCover);
 
 
@@ -66,7 +84,18 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         tabHost.addTab(tabSpec);
         tabHost.setOnTabChangedListener(this);
 
-        for (int i=0; i < tabHost.getTabWidget().getChildCount(); ++i) {
+
+        setBottomTabs();
+
+        viewPager = (ViewPager) findViewById(R.id.viewPagerBottom);
+        viewPager.setAdapter(new MyPageAdapter(getSupportFragmentManager()));
+        viewPager.setOnPageChangeListener(this);
+
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void setBottomTabs() {
+        for (int i = 0; i < tabHost.getTabWidget().getChildCount(); ++i) {
             View v = tabHost.getTabWidget().getChildTabViewAt(i);
             v.setBackground(getResources().getDrawable(R.drawable.tab_indicator_holo));
             TextView title = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
@@ -76,10 +105,28 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
             }
             title.setTextColor(color);
         }
+    }
 
-        viewPager = (ViewPager) findViewById(R.id.viewPagerBottom);
-        viewPager.setAdapter(new MyPageAdapter(getSupportFragmentManager()));
-        viewPager.setOnPageChangeListener(this);
+
+    /**
+     * Set up the {@link android.app.ActionBar}, if the API is available.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void setupActionBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            getActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+            getActionBar().setCustomView(R.layout.product_title);
+            View view = getActionBar().getCustomView();
+            ImageButton imageButton = (ImageButton) view.findViewById(R.id.imageButtonBack);
+            imageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+            TextView textView = (TextView) view.findViewById(R.id.textView);
+            textView.setText(Misc.truncate(verificationInfo.getName(), 10));
+        }
     }
 
     @Override
@@ -101,7 +148,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
     @Override
     public void onTabChanged(String s) {
         int pos = tabHost.getCurrentTab();
-        for (int i=0; i < tabHost.getTabWidget().getChildCount(); ++i) {
+        for (int i = 0; i < tabHost.getTabWidget().getChildCount(); ++i) {
             int color = getResources().getColor(android.R.color.darker_gray);
             if (i == pos) {
                 color = getResources().getColor(R.color.highlighted_tab);
@@ -152,13 +199,13 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         }
     }
 
-    class MyCoverAdapter extends  FragmentPagerAdapter {
+    class MyCoverAdapter extends FragmentPagerAdapter {
         private List<Fragment> fragments;
 
         public MyCoverAdapter(FragmentManager fm, List<String> picUrlList) {
             super(fm);
             fragments = new ArrayList<Fragment>();
-            for (String url: picUrlList) {
+            for (String url : picUrlList) {
                 fragments.add(new CoverFragment(ProductActivity.this, url));
                 Log.d(TAG, url);
             }
@@ -181,5 +228,4 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         getMenuInflater().inflate(R.menu.product, menu);
         return true;
     }
-
 }

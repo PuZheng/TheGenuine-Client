@@ -6,5 +6,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_product">ProductActivity</string>
     <string name="title_activity_counterfeit">CouterfeitActivity</string>
+    <string name="title_activity_comments">CommentsActivity</string>
 
 </resources>

@@ -2,6 +2,7 @@ package com.puzheng.the_genuine.netutils;
 
 import android.content.Context;
 
+import com.puzheng.the_genuine.data_structure.Comment;
 import com.puzheng.the_genuine.data_structure.Recommendation;
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 
@@ -50,11 +51,32 @@ public class WebService {
     }
 
     public List<Recommendation> getRecommendations(int queryType, List<Object> args) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         List<Recommendation> ret = new ArrayList<Recommendation>();
         ret.add(new Recommendation(2, "五粮液", 100, 120,
                 "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 500));
         ret.add(new Recommendation(2, "五粮液", 100, 120,
                 "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 500));
+        return ret;
+    }
+
+    public List<Comment> getComments(int productId) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        List<Comment> ret = new ArrayList<Comment>();
+        for (int i = 0; i < 100; ++i) {
+            ret.add(new Comment(1, 1, "张三",
+                    "http://c.hiphotos.baidu.com/image/w%3D230/sign=d882f8216963f6241c5d3e00b745eb32/b3b7d0a20cf431ade17230214936acaf2edd9801.jpg",
+                    "just so so", new Date(1384935011000L), 4.5F));
+        }
         return ret;
     }
 }
