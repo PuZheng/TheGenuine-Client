@@ -15,6 +15,7 @@ import android.widget.Button;
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
+import com.puzheng.the_genuine.views.NavBar;
 
 public class MainActivity extends Activity {
 
@@ -47,7 +48,10 @@ public class MainActivity extends Activity {
             }
         });
 
-        handleIntent(getIntent());
+        //handleIntent(getIntent());
+
+        NavBar navBar = (NavBar) findViewById(R.id.navBar);
+        navBar.setContext(this);
     }
 
 

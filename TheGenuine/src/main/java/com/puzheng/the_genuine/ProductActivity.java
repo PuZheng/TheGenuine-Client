@@ -80,7 +80,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         // 添加微信平台，参数1为当前Activity, 参数2为用户申请的AppID, 参数3为点击分享内容跳转到的目标url
         mController.getConfig().supportWXPlatform(this, appID, contentUrl);
         // 支持微信朋友圈
-        mController.getConfig().supportWXCirclePlatform(this ,appID, contentUrl) ;
+        mController.getConfig().supportWXCirclePlatform(this, appID, contentUrl);
 
         ImageButton imageButton = (ImageButton) findViewById(R.id.imageButtonShare);
         imageButton.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +121,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         viewPager = (ViewPager) findViewById(R.id.viewPagerBottom);
         viewPager.setAdapter(new MyPageAdapter(getSupportFragmentManager()));
         viewPager.setOnPageChangeListener(this);
+
 
     }
 

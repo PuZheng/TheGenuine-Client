@@ -25,7 +25,7 @@
         android:layout_weight="1"/>
 
     <ImageButton
-        android:id="@+id/around"
+        android:id="@+id/nearby"
         android:padding="8dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

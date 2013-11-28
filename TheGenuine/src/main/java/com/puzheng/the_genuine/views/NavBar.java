@@ -1,7 +1,9 @@
 package com.puzheng.the_genuine.views;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -9,6 +11,9 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import com.puzheng.the_genuine.CategoriesActivity;
+import com.puzheng.the_genuine.MainActivity;
+import com.puzheng.the_genuine.NearbyActivity;
 import com.puzheng.the_genuine.R;
 
 /**
@@ -18,8 +23,10 @@ public class NavBar extends LinearLayout {
     private static final int GO_HOME = 0;
     private static final int GENUINES = 1;
     private static final int AROUND = 2;
-    private static final int FAVOR = 3;
+    public static final int FAVOR = 3;
     private static final int ACCOUNT = 4;
+    private final View rootView;
+    private Context context;
 
     public NavBar(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -27,11 +34,54 @@ public class NavBar extends LinearLayout {
         setGravity(Gravity.CENTER_VERTICAL);
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rootView = inflater.inflate(R.layout.nav_bar, this, true);
+        rootView = inflater.inflate(R.layout.nav_bar, this, true);
 
         TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.NavBar, 0, 0);
         int tab = a.getInteger(R.styleable.NavBar_enabledTab, GO_HOME);
+        enableTab(tab, false);
+
+        initTab(R.id.go_home, MainActivity.class, null);
+        initTab(R.id.genuines, CategoriesActivity.class, null);
+        initTab(R.id.nearby, NearbyActivity.class, null);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("Favor", true);
+        initTab(R.id.favor, CategoriesActivity.class, bundle);
+    }
+
+    private void initTab(int resId, final Class<?> activityClass, final Bundle bundle) {
+        ImageButton imageButton = (ImageButton) findViewById(resId);
+        imageButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, activityClass);
+                if (bundle != null) {
+                    intent.putExtras(bundle);
+                }
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                context.startActivity(intent);
+            }
+        });
+
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public void enableTab(int tab, boolean disableOthers) {
+        if (disableOthers) {
+            ImageButton imageButton = (ImageButton) findViewById(R.id.go_home);
+            imageButton.setImageResource(R.drawable.home);
+            imageButton = (ImageButton) findViewById(R.id.genuines);
+            imageButton.setImageResource(R.drawable.the_genuine);
+            imageButton = (ImageButton) findViewById(R.id.nearby);
+            imageButton.setImageResource(R.drawable.around);
+            imageButton = (ImageButton) findViewById(R.id.favor);
+            imageButton.setImageResource(R.drawable.favor);
+            imageButton = (ImageButton) findViewById(R.id.account);
+            imageButton.setImageResource(R.drawable.account);
+        }
         ImageButton imageButtonActivitated = null;
         int resId = 0;
         switch (tab) {
@@ -44,7 +94,7 @@ public class NavBar extends LinearLayout {
                 resId = R.drawable.the_genuine_activated;
                 break;
             case AROUND:
-                imageButtonActivitated = (ImageButton) rootView.findViewById(R.id.around);
+                imageButtonActivitated = (ImageButton) rootView.findViewById(R.id.nearby);
                 resId = R.drawable.around_activated;
                 break;
             case FAVOR:

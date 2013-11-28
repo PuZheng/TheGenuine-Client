@@ -2,17 +2,17 @@
 <resources>
     <declare-styleable name="TabWidget">
 
-        <attr name="tabLayout" format="reference"/>
+        <attr name="tabLayout" format="reference" />
 
     </declare-styleable>
 
     <declare-styleable name="NavBar">
         <attr name="enabledTab" format="enum">
-            <enum name="go_home" value="0"/>
-            <enum name="genuines" value="1"/>
-            <enum name="around" value="2"/>
-            <enum name="favor" value="3"/>
-            <enum name="account" value="4"/>
+            <enum name="go_home" value="0" />
+            <enum name="genuines" value="1" />
+            <enum name="nearby" value="2" />
+            <enum name="favor" value="3" />
+            <enum name="account" value="4" />
         </attr>
     </declare-styleable>
 

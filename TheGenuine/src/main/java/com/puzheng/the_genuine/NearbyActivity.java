@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.puzheng.the_genuine.views.NavBar;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +69,8 @@ public class NearbyActivity extends FragmentActivity {
 
             }
         });
+        NavBar navBar = (NavBar) findViewById(R.id.navBar);
+        navBar.setContext(this);
     }
 
     private void initTabHostBackgroud() {
