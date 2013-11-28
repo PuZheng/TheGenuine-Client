@@ -52,7 +52,7 @@ public class BaiduMapFragment extends Fragment {
         mMapView.setBuiltInZoomControls(true);
         mMapController = mMapView.getController();
         mMapController.enableClick(true);
-        mMapController.setZoom(12);
+        mMapController.setZoom(18);
 
         mLocationClient.registerLocationListener(new MyLocationListenner());
         LocationClientOption option = new LocationClientOption();
@@ -69,48 +69,43 @@ public class BaiduMapFragment extends Fragment {
         mMapView.getOverlays().add(myLocationOverlay);
         myLocationOverlay.enableCompass();
 
-        addItemOverlay(mMapView);
         mMapView.refresh();
         return rootView;
     }
 
     private void addItemOverlay(MapView mapView) {
+        if (myLocationOverlay != null) {
+            int currentLat = (int) (myLocationOverlay.getMyLocation().latitude * 1E6);
+            int currentLon = (int) (myLocationOverlay.getMyLocation().longitude * 1E6);
+            GeoPoint p1 = new GeoPoint(currentLat + 1000, currentLon + 1000);
+            GeoPoint p2 = new GeoPoint(currentLat + 200, currentLon + 200);
+            //准备overlay图像数据，根据实情情况修复
+            Drawable mark = getResources().getDrawable(R.drawable.icon_marka);
+            Drawable mark2 = getResources().getDrawable(R.drawable.icon_markb);
+            //用OverlayItem准备Overlay数据
+            OverlayItem item1 = new OverlayItem(p1, "肯德基", "item1");
+            //使用setMarker()方法设置overlay图片,如果不设置则使用构建ItemizedOverlay时的默认设置
+            OverlayItem item2 = new OverlayItem(p2, "麦当劳", "item2");
+            item2.setMarker(mark2);
 
-        double mLat1 = 30.239496;
-        double mLon1 = 120.116681;
-        double mLat2 = 30.220524;
-        double mLon2 = 120.141977;
-        // 用给定的经纬度构造GeoPoint，单位是微度 (度 * 1E6)
-        GeoPoint p1 = new GeoPoint((int) (mLat1 * 1E6), (int) (mLon1 * 1E6));
-        GeoPoint p2 = new GeoPoint((int) (mLat2 * 1E6), (int) (mLon2 * 1E6));
+            //创建IteminizedOverlay
+            mOverlay = new MyOverlay(mark, mapView);
+            //将IteminizedOverlay添加到MapView中
 
-        //准备overlay图像数据，根据实情情况修复
-        Drawable mark = getResources().getDrawable(R.drawable.icon_marka);
-        Drawable mark2 = getResources().getDrawable(R.drawable.icon_markb);
-        //用OverlayItem准备Overlay数据
-        OverlayItem item1 = new OverlayItem(p1, "肯德基", "item1");
-        //使用setMarker()方法设置overlay图片,如果不设置则使用构建ItemizedOverlay时的默认设置
-        OverlayItem item2 = new OverlayItem(p2, "麦当劳", "item2");
-        item2.setMarker(mark2);
+            mapView.getOverlays().add(mOverlay);
 
-        //创建IteminizedOverlay
-        mOverlay = new MyOverlay(mark, mapView);
-        //将IteminizedOverlay添加到MapView中
+            //现在所有准备工作已准备好，使用以下方法管理overlay.
+            //添加overlay, 当批量添加Overlay时使用addItem(List<OverlayItem>)效率更高
+            mOverlay.addItem(item1);
+            mOverlay.addItem(item2);
 
-        mapView.getOverlays().clear();
-        mapView.getOverlays().add(mOverlay);
-
-        //现在所有准备工作已准备好，使用以下方法管理overlay.
-        //添加overlay, 当批量添加Overlay时使用addItem(List<OverlayItem>)效率更高
-        mOverlay.addItem(item1);
-        mOverlay.addItem(item2);
-
-        pop = new PopupOverlay(mapView, new PopupClickListener() {
-            @Override
-            public void onClickedPopup(int index) {
-            }
-        });
-
+            pop = new PopupOverlay(mapView, new PopupClickListener() {
+                @Override
+                public void onClickedPopup(int index) {
+                }
+            });
+        }
+        mapView.refresh();
     }
 
     @Override
@@ -192,15 +187,18 @@ public class BaiduMapFragment extends Fragment {
             //更新定位数据
             myLocationOverlay.setData(mLocationData);
             //更新图层数据执行刷新后生效
+
             mMapView.refresh();
             //是手动触发请求或首次定位时，移动到定位点
             if (isFirstLoc) {
+                addItemOverlay(mMapView);
                 //移动地图到定位点
                 mMapController.animateTo(new GeoPoint((int) (mLocationData.latitude * 1e6), (int) (mLocationData.longitude * 1e6)));
                 myLocationOverlay.setLocationMode(MyLocationOverlay.LocationMode.FOLLOWING);
             }
             //首次定位完成
             isFirstLoc = false;
+
         }
 
         public void onReceivePoi(BDLocation poiLocation) {
