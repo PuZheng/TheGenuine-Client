@@ -11,12 +11,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.utils.Misc;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.controller.RequestType;
+import com.umeng.socialize.controller.UMServiceFactory;
+import com.umeng.socialize.controller.UMSocialService;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.ArrayList;
@@ -42,6 +47,33 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
 
         Button button = (Button) findViewById(R.id.buttonComment);
         button.setText("评论\n(" + Misc.humanizeFavorCnt(verificationInfo.getCommentsCnt()) + ")");
+
+        final UMSocialService mController = UMServiceFactory.getUMSocialService("com.umeng.share",
+                RequestType.SOCIAL);
+
+        mController.setShareContent("360真品鉴别让您不再上当, http://www.foo.com");
+    /*
+            mController.setShareMedia(new UMImage(this,
+                    "http://www.umeng.com/images/pic/banner_module_social.png"));
+    */
+        mController.getConfig().removePlatform(SHARE_MEDIA.EMAIL, SHARE_MEDIA.DOUBAN, SHARE_MEDIA.RENREN);
+        String appID = "wx061490cf3011fbd0";
+        // 微信图文分享必须设置一个url
+        String contentUrl = "http://www.umeng.com/social";
+        // 添加微信平台，参数1为当前Activity, 参数2为用户申请的AppID, 参数3为点击分享内容跳转到的目标url
+        mController.getConfig().supportWXPlatform(this, appID, contentUrl);
+        // 支持微信朋友圈
+        mController.getConfig().supportWXCirclePlatform(this ,appID, contentUrl) ;
+
+        ImageButton imageButton = (ImageButton) findViewById(R.id.imageButtonShare);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 打开平台选择面板，参数2为打开分享面板时是否强制登录,false为不强制登录
+                mController.openShare(ProductActivity.this, false);
+            }
+        });
+
 
         viewPagerCover = (ViewPager) findViewById(R.id.viewPagerCover);
         viewPagerCover.setAdapter(new MyCoverAdapter(getSupportFragmentManager(), verificationInfo.getPicUrlList()));
@@ -80,6 +112,8 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         viewPager = (ViewPager) findViewById(R.id.viewPagerBottom);
         viewPager.setAdapter(new MyPageAdapter(getSupportFragmentManager()));
         viewPager.setOnPageChangeListener(this);
+
+
     }
 
     @Override
