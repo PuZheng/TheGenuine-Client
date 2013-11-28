@@ -5,7 +5,16 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
+    <ImageButton
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_action_photo"
+        android:id="@+id/imageButton" />
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

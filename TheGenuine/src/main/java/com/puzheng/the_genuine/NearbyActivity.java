@@ -1,6 +1,8 @@
 package com.puzheng.the_genuine;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -73,6 +75,7 @@ public class NearbyActivity extends FragmentActivity {
         navBar.setContext(this);
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void initTabHostBackgroud() {
         for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); ++i) {
             View v = mTabHost.getTabWidget().getChildTabViewAt(i);

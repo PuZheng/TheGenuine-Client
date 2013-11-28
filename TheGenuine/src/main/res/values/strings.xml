@@ -8,6 +8,11 @@
     <string name="title_activity_counterfeit">CouterfeitActivity</string>
     <string name="nearby_list">列表</string>
     <string name="nearby_map">地图</string>
+    <string name="title_activity_nearby">NeighborhoodActivity</string>
+    <string name="title_activity_barcode">BarCodeActivity</string>
+    <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
+    <string name="title_activity_capture">扫描</string>
+    <string name="msg_camera_framework_bug">出现bug</string>
     <string name="title_activity_comments">CommentsActivity</string>
     <string name="title_activity_categories">CategoriesActivity</string>
 
