@@ -3,4 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="tab_host_default_height">48dp</dimen>
+    <dimen name="categories_grid_item_width">80dp</dimen>
+    <dimen name="categories_grid_item_height">80dp</dimen>
 </resources>

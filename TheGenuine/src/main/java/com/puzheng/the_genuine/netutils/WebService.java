@@ -2,6 +2,7 @@ package com.puzheng.the_genuine.netutils;
 
 import android.content.Context;
 
+import com.puzheng.the_genuine.data_structure.Category;
 import com.puzheng.the_genuine.data_structure.Comment;
 import com.puzheng.the_genuine.data_structure.Recommendation;
 import com.puzheng.the_genuine.data_structure.Store;
@@ -80,6 +81,19 @@ public class WebService {
             ret.add(new Comment(1, 1, "张三",
                     "http://c.hiphotos.baidu.com/image/w%3D230/sign=d882f8216963f6241c5d3e00b745eb32/b3b7d0a20cf431ade17230214936acaf2edd9801.jpg",
                     "just so so", new Date(1384935011000L), 4.5F));
+        }
+        return ret;
+    }
+
+    public List<Category> getCategories() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        List<Category> ret = new ArrayList<Category>();
+        for (int i = 0; i < 10; ++i) {
+            ret.add(new Category(i, "香烟", 100, "http://t1.baidu.com/it/u=2048806342,2776893942&fm=21&gp=0.jpg"));
         }
         return ret;
     }
