@@ -11,17 +11,22 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.Window;
+import android.widget.ImageButton;
 import android.widget.Toast;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
-import com.puzheng.the_genuine.camera.CameraManager;
 import com.puzheng.the_genuine.camera.AmbientLightManager;
+import com.puzheng.the_genuine.camera.CameraManager;
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.decoding.CaptureActivityHandler;
 import com.puzheng.the_genuine.decoding.InactivityTimer;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.Misc;
 import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
+import com.puzheng.the_genuine.views.NavBar;
 import com.puzheng.the_genuine.views.ViewfinderView;
 
 import java.io.IOException;
@@ -48,11 +53,22 @@ public class BarCodeActivity extends Activity implements SurfaceHolder.Callback 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         CameraManager.init(getApplicationContext());
         setContentView(R.layout.activity_barcode);
         ambientLightManager = new AmbientLightManager(getApplicationContext());
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this);
+
+        ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        NavBar navBar = (NavBar) findViewById(R.id.navBar);
+        navBar.setContext(this);
     }
 
     @Override
