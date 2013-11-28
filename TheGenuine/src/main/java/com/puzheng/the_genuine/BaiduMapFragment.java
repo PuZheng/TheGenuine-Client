@@ -1,10 +1,13 @@
 package com.puzheng.the_genuine;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -23,13 +26,21 @@ public class BaiduMapFragment extends Fragment {
     private LocationData mLocationData;
     private MapController mMapController;
     private MyLocationOverlay myLocationOverlay = null;
-
+    private PopupOverlay pop = null;
+    private View viewCache = null;
+    private View popupInfo = null;
+    private TextView popupText = null;
+    private MyOverlay mOverlay = null;
     boolean isFirstLoc = true;//是否首次定位
 
     private final static String KEY = "UTW8RC2pRPD9oGrGn8jXgcnO";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        viewCache = inflater.inflate(R.layout.map_text_view, null);
+        popupInfo = (View) viewCache.findViewById(R.id.popinfo);
+        popupText = (TextView) viewCache.findViewById(R.id.textcache);
+
         mBMapManager = new BMapManager(this.getActivity());
         mBMapManager.init(KEY, null);
         mLocationClient = new LocationClient(this.getActivity());
@@ -58,8 +69,48 @@ public class BaiduMapFragment extends Fragment {
         mMapView.getOverlays().add(myLocationOverlay);
         myLocationOverlay.enableCompass();
 
+        addItemOverlay(mMapView);
         mMapView.refresh();
         return rootView;
+    }
+
+    private void addItemOverlay(MapView mapView) {
+
+        double mLat1 = 30.239496;
+        double mLon1 = 120.116681;
+        double mLat2 = 30.220524;
+        double mLon2 = 120.141977;
+        // 用给定的经纬度构造GeoPoint，单位是微度 (度 * 1E6)
+        GeoPoint p1 = new GeoPoint((int) (mLat1 * 1E6), (int) (mLon1 * 1E6));
+        GeoPoint p2 = new GeoPoint((int) (mLat2 * 1E6), (int) (mLon2 * 1E6));
+
+        //准备overlay图像数据，根据实情情况修复
+        Drawable mark = getResources().getDrawable(R.drawable.icon_marka);
+        Drawable mark2 = getResources().getDrawable(R.drawable.icon_markb);
+        //用OverlayItem准备Overlay数据
+        OverlayItem item1 = new OverlayItem(p1, "肯德基", "item1");
+        //使用setMarker()方法设置overlay图片,如果不设置则使用构建ItemizedOverlay时的默认设置
+        OverlayItem item2 = new OverlayItem(p2, "麦当劳", "item2");
+        item2.setMarker(mark2);
+
+        //创建IteminizedOverlay
+        mOverlay = new MyOverlay(mark, mapView);
+        //将IteminizedOverlay添加到MapView中
+
+        mapView.getOverlays().clear();
+        mapView.getOverlays().add(mOverlay);
+
+        //现在所有准备工作已准备好，使用以下方法管理overlay.
+        //添加overlay, 当批量添加Overlay时使用addItem(List<OverlayItem>)效率更高
+        mOverlay.addItem(item1);
+        mOverlay.addItem(item2);
+
+        pop = new PopupOverlay(mapView, new PopupClickListener() {
+            @Override
+            public void onClickedPopup(int index) {
+            }
+        });
+
     }
 
     @Override
@@ -91,6 +142,35 @@ public class BaiduMapFragment extends Fragment {
             mBMapManager.start();
         }
         super.onResume();
+    }
+
+    /*
+ * 要处理overlay点击事件时需要继承ItemizedOverlay
+ * 不处理点击事件时可直接生成ItemizedOverlay.
+ */
+    public class MyOverlay extends ItemizedOverlay<OverlayItem> {
+        //用MapView构造ItemizedOverlay
+        public MyOverlay(Drawable mark, MapView mapView) {
+            super(mark, mapView);
+        }
+
+        protected boolean onTap(int index) {
+            //在此处理item点击事件
+            OverlayItem item = getItem(index);
+            popupText.setText(getItem(index).getTitle());
+            Bitmap[] bitMaps = {
+                    getBitmapFromView(popupInfo),
+            };
+            pop.showPopup(bitMaps, item.getPoint(), 48);
+            mMapView.refresh();
+            return true;
+        }
+
+        public boolean onTap(GeoPoint pt, MapView mapView) {
+            //在此处理MapView的点击事件，当返回 true时
+            pop.hidePop();
+            return false;
+        }
     }
 
     /**
@@ -127,4 +207,12 @@ public class BaiduMapFragment extends Fragment {
         }
     }
 
+    Bitmap getBitmapFromView(View view) {
+        view.destroyDrawingCache();
+        view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+        view.setDrawingCacheEnabled(true);
+        return view.getDrawingCache(true);
+    }
 }
