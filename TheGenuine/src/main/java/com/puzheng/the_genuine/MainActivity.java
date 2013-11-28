@@ -1,17 +1,20 @@
 package com.puzheng.the_genuine;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
 import android.nfc.tech.NfcA;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 
+import android.widget.ImageButton;
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
@@ -25,6 +28,7 @@ public class MainActivity extends Activity {
     private Button enableNFCButton;
 
 
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +51,14 @@ public class MainActivity extends Activity {
                 startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
             }
         });
-
+        ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, BarCodeActivity.class);
+                startActivity(intent);
+            }
+        });
         //handleIntent(getIntent());
 
         NavBar navBar = (NavBar) findViewById(R.id.navBar);
@@ -55,6 +66,7 @@ public class MainActivity extends Activity {
     }
 
 
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
     public void onResume() {
         super.onResume();
@@ -88,6 +100,7 @@ public class MainActivity extends Activity {
         handleIntent(intent);
     }
 
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
     public static void setupForegroundDispatch(final Activity activity, NfcAdapter adapter) {
         final Intent intent = new Intent(activity.getApplicationContext(), activity.getClass());
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -162,6 +175,7 @@ public class MainActivity extends Activity {
         */
     }
 
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
     public static void stopForegroundDispatch(final Activity activity, NfcAdapter adapter) {
         adapter.disableForegroundDispatch(activity);
     }
