@@ -8,5 +8,6 @@
     <string name="title_activity_counterfeit">CouterfeitActivity</string>
     <string name="nearby_list">列表</string>
     <string name="nearby_map">地图</string>
+    <string name="title_activity_comments">CommentsActivity</string>
 
 </resources>
