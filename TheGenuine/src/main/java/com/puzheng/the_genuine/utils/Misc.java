@@ -17,17 +17,17 @@ public class Misc {
         if (distance < 1000) {
             return String.valueOf(distance) + "米";
         }
-        return String.valueOf(distance/1000) + "千米";
+        return String.valueOf(distance / 1000) + "千米";
     }
 
-    public static String humanizeFavorCnt(int favorCnt) {
+    public static String humanizeNum(int favorCnt) {
         if (favorCnt < 1000) {
             return String.valueOf(favorCnt);
         }
         if (favorCnt < 10000) {
-            return String.valueOf(favorCnt/1000) + "千+";
+            return String.valueOf(favorCnt / 1000) + "千+";
         }
-        return String.valueOf(favorCnt/10000) + "万+";
+        return String.valueOf(favorCnt / 10000) + "万+";
     }
 
     public static String getMd5Hash(String input) {
@@ -75,5 +75,13 @@ public class Misc {
 
     public static String getStorageDir() {
         return Environment.getExternalStorageDirectory() + "/Android/data/TheGenium/";
+    }
+
+    public static String truncate(String s, int maxSize) {
+        if (s.length() <= maxSize) {
+            return s;
+        } else {
+            return s.substring(0, maxSize - 2) + "..";
+        }
     }
 }

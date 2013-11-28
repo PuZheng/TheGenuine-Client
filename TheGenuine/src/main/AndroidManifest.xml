@@ -77,7 +77,6 @@
                 android:name="android.support.UI_OPTIONS"
                 android:value="splitActionBarWhenNarrow" />
         </activity>
-
         <activity
             android:name="com.puzheng.the_genuine.CounterfeitActivity"
             android:screenOrientation="portrait"

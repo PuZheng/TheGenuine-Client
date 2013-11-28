@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -132,8 +131,10 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
 
         @Override
         protected  void onPostExecute(Boolean b) {
-            this.maskable.unmask(b);
-            listFragment.setListAdapter(new MyRecommendationsAdapter(recommendations));
+            if (b) {
+                this.maskable.unmask(b);
+                listFragment.setListAdapter(new MyRecommendationsAdapter(recommendations));
+            }
         }
     }
 
@@ -203,12 +204,11 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
             }
 
             Recommendation recommendation = (Recommendation) getItem(position);
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
             new GetImageTask(viewHolder.imageView, recommendation.getPicUrl()).execute();
 
             viewHolder.textViewProductName.setText(recommendation.getProductName());
             viewHolder.textViewDistance.setText(Misc.humanizeDistance(recommendation.getDistance()));
-            viewHolder.textViewFavorCnt.setText("人气" + Misc.humanizeFavorCnt(recommendation.getFavorCnt()));
+            viewHolder.textViewFavorCnt.setText("人气" + Misc.humanizeNum(recommendation.getFavorCnt()));
             viewHolder.textViewPrice.setText(String.valueOf(recommendation.getPriceInYuan()));
             viewHolder.ratingBar.setRating(recommendation.getRating());
             viewHolder.button.setOnClickListener(new View.OnClickListener() {
@@ -220,8 +220,6 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
                 }
             });
             return convertView;
-
-
         }
     }
 }
