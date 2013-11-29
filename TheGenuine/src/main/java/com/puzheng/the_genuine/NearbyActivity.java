@@ -21,10 +21,21 @@ import java.util.List;
 /**
  * Created by abc549825@163.com(https://github.com/abc549825) at 11-26.
  */
-public class NearbyActivity extends FragmentActivity {
+public class NearbyActivity extends FragmentActivity implements BackPressedInterface {
     public static final int NEARBY_LIST = 1;
     private TabHost mTabHost;
     private ViewPager mViewPager;
+    private BackPressedHandle backPressedHandle = new BackPressedHandle();
+
+    @Override
+    public void doBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onBackPressed() {
+        backPressedHandle.doBackPressed(this, this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
