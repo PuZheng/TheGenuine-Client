@@ -3,6 +3,7 @@ package com.puzheng.the_genuine;
 import android.annotation.TargetApi;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,7 +32,6 @@ public class CommentsActivity extends ListActivity implements Maskable {
     private int commentsCnt;
     private View mask;
     private View main;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +42,6 @@ public class CommentsActivity extends ListActivity implements Maskable {
         mask = findViewById(R.id.mask);
         main = findViewById(R.id.main);
         setupActionBar();
-        new GetCommentsTask(this).execute(productId);
     }
 
     /**
@@ -54,11 +53,21 @@ public class CommentsActivity extends ListActivity implements Maskable {
             getActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
             getActionBar().setCustomView(R.layout.comments_title);
             View view = getActionBar().getCustomView();
-            ImageButton imageButton = (ImageButton) view.findViewById(R.id.imageButtonBack);
-            imageButton.setOnClickListener(new View.OnClickListener() {
+            ImageButton backButton = (ImageButton) view.findViewById(R.id.imageButtonBack);
+            backButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     finish();
+                }
+            });
+
+            ImageButton newCommentButton = (ImageButton) view.findViewById(R.id.imageButtonNew);
+            newCommentButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(CommentsActivity.this, CommentActivity.class);
+                    intent.putExtra(ProductActivity.TAG_PRODUCT_ID, productId);
+                    startActivity(intent);
                 }
             });
             TextView textView = (TextView) view.findViewById(R.id.textView);
@@ -84,6 +93,12 @@ public class CommentsActivity extends ListActivity implements Maskable {
     public void unmask(Boolean b) {
         main.setVisibility(View.VISIBLE);
         mask.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new GetCommentsTask(this).execute(productId);
     }
 
     private class GetCommentsTask extends AsyncTask<Integer, Void, Boolean> {

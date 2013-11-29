@@ -34,6 +34,16 @@ public class WebService {
         return instance;
     }
 
+    public boolean addComment(int mProductID, String comment, float rating) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
     public List<Store> getNearbyStoreList() {
         List<Store> result = new ArrayList<Store>();
         Store s1 = new Store(1, "麦当劳", "http://pica.nipic.com/2008-05-24/2008524155151338_2.jpg", 4.5f, "A区B座C栋D号", 5000);
