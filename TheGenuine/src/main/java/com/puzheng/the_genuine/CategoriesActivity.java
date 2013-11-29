@@ -20,10 +20,21 @@ import com.puzheng.the_genuine.views.NavBar;
 
 import java.util.List;
 
-public class CategoriesActivity extends ActionBarActivity implements Maskable {
+public class CategoriesActivity extends ActionBarActivity implements Maskable, BackPressedInterface {
 
     private View mask;
     private GridView gridView;
+    private BackPressedHandle backPressedHandle = new BackPressedHandle();
+
+    @Override
+    public void onBackPressed() {
+        backPressedHandle.doBackPressed(this, this);
+    }
+
+    @Override
+    public void doBackPressed() {
+        super.onBackPressed();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

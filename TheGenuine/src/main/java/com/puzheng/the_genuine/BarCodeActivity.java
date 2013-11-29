@@ -35,7 +35,7 @@ import java.util.Vector;
 /**
  * Created by abc549825@163.com(https://github.com/abc549825) at 11-28.
  */
-public class BarCodeActivity extends Activity implements SurfaceHolder.Callback {
+public class BarCodeActivity extends Activity implements SurfaceHolder.Callback, BackPressedInterface {
     public static final String TAG_VERIFICATION_INFO = "VERIFICATION_INFO";
 
     private CaptureActivityHandler handler;
@@ -49,6 +49,17 @@ public class BarCodeActivity extends Activity implements SurfaceHolder.Callback 
     private static final float BEEP_VOLUME = 0.10f;
     private boolean vibrate;
     private AmbientLightManager ambientLightManager;
+    private BackPressedHandle backPressedHandle = new BackPressedHandle();
+
+    @Override
+    public void doBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onBackPressed() {
+        backPressedHandle.doBackPressed(this, this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

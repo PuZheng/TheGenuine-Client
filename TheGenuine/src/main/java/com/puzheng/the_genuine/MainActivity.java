@@ -20,12 +20,17 @@ import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
 import com.puzheng.the_genuine.views.NavBar;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements BackPressedInterface{
 
     public static final String TAG_VERIFICATION_INFO = "VERIFICATION_INFO";
 
     private NfcAdapter mNfcAdapter;
     private Button enableNFCButton;
+    private BackPressedHandle backPressedHandle = new BackPressedHandle();
+    @Override
+    public void doBackPressed() {
+        super.onBackPressed();
+    }
 
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
@@ -187,4 +192,8 @@ public class MainActivity extends Activity {
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        backPressedHandle.doBackPressed(this, this);
+    }
 }
