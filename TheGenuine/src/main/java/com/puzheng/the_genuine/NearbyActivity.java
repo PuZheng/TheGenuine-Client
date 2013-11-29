@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.Window;
 import android.widget.TabHost;
 import android.widget.TextView;
 
@@ -40,6 +41,7 @@ public class NearbyActivity extends FragmentActivity implements BackPressedInter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_nearby);
         mTabHost = (TabHost) findViewById(R.id.tabHost);
         mTabHost.setup();
