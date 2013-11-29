@@ -117,7 +117,7 @@
             android:name="com.puzheng.the_genuine.CommentsActivity"
             android:label="@string/title_activity_comments"
             android:screenOrientation="portrait" />
-                <activity
+        <activity
             android:name=".CommentActivity"
             android:windowSoftInputMode="adjustResize|stateVisible"
             android:label="CommentActivity"
