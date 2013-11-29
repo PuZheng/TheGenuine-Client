@@ -15,10 +15,11 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
-import com.puzheng.the_genuine.camera.CameraManager;
 import com.puzheng.the_genuine.camera.AmbientLightManager;
+import com.puzheng.the_genuine.camera.CameraManager;
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.decoding.CaptureActivityHandler;
 import com.puzheng.the_genuine.decoding.InactivityTimer;
@@ -34,7 +35,7 @@ import java.util.Vector;
 /**
  * Created by abc549825@163.com(https://github.com/abc549825) at 11-28.
  */
-public class BarCodeActivity extends Activity implements SurfaceHolder.Callback {
+public class BarCodeActivity extends Activity implements SurfaceHolder.Callback, BackPressedInterface {
     public static final String TAG_VERIFICATION_INFO = "VERIFICATION_INFO";
 
     private CaptureActivityHandler handler;
@@ -48,6 +49,17 @@ public class BarCodeActivity extends Activity implements SurfaceHolder.Callback 
     private static final float BEEP_VOLUME = 0.10f;
     private boolean vibrate;
     private AmbientLightManager ambientLightManager;
+    private BackPressedHandle backPressedHandle = new BackPressedHandle();
+
+    @Override
+    public void doBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onBackPressed() {
+        backPressedHandle.doBackPressed(this, this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +70,8 @@ public class BarCodeActivity extends Activity implements SurfaceHolder.Callback 
         ambientLightManager = new AmbientLightManager(getApplicationContext());
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this);
-        ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton);
+
+       ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -253,4 +253,8 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
+    }
 }
