@@ -8,7 +8,7 @@
     <RelativeLayout
         android:id="@+id/surface_view"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent">
 
         <SurfaceView
             android:id="@+id/preview_view"
@@ -23,7 +23,20 @@
 
     </RelativeLayout>
 
+    <ImageButton
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:scaleType="centerCrop"
+        android:id="@+id/imageButton"
+        android:src="@drawable/ic_launcher"
+        android:layout_gravity="center" />
+
     <com.puzheng.the_genuine.views.NavBar
+        android:id="@+id/nav_bar"
         android:layout_toEndOf="@id/surface_view"
         android:layout_width="fill_parent"
         android:layout_alignParentBottom="true"
