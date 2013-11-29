@@ -71,15 +71,18 @@ public class BarCodeActivity extends Activity implements SurfaceHolder.Callback,
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this);
 
-        ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton);
+       ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(BarCodeActivity.this, MainActivity.class);
+                startActivity(intent);
+                BarCodeActivity.this.finish();
             }
         });
-        NavBar navBar = (NavBar) findViewById(R.id.navBar);
-        navBar.setContext(this);
+
+        NavBar navBar = (NavBar) findViewById(R.id.nav_bar);
+        navBar.setContext(getApplicationContext());
     }
 
     @Override
