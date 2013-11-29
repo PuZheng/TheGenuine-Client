@@ -1,0 +1,155 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".LoginActivity">
+
+    <!-- Login progress -->
+    <LinearLayout
+        android:id="@+id/login_status"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/login_status_message"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:fontFamily="sans-serif-light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/login_progress_signing_in" />
+    </LinearLayout>
+
+    <!-- Login form -->
+    <ScrollView
+        android:id="@+id/login_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            style="@style/LoginFormContainer"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_height="match_parent"
+                android:background="@drawable/login_panel"
+                android:layout_width="match_parent"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:id="@+id/imageView"
+                        android:src="@drawable/social_person" />
+
+                    <EditText
+                        android:id="@+id/email"
+                        android:singleLine="true"
+                        android:maxLines="1"
+                        android:layout_width="180dp"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:hint="请输入您的邮箱"
+                        android:layout_toRightOf="@id/imageView"
+                        android:background="@null"
+                        android:layout_centerVertical="true" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#DBDBDB"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp" />
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:id="@+id/imageView2"
+                        android:src="@drawable/social_person" />
+
+                    <EditText
+                        android:id="@+id/password"
+                        android:singleLine="true"
+                        android:maxLines="1"
+                        android:layout_width="180dp"
+                        android:layout_height="wrap_content"
+                        android:hint="请输入您的密码"
+                        android:inputType="textPassword"
+                        android:imeActionLabel="@string/action_sign_in_short"
+                        android:imeActionId="@+id/login"
+                        android:imeOptions="actionUnspecified"
+                        android:layout_toRightOf="@id/imageView2"
+                        android:background="@null"
+                        android:layout_centerInParent="true" />
+
+                    <Switch
+                        android:switchMinWidth="100dp"
+                        android:layout_width="100dp"
+                        android:layout_height="10dp"
+                        android:id="@+id/switch1"
+                        android:layout_toRightOf="@id/password"
+                        android:textOn=""
+                        android:textOff=""
+                        android:thumb="@drawable/apptheme_switch_inner_holo_light"
+                        android:track="@drawable/apptheme_switch_track_holo_light"
+                        android:layout_centerVertical="true"
+                        tools:ignore="NewApi" />
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp">
+
+                <Button
+                    android:id="@+id/sign_in_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="登录"
+                    android:paddingLeft="32dp"
+                    android:paddingRight="32dp"
+                    android:background="@drawable/apptheme_btn_default_holo_light" />
+
+                <Button
+                    android:id="@+id/register_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="注册"
+                    android:paddingLeft="32dp"
+                    android:paddingRight="32dp"
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
+        </LinearLayout>
+
+    </ScrollView>
+</merge>

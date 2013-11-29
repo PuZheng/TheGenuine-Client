@@ -82,7 +82,6 @@
                 android:name="android.support.UI_OPTIONS"
                 android:value="splitActionBarWhenNarrow" />
         </activity>
-
         <activity
             android:name="com.puzheng.the_genuine.CounterfeitActivity"
             android:label="@string/title_activity_counterfeit"
@@ -126,6 +125,14 @@
         <activity
             android:name=".CategoryActivity"
             android:label="CategoryActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.puzheng.the_genuine.AccountSettingsActivity"
+            android:label="@string/title_activity_account_settings"
+            android:screenOrientation="portrait" />
+        <activity
+            android:windowSoftInputMode="adjustResize|stateVisible"
+            android:name="com.puzheng.the_genuine.LoginActivity"
+            android:label="@string/title_activity_login"
             android:screenOrientation="portrait" />
     </application>
 
