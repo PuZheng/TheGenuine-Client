@@ -1,12 +1,10 @@
 package com.puzheng.the_genuine;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
@@ -28,7 +26,10 @@ public class CommentActivity extends Activity {
         mProductID = getIntent().getIntExtra(ProductActivity.TAG_PRODUCT_ID, 0);
         mEditText = (EditText) findViewById(R.id.editText);
         mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
-
+        try {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        } catch (NullPointerException ignore) {
+        }
         Button confirmButton = (Button) findViewById(R.id.ok);
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,9 +40,9 @@ public class CommentActivity extends Activity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if(Misc.isEmptyString(comment)){
+                if (Misc.isEmptyString(comment)) {
                     Toast.makeText(CommentActivity.this, R.string.add_comment_empty, Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     new NewCommentTask().execute(new Pair<String, Float>(comment, mRatingBar.getRating()));
                 }
             }
