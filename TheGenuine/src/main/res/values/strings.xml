@@ -15,6 +15,6 @@
     <string name="msg_camera_framework_bug">出现bug</string>
     <string name="title_activity_comments">CommentsActivity</string>
     <string name="title_activity_categories">CategoriesActivity</string>
-    <string name="title_activity_account_settings">AccountSettingsActivity</string>
+    <string name="title_activity_account_settings">账户设置</string>
 
 </resources>

@@ -1,9 +1,12 @@
 package com.puzheng.the_genuine.utils;
 
-import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Environment;
+import android.util.Log;
+
+import com.puzheng.the_genuine.data_structure.User;
 
 import java.io.File;
 import java.math.BigInteger;
@@ -14,6 +17,8 @@ import java.security.NoSuchAlgorithmException;
  * Created by xc on 13-11-21.
  */
 public class Misc {
+    private static final String TAG = "Misc";
+
     public static String humanizeDistance(int distance) {
         if (distance < 1000) {
             return String.valueOf(distance) + "米";
@@ -84,5 +89,41 @@ public class Misc {
         } else {
             return s.substring(0, maxSize - 2) + "..";
         }
+    }
+
+    public static User readUserPrefs(Context c) {
+        SharedPreferences preferences = c.getSharedPreferences("user", Context.MODE_PRIVATE);
+        int id = preferences.getInt("id", -1);
+        String username = preferences.getString("name", null);
+        String token = preferences.getString("token", null);
+        if (id == -1 || username == null || token == null) {
+            return null;
+        }
+        return new User(id, username, token);
+    }
+
+    public static void storeUserPrefs(User user, Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("user", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("id", user.getId());
+        editor.putString("name", user.getName());
+        editor.putString("token", user.getToken());
+        editor.commit();
+    }
+
+    public static void assertDirExists(String dir) {
+        File file = new File(dir);
+        if (!file.exists()) {
+            if (!file.mkdirs()) {
+                Log.e(TAG, "can't create directory: " + dir);
+            }
+        }
+    }
+
+    public static void clearUserPrefs(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("user", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
     }
 }

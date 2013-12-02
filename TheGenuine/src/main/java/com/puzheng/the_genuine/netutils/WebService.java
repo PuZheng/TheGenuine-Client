@@ -1,11 +1,13 @@
 package com.puzheng.the_genuine.netutils;
 
 import android.content.Context;
+import android.util.Pair;
 
 import com.puzheng.the_genuine.data_structure.Category;
 import com.puzheng.the_genuine.data_structure.Comment;
 import com.puzheng.the_genuine.data_structure.Recommendation;
 import com.puzheng.the_genuine.data_structure.Store;
+import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 
 import java.io.IOException;
@@ -96,5 +98,14 @@ public class WebService {
             ret.add(new Category(i, "香烟", 100, "http://t1.baidu.com/it/u=2048806342,2776893942&fm=21&gp=0.jpg"));
         }
         return ret;
+    }
+
+    public Pair<User, Boolean> register_or_login(String mEmail, String mPassword) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return Pair.create(new User(1, "张三", "asdflkjlkjasdf"), false);
     }
 }

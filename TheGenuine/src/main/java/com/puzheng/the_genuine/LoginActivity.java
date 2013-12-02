@@ -4,30 +4,32 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.puzheng.the_genuine.data_structure.User;
+import com.puzheng.the_genuine.netutils.WebService;
 
 /**
- * Activity which displays a login screen to the user, offering registration as
+ * Activity which displays a register_or_login screen to the user, offering registration as
  * well.
  */
 public class LoginActivity extends Activity {
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello",
-            "bar@example.com:world"
-    };
+
 
     /**
      * The default email to populate the email field with.
@@ -35,11 +37,11 @@ public class LoginActivity extends Activity {
     public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
 
     /**
-     * Keep track of the login task to ensure we can cancel it if requested.
+     * Keep track of the register_or_login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
 
-    // Values for email and password at the time of the login attempt.
+    // Values for email and password at the time of the register_or_login attempt.
     private String mEmail;
     private String mPassword;
 
@@ -54,9 +56,9 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_login2);
+        setContentView(R.layout.activity_login);
 
-        // Set up the login form.
+        // Set up the register_or_login form.
         mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
         mEmailView = (EditText) findViewById(R.id.email);
         mEmailView.setText(mEmail);
@@ -83,6 +85,22 @@ public class LoginActivity extends Activity {
                 attemptLogin();
             }
         });
+
+        initSwitch();
+    }
+
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    private void initSwitch() {
+        Switch switch1 = (Switch) findViewById(R.id.switch1);
+        switch1.setChecked(true);
+        switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                int inputType = isChecked ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD : InputType.TYPE_CLASS_TEXT;
+                mPasswordView.setInputType(inputType);
+            }
+        });
+
     }
 
 
@@ -94,9 +112,9 @@ public class LoginActivity extends Activity {
     }
 
     /**
-     * Attempts to sign in or register the account specified by the login form.
+     * Attempts to sign in or register the account specified by the register_or_login form.
      * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
+     * errors are presented and no actual register_or_login attempt is made.
      */
     public void attemptLogin() {
         if (mAuthTask != null) {
@@ -107,7 +125,7 @@ public class LoginActivity extends Activity {
         mEmailView.setError(null);
         mPasswordView.setError(null);
 
-        // Store values at the time of the login attempt.
+        // Store values at the time of the register_or_login attempt.
         mEmail = mEmailView.getText().toString();
         mPassword = mPasswordView.getText().toString();
 
@@ -137,12 +155,12 @@ public class LoginActivity extends Activity {
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
+            // There was an error; don't attempt register_or_login and focus the first
             // form field with an error.
             focusView.requestFocus();
         } else {
             // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
+            // perform the user register_or_login attempt.
             mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
             showProgress(true);
             mAuthTask = new UserLoginTask();
@@ -151,7 +169,7 @@ public class LoginActivity extends Activity {
     }
 
     /**
-     * Shows the progress UI and hides the login form.
+     * Shows the progress UI and hides the register_or_login form.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
@@ -191,30 +209,25 @@ public class LoginActivity extends Activity {
     }
 
     /**
-     * Represents an asynchronous login/registration task used to authenticate
+     * Represents an asynchronous register_or_login/registration task used to authenticate
      * the user.
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+
+        Pair<User, Boolean> pair;
+
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
 
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
+                pair = WebService.getInstance(LoginActivity.this).register_or_login(mEmail, mPassword);
+            } catch (Exception e) {
                 return false;
             }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
+            if (pair == null) {
+                return false;
             }
-
-            // TODO: register the new account here.
+            MyApp.setCurrentUser(pair.first);
             return true;
         }
 
@@ -224,6 +237,13 @@ public class LoginActivity extends Activity {
             showProgress(false);
 
             if (success) {
+                if (pair.second) {
+                    Toast.makeText(LoginActivity.this, "您已经成功注册", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(LoginActivity.this, "您已经成功登录", Toast.LENGTH_SHORT).show();
+                }
+                Intent intent = new Intent(LoginActivity.this, AccountSettingsActivity.class);
+                startActivity(intent);
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
