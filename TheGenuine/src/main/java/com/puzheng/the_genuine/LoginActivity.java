@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.netutils.WebService;
+import com.puzheng.the_genuine.views.NavBar;
 
 /**
  * Activity which displays a register_or_login screen to the user, offering registration as
@@ -87,6 +88,8 @@ public class LoginActivity extends Activity {
         });
 
         initSwitch();
+        NavBar navBar = (NavBar) findViewById(R.id.navBar);
+        navBar.setContext(this);
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
