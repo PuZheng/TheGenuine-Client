@@ -21,5 +21,9 @@
     <string name="add_comment_succeed">发表评论成功</string>
     <string name="add_comment_empty">评论不能为空</string>
     <string name="comment">发表</string>
-
+    <string-array name="short_list">
+        <item>按价格排序</item>
+        <item>按距离排序</item>
+        <item>按产品排序</item>
+    </string-array>
 </resources>

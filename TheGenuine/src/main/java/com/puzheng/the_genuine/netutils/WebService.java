@@ -62,6 +62,17 @@ public class WebService {
         return ret;
     }
 
+    public List<Recommendation> getRecommendationsByCategoryId(int category_id) {
+        List<Recommendation> ret = new ArrayList<Recommendation>();
+        ret.add(new Recommendation(1, "五粮液", 1000, 120,
+                "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 500));
+        ret.add(new Recommendation(2, "五粮液", 100, 120,
+                "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 5000));
+        ret.add(new Recommendation(3, "五粮液", 500, 120,
+                "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 100));
+        return ret;
+    }
+
     public InputStream getStreamFromUrl(String sUrl) throws IOException {
         URL url = new URL(sUrl);
         return url.openStream();

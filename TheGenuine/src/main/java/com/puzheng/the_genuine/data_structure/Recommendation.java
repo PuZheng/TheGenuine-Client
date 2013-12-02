@@ -14,13 +14,13 @@ public class Recommendation {
     private float rating;
 
     public Recommendation(int productId, String productName, int distance, int favorCnt,
-                          String picUrl, float rateing, int priceInCents) {
+                          String picUrl, float rating, int priceInCents) {
         this.productId = productId;
         this.productName = productName;
         this.distance = distance;
         this.favorCnt = favorCnt;
         this.picUrl = picUrl;
-        this.rating = rateing;
+        this.rating = rating;
         this.priceInCents = priceInCents;
     }
 
