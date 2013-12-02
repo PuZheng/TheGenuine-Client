@@ -2,15 +2,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".AccountSettingsActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+
+    <TableLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_marginTop="32dp"
+        android:background="@drawable/login_panel"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:padding="16dp"
+        android:id="@+id/tableLayout">
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:textColor="@android:color/darker_gray"
+                android:text="邮箱" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="6"
+                android:text="foo@foo.com"
+                android:textColor="@android:color/darker_gray"
+                android:id="@+id/textViewEmail" />
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:id="@+id/imageView"
+                android:src="@drawable/navigation_next_item"
+                android:layout_column="16" />
+        </TableRow>
+    </TableLayout>
+
+    <com.puzheng.the_genuine.views.NavBar
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/nav_bar_height"
+        android:background="#3c3c3c"
+        android:weightSum="6"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/navBar"
+        app:enabledTab="account" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/apptheme_btn_default_holo_light"
+        android:text="退出登录"
+        android:id="@+id/button"
+        android:textSize="16dp"
+        android:textColor="@android:color/white"
+        android:layout_margin="16dp"
+        android:layout_below="@+id/tableLayout"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

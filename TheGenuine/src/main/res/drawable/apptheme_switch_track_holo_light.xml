@@ -19,8 +19,10 @@
         <item android:state_focused="true"  android:drawable="@drawable/apptheme_switch_bg_focused_holo_light" />
         <item                               android:drawable="@drawable/apptheme_switch_bg_holo_light" />
     -->
-    <item android:state_enabled="false" android:drawable="@drawable/a" />
-    <item android:state_focused="true" android:drawable="@drawable/a" />
-    <item android:drawable="@drawable/a" />
+    <item android:state_checked="true" android:drawable="@drawable/hide_password" />
+    <!--
+        <item android:state_focused="true" android:drawable="@drawable/show_passwd" />
+    -->
+    <item android:drawable="@drawable/show_password" />
 
 </selector>
