@@ -1,6 +1,7 @@
 package com.puzheng.the_genuine;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -159,8 +160,16 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-
-            Category comment = (Category) getItem(position);
+            final Category comment = (Category) getItem(position);
+            viewHolder.imageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(CategoriesActivity.this, CategoryActivity.class);
+                    intent.putExtra("category_id", comment.getId());
+                    intent.putExtra("categoryName", comment.getName());
+                    startActivity(intent);
+                }
+            });
             new GetImageTask(viewHolder.imageButton, comment.getPicUrl()).execute();
             return convertView;
         }

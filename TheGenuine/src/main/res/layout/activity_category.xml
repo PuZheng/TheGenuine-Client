@@ -1,0 +1,40 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".CategoriesActivity">
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".CategoryActivity"
+        tools:ignore="MergeRootFrame">
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/mask"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center">
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:layout_gravity="center" />
+    </LinearLayout>
+
+    <com.puzheng.the_genuine.views.NavBar
+        android:id="@+id/navBar"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/nav_bar_height"
+        android:layout_alignParentBottom="true"
+        android:background="#3c3c3c"
+        android:weightSum="6"
+        app:enabledTab="genuines" />
+</RelativeLayout>

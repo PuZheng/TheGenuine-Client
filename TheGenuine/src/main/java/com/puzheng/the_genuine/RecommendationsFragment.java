@@ -30,6 +30,7 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
 
     private static final int NEARYBY = 1;
     private static final int SAME_VENDOR = 2;
+    public static final int SAME_CATEGORY = 3;
     private Context context;
     private int queryType;
     private List<Object> args;
