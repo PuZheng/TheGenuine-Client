@@ -62,7 +62,10 @@ public class NavBar extends LinearLayout {
                 } else {
                     intent = new Intent(context, LoginActivity.class);
                 }
+<<<<<<< HEAD
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+=======
+>>>>>>> 0ede804e170fc344dbe487650839bcd070df5dee
                 context.startActivity(intent);
             }
         });

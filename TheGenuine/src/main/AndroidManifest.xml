@@ -85,6 +85,7 @@
         </activity>
         <activity
             android:name="com.puzheng.the_genuine.CounterfeitActivity"
+<<<<<<< HEAD
             android:label="@string/title_activity_counterfeit"
             android:screenOrientation="portrait" />
         <activity
@@ -96,6 +97,18 @@
             android:screenOrientation="portrait"
             android:label="@string/title_activity_barcode" />
 
+=======
+            android:label="@string/title_activity_counterfeit" />
+        android:screenOrientation="portrait" />
+        <activity
+            android:name="com.puzheng.the_genuine.NearbyActivity"
+            android:label="NeighborhoodActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.puzheng.the_genuine.BarCodeActivity"
+            android:label="@string/title_activity_barcode"
+            android:screenOrientation="portrait" />
+>>>>>>> 0ede804e170fc344dbe487650839bcd070df5dee
         <activity
             android:name="com.umeng.socialize.view.ShareActivity"
             android:configChanges="orientation|keyboard"
