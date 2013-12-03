@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.utils.Misc;
+import com.puzheng.the_genuine.views.NavBar;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.controller.RequestType;
 import com.umeng.socialize.controller.UMServiceFactory;
@@ -122,7 +123,8 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         viewPager.setAdapter(new MyPageAdapter(getSupportFragmentManager()));
         viewPager.setOnPageChangeListener(this);
 
-
+        NavBar navBar = (NavBar) findViewById(R.id.navBar);
+        navBar.setContext(ProductActivity.this);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)

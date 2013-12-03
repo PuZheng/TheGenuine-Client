@@ -127,6 +127,7 @@
             android:layout_height="@dimen/nav_bar_height"
             android:background="#3c3c3c"
             android:weightSum="6"
+            android:id="@+id/navBar"
             app:enabledTab="go_home"/>
     </LinearLayout>
 </LinearLayout>
