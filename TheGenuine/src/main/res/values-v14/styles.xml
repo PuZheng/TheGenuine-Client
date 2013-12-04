@@ -7,7 +7,6 @@
     -->
     <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
         <!-- API 14 theme customizations can go here. -->
-        <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
