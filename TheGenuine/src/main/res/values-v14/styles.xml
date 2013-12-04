@@ -9,6 +9,15 @@
         <!-- API 14 theme customizations can go here. -->
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Example</item>
+        <item name="android:actionBarTabTextStyle">@style/ActionBarTabTextStyle.Example</item>
     </style>
 
+    <style name="ActionBarTabStyle.Example" parent="@android:style/Widget.Holo.Light.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_indicator_holo</item>
+    </style>
+
+    <style name="ActionBarTabTextStyle.Example" parent="@android:style/Widget.Holo.Light.ActionBar.TabText">
+        <item name="android:textColor">@drawable/apptheme_text_holo</item>
+    </style>
 </resources>

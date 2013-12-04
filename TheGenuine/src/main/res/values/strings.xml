@@ -21,6 +21,11 @@
     <string name="add_comment_succeed">发表评论成功</string>
     <string name="add_comment_empty">评论不能为空</string>
     <string name="comment">发表</string>
+    <string name="search_hint">搜索</string>
+    <string name="search_product">搜索产品</string>
+    <string name="search_instructions">搜索产品</string>
+    <string name="clear_recent_search">清空搜索历史</string>
+    <string name="search_no_result_found">暂无数据</string>
     <string-array name="short_list">
         <item>按价格排序</item>
         <item>按距离排序</item>

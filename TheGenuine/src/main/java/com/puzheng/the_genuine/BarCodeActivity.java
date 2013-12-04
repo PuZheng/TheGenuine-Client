@@ -81,7 +81,7 @@ public class BarCodeActivity extends Activity implements SurfaceHolder.Callback,
             }
         });
 
-        NavBar navBar = (NavBar) findViewById(R.id.nav_bar);
+        NavBar navBar = (NavBar) findViewById(R.id.navBar);
         navBar.setContext(getApplicationContext());
     }
 
