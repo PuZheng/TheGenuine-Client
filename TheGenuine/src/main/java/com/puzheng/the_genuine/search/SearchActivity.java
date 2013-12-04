@@ -138,7 +138,7 @@ public class SearchActivity extends FragmentActivity implements ActionBar.TabLis
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SearchRecentSuggestions suggestions = new SearchRecentSuggestions(SearchActivity.this, RecentSearchSuggestionsProvider.AUTHORITY, RecentSearchSuggestionsProvider.MODE);
+                SearchRecentSuggestions suggestions = new SearchRecentSuggestions(SearchActivity.this, SearchSuggestionsProvider.AUTHORITY, SearchSuggestionsProvider.MODE);
                 suggestions.clearHistory();
             }
         });
@@ -154,7 +154,7 @@ public class SearchActivity extends FragmentActivity implements ActionBar.TabLis
     }
 
     private void storeRecentSearch(String query) {
-        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, RecentSearchSuggestionsProvider.AUTHORITY, RecentSearchSuggestionsProvider.MODE);
+        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, SearchSuggestionsProvider.AUTHORITY, SearchSuggestionsProvider.MODE);
         suggestions.saveRecentQuery(query, null);
     }
 

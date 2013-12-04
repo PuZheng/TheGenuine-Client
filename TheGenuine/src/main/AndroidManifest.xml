@@ -146,7 +146,7 @@
 
         <provider
             android:authorities="com.puzheng.the_genuine.search.RecentSearchSuggestionProvider"
-            android:name=".search.RecentSearchSuggestionsProvider" />
+            android:name=".search.SearchSuggestionsProvider" />
     </application>
 
 </manifest>
