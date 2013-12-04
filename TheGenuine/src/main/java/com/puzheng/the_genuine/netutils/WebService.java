@@ -86,6 +86,9 @@ public class WebService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        if (!code.equals("123456")) {
+            return null;
+        }
         List<String> picUrlList = new ArrayList<String>();
         picUrlList.add("http://pmgs.kongfz.com/data/pre_show_pic/78/236/2490.jpg");
         picUrlList.add("http://t1.baidu.com/it/u=1193376269,1094496181&fm=21&gp=0.jpg");

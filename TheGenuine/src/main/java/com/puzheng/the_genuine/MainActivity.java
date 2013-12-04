@@ -185,7 +185,6 @@ public class MainActivity extends Activity implements BackPressedInterface{
             });
             builder.after(new PoliteBackgroundTask.OnAfter<VerificationInfo>() {
 
-
                 @Override
                 public void onAfter(VerificationInfo verificationInfo) {
                     Intent intent;
@@ -226,6 +225,7 @@ public class MainActivity extends Activity implements BackPressedInterface{
                 }
             }
             if (!hit) {
+                Toast.makeText(MainActivity.this, "无法识别的NFC标签", Toast.LENGTH_SHORT).show();
                 tag = null;
             }
         }
