@@ -6,8 +6,11 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.Ndef;
 import android.nfc.tech.NfcA;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +20,7 @@ import android.view.ViewPropertyAnimator;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.netutils.WebService;
@@ -25,6 +29,7 @@ import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
 import com.puzheng.the_genuine.views.NavBar;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
 public class MainActivity extends Activity implements BackPressedInterface{
 
@@ -174,7 +179,6 @@ public class MainActivity extends Activity implements BackPressedInterface{
             });
             builder.after(new PoliteBackgroundTask.OnAfter<VerificationInfo>() {
 
-
                 @Override
                 public void onAfter(VerificationInfo verificationInfo) {
                     Intent intent;
@@ -192,7 +196,52 @@ public class MainActivity extends Activity implements BackPressedInterface{
     }
 
     private String extractNFCMessage(Intent intent) {
-        return "foo";
+        String action = intent.getAction();
+        Tag tag = null;
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
+
+            String type = intent.getType();
+            if (MIME_TEXT_PLAIN.equals(type)) {
+                tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+            } else {
+                Toast.makeText(MainActivity.this, "Wrong mime type: " + type, Toast.LENGTH_SHORT).show();
+            }
+        } else if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
+            tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+            String[] techList = tag.getTechList();
+            String searchedTech = Ndef.class.getName();
+            boolean hit = false;
+            for (String tech : techList) {
+                if (searchedTech.equals(tech)) {
+                    hit = true;
+                    break;
+                }
+            }
+            if (!hit) {
+                Toast.makeText(MainActivity.this, "无法识别的NFC标签", Toast.LENGTH_SHORT).show();
+                tag = null;
+            }
+        }
+        if (tag == null) {
+            return null;
+        }
+        Ndef ndef = Ndef.get(tag);
+        if (ndef == null) {
+            // NDEF is not supported by this Tag.
+            return null;
+        }
+        NdefMessage ndefMessage = ndef.getCachedNdefMessage();
+        NdefRecord[] records = ndefMessage.getRecords();
+        for (NdefRecord ndefRecord : records) {
+            if (ndefRecord.getTnf() == NdefRecord.TNF_WELL_KNOWN && Arrays.equals(ndefRecord.getType(), NdefRecord.RTD_TEXT)) {
+                try {
+                    return readText(ndefRecord);
+                } catch (UnsupportedEncodingException e) {
+                    Toast.makeText(MainActivity.this, "Unsupported Encoding" + e, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+        return null;
     }
 
     private String readText(NdefRecord record) throws UnsupportedEncodingException {
