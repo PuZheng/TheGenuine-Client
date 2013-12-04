@@ -11,8 +11,11 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import com.puzheng.the_genuine.AccountSettingsActivity;
 import com.puzheng.the_genuine.CategoriesActivity;
+import com.puzheng.the_genuine.LoginActivity;
 import com.puzheng.the_genuine.MainActivity;
+import com.puzheng.the_genuine.MyApp;
 import com.puzheng.the_genuine.NearbyActivity;
 import com.puzheng.the_genuine.R;
 
@@ -28,7 +31,7 @@ public class NavBar extends LinearLayout {
     private final View rootView;
     private Context context;
 
-    public NavBar(Context context, AttributeSet attrs) {
+    public NavBar(final Context context, AttributeSet attrs) {
         super(context, attrs);
         setOrientation(LinearLayout.HORIZONTAL);
         setGravity(Gravity.CENTER_VERTICAL);
@@ -47,6 +50,22 @@ public class NavBar extends LinearLayout {
         Bundle bundle = new Bundle();
         bundle.putBoolean("Favor", true);
         initTab(R.id.favor, CategoriesActivity.class, bundle);
+
+        // account settings is special
+        ImageButton imageButton = (ImageButton) findViewById(R.id.account);
+        imageButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent;
+                if (MyApp.getCurrentUser() != null) {
+                    intent = new Intent(context, AccountSettingsActivity.class);
+                } else {
+                    intent = new Intent(context, LoginActivity.class);
+                }
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                context.startActivity(intent);
+            }
+        });
     }
 
     private void initTab(int resId, final Class<?> activityClass, final Bundle bundle) {

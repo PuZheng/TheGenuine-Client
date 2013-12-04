@@ -23,4 +23,15 @@
         <item name="android:progressDrawable">@drawable/apptheme_ratingbar_full_holo_light</item>
         <item name="android:indeterminateDrawable">@drawable/apptheme_ratingbar_full_holo_light</item>
     </style>
+
+    <style name="ButtonAppTheme" parent="android:Widget.Button">
+        <item name="android:background">@drawable/apptheme_btn_default_holo_light</item>
+        <item name="android:minHeight">48dip</item>
+        <item name="android:minWidth">64dip</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ImageButtonAppTheme" parent="android:Widget.ImageButton">
+        <item name="android:background">@drawable/apptheme_btn_default_holo_light</item>
+    </style>
 </resources>
