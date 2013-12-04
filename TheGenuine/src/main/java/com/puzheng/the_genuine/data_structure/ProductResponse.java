@@ -68,4 +68,5 @@ public class ProductResponse implements Parcelable {
             return new ProductResponse[0];
         }
     };
+
 }

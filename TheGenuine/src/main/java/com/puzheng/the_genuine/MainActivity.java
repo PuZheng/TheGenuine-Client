@@ -37,6 +37,7 @@ public class MainActivity extends Activity implements BackPressedInterface{
 
     public static final String TAG_VERIFICATION_INFO = "VERIFICATION_INFO";
     private static final String MIME_TEXT_PLAIN = "text/plain";
+    public static final String TAG_PRODUCT_RESPONSE = "PRODUCT_RESPONSE";
 
     private NfcAdapter mNfcAdapter;
     private Button enableNFCButton;

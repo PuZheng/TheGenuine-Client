@@ -13,9 +13,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -56,13 +58,20 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         }
 
         setupActionBar();
+        shareInit();
+
+        if (verificationInfo == null) {
+            ImageView imageView = (ImageView) findViewById(R.id.imageView);
+            imageView.setVisibility(View.GONE);
+        }
 
 
         RatingBar rb = (RatingBar) findViewById(R.id.productRatingBar);
-        rb.setRating(verificationInfo.getRating());
+        rb.setRating(getRating());
 
         Button button = (Button) findViewById(R.id.buttonComment);
-        button.setText("评论\n(" + Misc.humanizeNum(verificationInfo.getCommentsCnt()) + ")");
+
+        button.setText("评论\n(" + Misc.humanizeNum(getCommentsCnt()) + ")");
         button.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -74,11 +83,9 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
             }
         });
 
-        shareInit();
-
 
         viewPagerCover = (ViewPager) findViewById(R.id.viewPagerCover);
-        viewPagerCover.setAdapter(new MyCoverAdapter(getSupportFragmentManager(), verificationInfo.getPicUrlList()));
+        viewPagerCover.setAdapter(new MyCoverAdapter(getSupportFragmentManager(), getPicUrlList()));
         CirclePageIndicator titleIndicator = (CirclePageIndicator) findViewById(R.id.titles);
         titleIndicator.setViewPager(viewPagerCover);
 
@@ -94,12 +101,12 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         tabSpec.setContent(new MyTabFactory(this));
         tabHost.addTab(tabSpec);
 
-        s = "周边推荐(" + verificationInfo.getNearbyRecommendationsCnt() + ")";
+        s = "周边推荐(" + Misc.humanizeNum(getNearbyRecommendationsCnt()) + ")";
         tabSpec = tabHost.newTabSpec("tab2").setIndicator(s);
         tabSpec.setContent(new MyTabFactory(this));
         tabHost.addTab(tabSpec);
 
-        s = "同厂推荐(" + verificationInfo.getSameVendorRecommendationsCnt() + ")";
+        s = "同厂推荐(" + Misc.humanizeNum(getSameVendorRecommendationsCnt()) + ")";
         tabSpec = tabHost.newTabSpec("tab3").setIndicator(s);
         tabSpec.setContent(new MyTabFactory(this));
         tabHost.addTab(tabSpec);
@@ -111,13 +118,32 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         viewPager = (ViewPager) findViewById(R.id.viewPagerBottom);
         viewPager.setAdapter(new MyPageAdapter(getSupportFragmentManager()));
         viewPager.setOnPageChangeListener(this);
-
-        MediaPlayer mMediaPlayer = MediaPlayer.create(this, R.raw.good);
-        mMediaPlayer.setLooping(false);
-        mMediaPlayer.start();
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.good);
+        mediaPlayer.setLooping(false);
+        mediaPlayer.start();
 
         NavBar navBar = (NavBar) findViewById(R.id.navBar);
         navBar.setContext(ProductActivity.this);
+    }
+
+    private int getSameVendorRecommendationsCnt() {
+        return verificationInfo != null ? verificationInfo.getSameVendorRecommendationsCnt() : productResponse.getSameVendorRecommendationsCnt();
+    }
+
+    private int getNearbyRecommendationsCnt() {
+        return verificationInfo != null ? verificationInfo.getNearbyRecommendationsCnt() : productResponse.getNearbyRecommendationsCnt();
+    }
+
+    private List<String> getPicUrlList() {
+        return verificationInfo != null ? verificationInfo.getPicUrlList() : productResponse.getProduct().getPicUrlList();
+    }
+
+    private int getCommentsCnt() {
+        return verificationInfo != null ? verificationInfo.getCommentsCnt() : productResponse.getCommentsCnt();
+    }
+
+    private float getRating() {
+        return verificationInfo != null ? verificationInfo.getRating() : productResponse.getProduct().getRating();
     }
 
     private void shareInit() {
@@ -168,21 +194,12 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void setupActionBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            getActionBar().setDisplayUseLogoEnabled(true);
-/*
-            getActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-            getActionBar().setCustomView(R.layout.product_title);
-            View view = getActionBar().getCustomView();
-            ImageButton imageButton = (ImageButton) view.findViewById(R.id.imageButtonBack);
-            imageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            });
-            TextView textView = (TextView) view.findViewById(R.id.textView);
-            textView.setText(Misc.truncate(verificationInfo.getName(), 10));
-*/
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+            if (verificationInfo != null) {
+                getActionBar().setTitle(verificationInfo.getName());
+            } else {
+                getActionBar().setTitle(productResponse.getProduct().getName());
+            }
         }
     }
 
@@ -239,10 +256,15 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         public MyPageAdapter(FragmentManager fm) {
             super(fm);
             fragments = new ArrayList<Fragment>();
-            fragments.add(VerificationInfoFragment.getInstance(ProductActivity.this, verificationInfo));
+            if (verificationInfo != null) {
+                fragments.add(VerificationInfoFragment.getInstance(ProductActivity.this, verificationInfo));
+            } else {
+                fragments.add(ProductFragment.getInstance(ProductActivity.this, productResponse.getProduct()));
+            }
             fragments.add(RecommendationsFragment.createNearByProductsFragment(ProductActivity.this));
+
             fragments.add(RecommendationsFragment.createSameVendorProductsFragment(ProductActivity.this,
-                    verificationInfo.getVendorId(), verificationInfo.getProductId()));
+                    getVendorId(), getProductId()));
         }
 
         @Override
@@ -254,6 +276,14 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         public int getCount() {
             return fragments.size();
         }
+    }
+
+    private int getProductId() {
+        return verificationInfo != null ? verificationInfo.getProductId() : productResponse.getProduct().getId();
+    }
+
+    private int getVendorId() {
+        return verificationInfo != null ? verificationInfo.getVendorId() : productResponse.getProduct().getVendorId();
     }
 
     class MyCoverAdapter extends FragmentPagerAdapter {
@@ -282,5 +312,13 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        if (menuItem.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(menuItem);
     }
 }
