@@ -3,7 +3,9 @@ package com.puzheng.the_genuine;
 import android.animation.Animator;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NdefMessage;
@@ -56,8 +58,17 @@ public class MainActivity extends Activity implements BackPressedInterface{
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (mNfcAdapter == null) {
             // Stop here, we definitely need NFC
-            Toast.makeText(this, "本手机不支持NFC功能", Toast.LENGTH_LONG).show();
-            finish();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("对不起");
+            builder.setMessage("本手机不支持NFC功能");
+            builder.setCancelable(false);
+            builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+            builder.show();
             return;
         }
         enableNFCButton = (Button) findViewById(R.id.enableNFCButton);
