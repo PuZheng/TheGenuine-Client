@@ -69,6 +69,7 @@ public class MainActivity extends Activity implements BackPressedInterface{
                 MainActivity.this.finish();
             }
         });
+
         NavBar navBar = (NavBar) findViewById(R.id.navBar);
         navBar.setContext(this);
         mask = findViewById(R.id.mask);
