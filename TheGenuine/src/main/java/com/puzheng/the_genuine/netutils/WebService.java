@@ -82,9 +82,12 @@ public class WebService {
 
     public VerificationInfo verify(String code) {
         try {
-            Thread.sleep(1000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+        if (!code.equals("123456")) {
+            return null;
         }
         List<String> picUrlList = new ArrayList<String>();
         picUrlList.add("http://pmgs.kongfz.com/data/pre_show_pic/78/236/2490.jpg");

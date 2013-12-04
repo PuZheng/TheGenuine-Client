@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:drawable="@drawable/login_panel"
+        android:id="@+id/scan_mask_bg"
+        android:top="0dp" />
+    <item
+        android:drawable="@drawable/scan_line"
+        android:id="@+id/scan_line"
+        android:top="0dp" />
+</layer-list>
