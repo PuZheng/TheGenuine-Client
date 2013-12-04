@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -122,6 +123,10 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         viewPager = (ViewPager) findViewById(R.id.viewPagerBottom);
         viewPager.setAdapter(new MyPageAdapter(getSupportFragmentManager()));
         viewPager.setOnPageChangeListener(this);
+
+        MediaPlayer mMediaPlayer = MediaPlayer.create(this, R.raw.good);
+        mMediaPlayer.setLooping(false);
+        mMediaPlayer.start();
 
         NavBar navBar = (NavBar) findViewById(R.id.navBar);
         navBar.setContext(ProductActivity.this);
