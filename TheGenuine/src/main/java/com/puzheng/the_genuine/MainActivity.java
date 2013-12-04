@@ -20,7 +20,6 @@ import android.view.ViewPropertyAnimator;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.netutils.WebService;
@@ -54,12 +53,6 @@ public class MainActivity extends Activity implements BackPressedInterface{
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if (mNfcAdapter == null) {
-            // Stop here, we definitely need NFC
-            Toast.makeText(this, "This device doesn't support NFC.", Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
         enableNFCButton = (Button) findViewById(R.id.enableNFCButton);
         enableNFCButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,6 +97,7 @@ public class MainActivity extends Activity implements BackPressedInterface{
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
     private void startAnim() {
+        //TODO this should be adapt to older versions
         final float scale = getResources().getDisplayMetrics().density;
         final ViewPropertyAnimator anim = mask.animate().translationY(scale * 100).withLayer().setDuration(3000);
         reset = true;
