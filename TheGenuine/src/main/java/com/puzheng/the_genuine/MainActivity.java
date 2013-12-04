@@ -54,6 +54,12 @@ public class MainActivity extends Activity implements BackPressedInterface{
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        if (mNfcAdapter == null) {
+            // Stop here, we definitely need NFC
+            Toast.makeText(this, "本手机不支持NFC功能", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
         enableNFCButton = (Button) findViewById(R.id.enableNFCButton);
         enableNFCButton.setOnClickListener(new View.OnClickListener() {
             @Override
