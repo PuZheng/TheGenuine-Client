@@ -122,10 +122,6 @@
             android:label="CommentActivity"
             android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".CategoryActivity"
-            android:label="CategoryActivity"
-            android:screenOrientation="portrait" />
         <activity android:name="com.puzheng.the_genuine.AccountSettingsActivity"
             android:label="@string/title_activity_account_settings"
             android:screenOrientation="portrait" />
@@ -135,8 +131,9 @@
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".search.SearchActivity"
+            android:name=".ProductListActivity"
             android:label="SearchActivity"
+            android:windowSoftInputMode="adjustPan"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>

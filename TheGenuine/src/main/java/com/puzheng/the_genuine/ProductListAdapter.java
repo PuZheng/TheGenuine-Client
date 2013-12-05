@@ -35,28 +35,28 @@ class ViewHolder {
     }
 }
 
-public class RecommendationListAdapter extends BaseAdapter {
-    private List<Recommendation> mRecommendationList;
+public class ProductListAdapter extends BaseAdapter {
+    private List<Recommendation> mProductList;
     private LayoutInflater inflater;
 
-    public RecommendationListAdapter(List<Recommendation> list, Context context) {
+    public ProductListAdapter(List<Recommendation> list, Context context) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.mRecommendationList = list;
+        this.mProductList = list;
     }
 
     @Override
     public int getCount() {
-        return mRecommendationList.size();
+        return mProductList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mRecommendationList.get(position);
+        return mProductList.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return mRecommendationList.get(position).getProductId();
+        return mProductList.get(position).getProductId();
     }
 
     @Override
@@ -84,29 +84,5 @@ public class RecommendationListAdapter extends BaseAdapter {
         viewHolder.textViewPrice.setText("￥" + recommendation.getPriceInYuan());
         viewHolder.ratingBar.setRating(recommendation.getRating());
         return convertView;
-    }
-
-    public void sort(final int position) {
-        Comparator<Recommendation> comparator = new Comparator<Recommendation>() {
-            @Override
-            public int compare(Recommendation lhs, Recommendation rhs) {
-                switch (position) {
-                    case 0:
-                        return lhs.getPriceInYuan() - rhs.getPriceInYuan();
-                    case 1:
-                        return lhs.getDistance() - rhs.getDistance();
-                    case 2:
-                        return lhs.getProductName().compareTo(rhs.getProductName());
-                    default:
-                        return 0;
-                }
-
-            }
-        };
-        Collections.sort(mRecommendationList, comparator);
-    }
-
-    public void sort() {
-        sort(0);
     }
 }

@@ -13,7 +13,6 @@ import android.widget.ImageButton;
 
 import com.puzheng.the_genuine.data_structure.Category;
 import com.puzheng.the_genuine.netutils.WebService;
-import com.puzheng.the_genuine.search.SearchActivity;
 import com.puzheng.the_genuine.utils.GetImageTask;
 import com.puzheng.the_genuine.views.NavBar;
 
@@ -68,7 +67,7 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search:
-                Intent intent = new Intent(this, SearchActivity.class);
+                Intent intent = new Intent(this, ProductListActivity.class);
                 startActivity(intent);
                 return true;
             default:
@@ -175,7 +174,7 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
             viewHolder.imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(CategoriesActivity.this, CategoryActivity.class);
+                    Intent intent = new Intent(CategoriesActivity.this, ProductListActivity.class);
                     intent.putExtra("category_id", comment.getId());
                     intent.putExtra("categoryName", comment.getName());
                     startActivity(intent);

@@ -13,9 +13,7 @@ import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by xc on 13-11-20.
@@ -64,7 +62,7 @@ public class WebService {
         return ret;
     }
 
-    public List<Recommendation> getRecommendationsByCategoryId(int category_id) {
+    public List<Recommendation> getProductListByCategory(int category_id, int sortIdx) {
         List<Recommendation> ret = new ArrayList<Recommendation>();
         ret.add(new Recommendation(1, "五粮液", 1000, 120,
                 "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 500));
@@ -72,10 +70,11 @@ public class WebService {
                 "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 5000));
         ret.add(new Recommendation(3, "五粮液", 500, 120,
                 "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 100));
+        sort(ret, sortIdx);
         return ret;
     }
 
-    public List<Recommendation> getRecommendationsByName(String query) {
+    public List<Recommendation> getProductListByName(String query, int sortIdx) {
         List<Recommendation> ret = new ArrayList<Recommendation>();
         ret.add(new Recommendation(1, "五粮液2", 1000, 120,
                 "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 500));
@@ -83,6 +82,7 @@ public class WebService {
                 "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 5000));
         ret.add(new Recommendation(3, "五粮液23", 500, 120,
                 "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 100));
+        sort(ret, sortIdx);
         return ret;
     }
 
@@ -142,5 +142,25 @@ public class WebService {
             e.printStackTrace();
         }
         return Pair.create(new User(1, "张三", "asdflkjlkjasdf"), false);
+    }
+
+    private void sort(List<Recommendation> list, final int idx){
+         Comparator<Recommendation> comparator = new Comparator<Recommendation>() {
+            @Override
+            public int compare(Recommendation lhs, Recommendation rhs) {
+                switch (idx) {
+                    case 0:
+                        return lhs.getPriceInYuan() - rhs.getPriceInYuan();
+                    case 1:
+                        return lhs.getDistance() - rhs.getDistance();
+                    case 2:
+                        return lhs.getProductName().compareTo(rhs.getProductName());
+                    default:
+                        return 0;
+                }
+
+            }
+        };
+        Collections.sort(list, comparator);
     }
 }
