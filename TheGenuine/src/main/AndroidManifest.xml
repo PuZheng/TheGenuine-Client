@@ -118,10 +118,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".CategoryActivity"
-            android:label="CategoryActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name="com.puzheng.the_genuine.AccountSettingsActivity"
+            android:name="com.puzheng.the_genuine.AccountSettingsActivity"
             android:label="@string/title_activity_account_settings"
             android:screenOrientation="portrait" />
         <activity
@@ -129,6 +126,34 @@
             android:name="com.puzheng.the_genuine.LoginActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".search.SearchActivity"
+            android:label="@string/search_product"
+            android:windowSoftInputMode="adjustPan"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+
+        <activity
+            android:name=".ProductListActivity"
+            android:label="ProductListActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
+
+        <meta-data
+            android:name="android.app.default_searchable"
+            android:value="com.puzheng.the_genuine.search.SearchActivity" />
+
+        <provider
+            android:authorities="com.puzheng.the_genuine.search.RecentSearchSuggestionProvider"
+            android:name=".search.SearchSuggestionsProvider" />
     </application>
 
 </manifest>

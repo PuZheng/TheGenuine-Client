@@ -11,8 +11,8 @@
 
 
     <ImageView
-        android:layout_width="144dp"
-        android:layout_height="144dp"
+        android:layout_width="@dimen/image_view_list_item_width"
+        android:layout_height="@dimen/image_view_list_item_height"
         android:id="@+id/imageView"
         android:scaleType="fitCenter"
         android:layout_gravity="center_vertical"
@@ -35,13 +35,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="商品名称"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:id="@+id/textViewProductName" />
 
         <RelativeLayout
             android:orientation="horizontal"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

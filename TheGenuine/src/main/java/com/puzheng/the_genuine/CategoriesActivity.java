@@ -6,16 +6,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
 
 import com.puzheng.the_genuine.data_structure.Category;
 import com.puzheng.the_genuine.netutils.WebService;
+import com.puzheng.the_genuine.search.SearchActivity;
 import com.puzheng.the_genuine.utils.GetImageTask;
 import com.puzheng.the_genuine.views.NavBar;
 
@@ -55,6 +53,7 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
         mask = findViewById(R.id.mask);
         gridView = (GridView) findViewById(R.id.gridView);
         new GetCategoriesTask(gridView, this).execute();
+
     }
 
 
@@ -63,6 +62,18 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.categories, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                Intent intent = new Intent(this, SearchActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -164,7 +175,7 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
             viewHolder.imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(CategoriesActivity.this, CategoryActivity.class);
+                    Intent intent = new Intent(CategoriesActivity.this, ProductListActivity.class);
                     intent.putExtra("category_id", comment.getId());
                     intent.putExtra("categoryName", comment.getName());
                     startActivity(intent);
