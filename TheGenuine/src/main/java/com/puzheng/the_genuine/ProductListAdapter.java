@@ -12,8 +12,6 @@ import com.puzheng.the_genuine.data_structure.Recommendation;
 import com.puzheng.the_genuine.utils.GetImageTask;
 import com.puzheng.the_genuine.utils.Misc;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -62,7 +60,7 @@ public class ProductListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.recommendation_category_list_item, null);
+            convertView = inflater.inflate(R.layout.product_list_item, null);
         }
         ViewHolder viewHolder;
         if (convertView.getTag() == null) {

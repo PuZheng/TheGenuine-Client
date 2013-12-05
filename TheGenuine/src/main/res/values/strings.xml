@@ -32,4 +32,6 @@
         <item>按产品排序</item>
     </string-array>
     <string name="title_activity_account_settings">账户管理</string>
+    <string name="action_search">搜索</string>
+    <string name="search_result">搜索结果</string>
 </resources>
