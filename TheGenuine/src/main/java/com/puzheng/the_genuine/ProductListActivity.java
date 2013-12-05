@@ -69,7 +69,7 @@ public class ProductListActivity extends FragmentActivity implements ActionBar.T
         mCategoryId = ProductListActivity.this.getIntent().getIntExtra("category_id", Constants.INVALID_ARGUMENT);
 
         setContentView(R.layout.activity_search);
-        setTitle(R.string.search_product);
+
         sortableString = getResources().getStringArray(R.array.short_list);
         mClearButton = (Button) findViewById(R.id.clear_recent_search);
         setClearButton(mClearButton);
@@ -78,8 +78,10 @@ public class ProductListActivity extends FragmentActivity implements ActionBar.T
         getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         mViewPager = (ViewPager) findViewById(R.id.pager);
         if (mCategoryId == Constants.INVALID_ARGUMENT) {
+            setTitle(R.string.search_product);
             handleIntent(getIntent());
         } else {
+            setTitle("360真品-" + getIntent().getStringExtra("categoryName"));
             drawFragments();
         }
     }
