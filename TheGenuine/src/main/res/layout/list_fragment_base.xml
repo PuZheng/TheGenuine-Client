@@ -40,13 +40,33 @@
         android:layout_gravity="center"
         android:id="@+id/error">
 
-        <ImageView
-            android:layout_width="180dp"
-            android:layout_height="180dp"
-            android:id="@+id/imageView"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/darker_gray"
+            android:text="对不起，出错了"
+            android:visibility="gone"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/alerts_and_states_error" />
+            android:id="@+id/textView2" />
+
     </LinearLayout>
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:id="@+id/no_data">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/darker_gray"
+            android:text="没有数据"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/textView2" />
+
+    </LinearLayout>
 
 </FrameLayout>
