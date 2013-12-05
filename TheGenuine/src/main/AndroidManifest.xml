@@ -26,7 +26,6 @@
 
     <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_GPS" />
 
     <uses-feature
@@ -91,10 +90,6 @@
             android:name="com.puzheng.the_genuine.NearbyActivity"
             android:screenOrientation="portrait"
             android:label="NeighborhoodActivity" />
-        <activity
-            android:name=".BarCodeActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_barcode" />
         <activity
             android:name="com.umeng.socialize.view.ShareActivity"
             android:configChanges="orientation|keyboard"

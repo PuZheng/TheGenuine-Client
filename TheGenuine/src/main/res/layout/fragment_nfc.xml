@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:background="@android:color/white">
+
+
+    <ImageButton
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/qr_code"
+        android:id="@+id/imageButton" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_gravity="center"
+            android:background="@null">
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/imageView"
+                android:src="@drawable/logo_bg" />
+
+            <ImageView
+                android:id="@+id/mask"
+                android:layout_width="176dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/scan_mask"
+                android:scaleType="fitXY"
+                android:layout_gravity="center_horizontal" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/imageView"
+                android:src="@drawable/scan_bg" />
+
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请将手机靠近NFC标签"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:textSize="20dp"
+            android:textColor="@android:color/darker_gray"
+            android:id="@+id/textView" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请开启NFC功能"
+            android:id="@+id/enableNFCButton"
+            android:layout_below="@+id/imageView"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <com.puzheng.the_genuine.views.NavBar
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/nav_bar_height"
+        android:background="#3c3c3c"
+        android:weightSum="6"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/navBar"
+        app:enabledTab="go_home" />
+
+</RelativeLayout>

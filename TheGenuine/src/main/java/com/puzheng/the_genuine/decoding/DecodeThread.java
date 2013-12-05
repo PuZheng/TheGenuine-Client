@@ -26,7 +26,7 @@ import android.os.Looper;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.ResultPointCallback;
-import com.puzheng.the_genuine.BarCodeActivity;
+import com.puzheng.the_genuine.BarCodeFragment;
 
 /**
  * This thread does all the heavy lifting of decoding the images.
@@ -34,17 +34,17 @@ import com.puzheng.the_genuine.BarCodeActivity;
 final class DecodeThread extends Thread {
 
     public static final String BARCODE_BITMAP = "barcode_bitmap";
-    private final BarCodeActivity activity;
+    private final BarCodeFragment fragment;
     private final Hashtable<DecodeHintType, Object> hints;
     private Handler handler;
     private final CountDownLatch handlerInitLatch;
 
-    DecodeThread(BarCodeActivity activity,
+    DecodeThread(BarCodeFragment fragment,
                  Vector<BarcodeFormat> decodeFormats,
                  String characterSet,
                  ResultPointCallback resultPointCallback) {
 
-        this.activity = activity;
+        this.fragment = fragment;
         handlerInitLatch = new CountDownLatch(1);
 
         hints = new Hashtable<DecodeHintType, Object>(3);
@@ -77,7 +77,7 @@ final class DecodeThread extends Thread {
     @Override
     public void run() {
         Looper.prepare();
-        handler = new DecodeHandler(activity, hints);
+        handler = new DecodeHandler(fragment, hints);
         handlerInitLatch.countDown();
         Looper.loop();
     }
