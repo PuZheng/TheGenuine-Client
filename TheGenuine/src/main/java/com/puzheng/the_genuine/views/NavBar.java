@@ -30,6 +30,7 @@ public class NavBar extends LinearLayout {
     private static final int ACCOUNT = 4;
     private final View rootView;
     private Context context;
+    private int mCurrentActiveTabId;
 
     public NavBar(final Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -56,6 +57,9 @@ public class NavBar extends LinearLayout {
         imageButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mCurrentActiveTabId == R.id.account) {
+                    return;
+                }
                 Intent intent;
                 if (MyApp.getCurrentUser() != null) {
                     intent = new Intent(context, AccountSettingsActivity.class);
@@ -68,11 +72,14 @@ public class NavBar extends LinearLayout {
         });
     }
 
-    private void initTab(int resId, final Class<?> activityClass, final Bundle bundle) {
+    private void initTab(final int resId, final Class<?> activityClass, final Bundle bundle) {
         ImageButton imageButton = (ImageButton) findViewById(resId);
         imageButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mCurrentActiveTabId == resId) {
+                    return;
+                }
                 Intent intent = new Intent(context, activityClass);
                 if (bundle != null) {
                     intent.putExtras(bundle);
@@ -105,22 +112,27 @@ public class NavBar extends LinearLayout {
         int resId = 0;
         switch (tab) {
             case GO_HOME:
+                mCurrentActiveTabId = R.id.go_home;
                 imageButtonActivitated = (ImageButton) rootView.findViewById(R.id.go_home);
                 resId = R.drawable.go_home_activated;
                 break;
             case GENUINES:
+                mCurrentActiveTabId = R.id.genuines;
                 imageButtonActivitated = (ImageButton) rootView.findViewById(R.id.genuines);
                 resId = R.drawable.the_genuine_activated;
                 break;
             case AROUND:
+                mCurrentActiveTabId = R.id.nearby;
                 imageButtonActivitated = (ImageButton) rootView.findViewById(R.id.nearby);
                 resId = R.drawable.around_activated;
                 break;
             case FAVOR:
+                mCurrentActiveTabId = R.id.favor;
                 imageButtonActivitated = (ImageButton) rootView.findViewById(R.id.favor);
                 resId = R.drawable.favor_activated;
                 break;
             case ACCOUNT:
+                mCurrentActiveTabId = R.id.account;
                 imageButtonActivitated = (ImageButton) rootView.findViewById(R.id.account);
                 resId = R.drawable.account_activated;
                 break;

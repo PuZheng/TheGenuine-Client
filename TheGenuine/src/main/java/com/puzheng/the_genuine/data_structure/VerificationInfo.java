@@ -44,7 +44,7 @@ public class VerificationInfo implements Parcelable {
     }
 
     public VerificationInfo(Parcel source) {
-        code = source.readString();
+        productId = source.readInt();
         name = source.readString();
         code = source.readString();
         manufactureDate = new Date(source.readLong());
@@ -66,7 +66,7 @@ public class VerificationInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(code);
+        dest.writeInt(productId);
         dest.writeString(name);
         dest.writeString(code);
         dest.writeLong(manufactureDate.getTime());

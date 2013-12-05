@@ -29,7 +29,7 @@ import android.util.Log;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
-import com.puzheng.the_genuine.BarCodeActivity;
+import com.puzheng.the_genuine.BarCodeFragment;
 import com.puzheng.the_genuine.R;
 import com.puzheng.the_genuine.camera.CameraManager;
 import com.puzheng.the_genuine.views.ViewfinderResultPointCallback;
@@ -41,7 +41,7 @@ public final class CaptureActivityHandler extends Handler {
 
     private static final String TAG = CaptureActivityHandler.class.getSimpleName();
 
-    private final BarCodeActivity activity;
+    private final BarCodeFragment fragment;
     private final DecodeThread decodeThread;
     private State state;
 
@@ -51,11 +51,11 @@ public final class CaptureActivityHandler extends Handler {
         DONE
     }
 
-    public CaptureActivityHandler(BarCodeActivity activity, Vector<BarcodeFormat> decodeFormats,
+    public CaptureActivityHandler(BarCodeFragment fragment, Vector<BarcodeFormat> decodeFormats,
                                   String characterSet) {
-        this.activity = activity;
-        decodeThread = new DecodeThread(activity, decodeFormats, characterSet,
-                new ViewfinderResultPointCallback(activity.getViewfinderView()));
+        this.fragment = fragment;
+        decodeThread = new DecodeThread(fragment, decodeFormats, characterSet,
+                new ViewfinderResultPointCallback(fragment.getViewfinderView()));
         decodeThread.start();
         state = State.SUCCESS;
         // Start ourselves capturing previews and decoding.
@@ -86,7 +86,7 @@ public final class CaptureActivityHandler extends Handler {
                 Bitmap barcode = bundle == null ? null :
                         (Bitmap) bundle.getParcelable(DecodeThread.BARCODE_BITMAP);
 
-                activity.handleDecode((Result) message.obj, barcode);
+                fragment.handleDecode((Result) message.obj, barcode);
                 break;
             case R.id.decode_failed:
                 // We're decoding as fast as possible, so when one decode fails, start another.
@@ -95,15 +95,15 @@ public final class CaptureActivityHandler extends Handler {
                 break;
             case R.id.return_scan_result:
                 Log.d(TAG, "Got return scan result message");
-                activity.setResult(Activity.RESULT_OK, (Intent) message.obj);
-                activity.finish();
+                fragment.getActivity().setResult(Activity.RESULT_OK, (Intent) message.obj);
+                fragment.getActivity().finish();
                 break;
             case R.id.launch_product_query:
                 Log.d(TAG, "Got product query message");
                 String url = (String) message.obj;
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                activity.startActivity(intent);
+                fragment.startActivity(intent);
                 break;
         }
     }
@@ -129,7 +129,7 @@ public final class CaptureActivityHandler extends Handler {
             state = State.PREVIEW;
             CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), R.id.decode);
             CameraManager.get().requestAutoFocus(this, R.id.auto_focus);
-            activity.drawViewfinder();
+            fragment.drawViewfinder();
         }
     }
 

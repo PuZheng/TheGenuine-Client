@@ -36,6 +36,7 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
     private List<Object> args;
     private View mask;
     private View error;
+    private View no_data;
 
     private RecommendationsFragment(Context context, int queryType) {
         new RecommendationsFragment(context, queryType, null);
@@ -66,7 +67,13 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
     @Override
     public void unmask(Boolean b) {
         if (b) {
-            getListView().setVisibility(View.VISIBLE);
+            if (getListAdapter().getCount() == 0) {
+                getListView().setVisibility(View.GONE);
+                no_data.setVisibility(View.VISIBLE);
+            } else {
+                getListView().setVisibility(View.VISIBLE);
+                no_data.setVisibility(View.GONE);
+            }
             error.setVisibility(View.GONE);
         } else {
             getListView().setVisibility(View.GONE);
@@ -93,6 +100,7 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
         View rootView = inflater.inflate(R.layout.list_fragment_base, container, false);
         mask = rootView.findViewById(R.id.mask);
         error = rootView.findViewById(R.id.error);
+        no_data = rootView.findViewById(R.id.no_data);
         return rootView;
     }
 
@@ -133,8 +141,8 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
         @Override
         protected  void onPostExecute(Boolean b) {
             if (b) {
-                this.maskable.unmask(b);
                 listFragment.setListAdapter(new MyRecommendationsAdapter(recommendations));
+                this.maskable.unmask(b);
             }
         }
     }
