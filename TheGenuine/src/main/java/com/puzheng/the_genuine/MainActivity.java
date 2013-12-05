@@ -1,217 +1,74 @@
 package com.puzheng.the_genuine;
 
-import android.animation.Animator;
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.PendingIntent;
-import android.content.DialogInterface;
+import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
-import android.nfc.tech.NfcA;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.View;
-import android.view.ViewPropertyAnimator;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.Misc;
 import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
-import com.puzheng.the_genuine.views.NavBar;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
-public class MainActivity extends Activity implements BackPressedInterface{
+public class MainActivity extends Activity implements BackPressedInterface {
 
     public static final String TAG_VERIFICATION_INFO = "VERIFICATION_INFO";
-    private static final String MIME_TEXT_PLAIN = "text/plain";
     public static final String TAG_PRODUCT_RESPONSE = "PRODUCT_RESPONSE";
-
-    private NfcAdapter mNfcAdapter;
-    private Button enableNFCButton;
+    private static final String MIME_TEXT_PLAIN = "text/plain";
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
-    private View mask;
-    private boolean reset;
+    public static boolean isNfcEnabled = true;
+
 
     @Override
     public void doBackPressed() {
         super.onBackPressed();
     }
 
+    @Override
+    public void onBackPressed() {
+        backPressedHandle.doBackPressed(this, this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
-        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if (mNfcAdapter == null) {
-            // Stop here, we definitely need NFC
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("对不起");
-            builder.setMessage("本手机不支持NFC功能");
-            builder.setCancelable(false);
-            builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    finish();
-                }
-            });
-            builder.show();
-            return;
+        isNfcEnabled = NfcAdapter.getDefaultAdapter(this) != null;
+        if (isNfcEnabled) {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.container, new NfcFragment());
+            ft.commit();
+            handleIntent(getIntent());
+        } else {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.container, new BarCodeFragment());
+            ft.commit();
         }
-        enableNFCButton = (Button) findViewById(R.id.enableNFCButton);
-        enableNFCButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
-            }
-        });
-        ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton);
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, BarCodeActivity.class);
-                startActivity(intent);
-                MainActivity.this.finish();
-            }
-        });
-
-        NavBar navBar = (NavBar) findViewById(R.id.navBar);
-        navBar.setContext(this);
-        mask = findViewById(R.id.mask);
-        handleIntent(getIntent());
-    }
-
-
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mNfcAdapter != null) {
-            if (!mNfcAdapter.isEnabled()) {
-                enableNFCButton.setVisibility(View.VISIBLE);
-            } else {
-                enableNFCButton.setVisibility(View.GONE);
-                startAnim();
-                /**
-                 * It's important, that the activity is in the foreground (resumed). Otherwise
-                 * an IllegalStateException is thrown.
-                 */
-                setupForegroundDispatch(this, mNfcAdapter);
-            }
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
-    private void startAnim() {
-        //TODO this should be adapt to older versions
-        final float scale = getResources().getDisplayMetrics().density;
-        final ViewPropertyAnimator anim = mask.animate().translationY(scale * 100).withLayer().setDuration(3000);
-        reset = true;
-        anim.setListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                if (reset) {
-                    anim.translationY(0).withLayer().setDuration(0);
-                } else {
-                    anim.translationY(scale * 100).withLayer().setDuration(3000);
-                }
-                reset = (!reset);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-    }
-
-    @Override
-    protected void onPause() {
-        /**
-         * Call this before onPause, otherwise an IllegalArgumentException is thrown as well.
-         */
-        if (mNfcAdapter != null) {
-            stopForegroundDispatch(this, mNfcAdapter);
-        }
-        super.onPause();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
+        setIntent(intent);
         handleIntent(intent);
-    }
-
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
-    public static void setupForegroundDispatch(final Activity activity, NfcAdapter adapter) {
-        final Intent intent = new Intent(activity.getApplicationContext(), activity.getClass());
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        final PendingIntent pendingIntent = PendingIntent.getActivity(activity.getApplicationContext(), 0, intent, 0);
-        IntentFilter[] filters = new IntentFilter[1];
-        String[][] techList = new String[][]{new String[]{NfcA.class.getName()}};
-        // Notice that this is the same filter as in our manifest.
-        filters[0] = new IntentFilter();
-        filters[0].addAction(NfcAdapter.ACTION_TECH_DISCOVERED);
-        filters[0].addCategory(Intent.CATEGORY_DEFAULT);
-        try {
-            filters[0].addDataType("text/plain");
-        } catch (IntentFilter.MalformedMimeTypeException e) {
-            throw new RuntimeException("Check your mime type.");
-        }
-        adapter.enableForegroundDispatch(activity, pendingIntent, filters, techList);
-    }
-
-    private void handleIntent(Intent intent) {
-
-        final String code = extractNFCMessage(intent);
-        if (!Misc.isEmptyString(code)) {
-            PoliteBackgroundTask.Builder<VerificationInfo> builder = new PoliteBackgroundTask.Builder<VerificationInfo>(this);
-            builder.msg("已读取NFC信息，正在验证真伪");
-            builder.run(new PoliteBackgroundTask.XRunnable<VerificationInfo>() {
-                @Override
-                public VerificationInfo run() throws Exception {
-                    return WebService.getInstance(MainActivity.this).verify(code);
-                }
-            });
-            builder.after(new PoliteBackgroundTask.OnAfter<VerificationInfo>() {
-
-                @Override
-                public void onAfter(VerificationInfo verificationInfo) {
-                    Intent intent;
-                    if (verificationInfo != null) {
-                        intent = new Intent(MainActivity.this, ProductActivity.class);
-                        intent.putExtra(TAG_VERIFICATION_INFO, verificationInfo);
-                    } else {
-                        intent = new Intent(MainActivity.this, CounterfeitActivity.class);
-                    }
-                    startActivity(intent);
-                }
-            });
-            builder.create().start();
-        }
     }
 
     private String extractNFCMessage(Intent intent) {
@@ -263,6 +120,35 @@ public class MainActivity extends Activity implements BackPressedInterface{
         return null;
     }
 
+    private void handleIntent(Intent intent) {
+        final String code = extractNFCMessage(intent);
+        if (!Misc.isEmptyString(code)) {
+            PoliteBackgroundTask.Builder<VerificationInfo> builder = new PoliteBackgroundTask.Builder<VerificationInfo>(this);
+            builder.msg("已读取NFC信息，正在验证真伪");
+            builder.run(new PoliteBackgroundTask.XRunnable<VerificationInfo>() {
+                @Override
+                public VerificationInfo run() throws Exception {
+                    return WebService.getInstance(MainActivity.this).verify(code);
+                }
+            });
+            builder.after(new PoliteBackgroundTask.OnAfter<VerificationInfo>() {
+
+                @Override
+                public void onAfter(VerificationInfo verificationInfo) {
+                    Intent intent;
+                    if (verificationInfo != null) {
+                        intent = new Intent(MainActivity.this, ProductActivity.class);
+                        intent.putExtra(TAG_VERIFICATION_INFO, verificationInfo);
+                    } else {
+                        intent = new Intent(MainActivity.this, CounterfeitActivity.class);
+                    }
+                    startActivity(intent);
+                }
+            });
+            builder.create().start();
+        }
+    }
+
     private String readText(NdefRecord record) throws UnsupportedEncodingException {
         /*
          * See NFC forum specification for "Text Record Type Definition" at 3.2.1
@@ -282,22 +168,5 @@ public class MainActivity extends Activity implements BackPressedInterface{
         // e.g. "en"
         // Get the Text
         return new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
-    }
-
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
-    public static void stopForegroundDispatch(final Activity activity, NfcAdapter adapter) {
-        adapter.disableForegroundDispatch(activity);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        backPressedHandle.doBackPressed(this, this);
     }
 }
