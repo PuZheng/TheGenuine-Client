@@ -245,8 +245,14 @@ public class LoginActivity extends Activity {
                 } else {
                     Toast.makeText(LoginActivity.this, "您已经成功登录", Toast.LENGTH_SHORT).show();
                 }
-                Intent intent = new Intent(LoginActivity.this, AccountSettingsActivity.class);
-                startActivity(intent);
+                Class nextClass = (Class) getIntent().getSerializableExtra("NEXT_ACTIVITY");
+                if (nextClass != null) {
+                    Intent intent = new Intent(LoginActivity.this, nextClass);
+                    startActivity(intent);
+                }else{
+                    Intent intent = new Intent(LoginActivity.this, AccountSettingsActivity.class);
+                    startActivity(intent);
+                }
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

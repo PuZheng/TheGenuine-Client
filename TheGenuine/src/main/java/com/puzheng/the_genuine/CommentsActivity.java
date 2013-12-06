@@ -12,12 +12,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.TextView;
-
+import android.widget.*;
 import com.puzheng.the_genuine.data_structure.Comment;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.GetImageTask;
@@ -32,6 +27,7 @@ public class CommentsActivity extends ListActivity implements Maskable {
     private int commentsCnt;
     private View mask;
     private View main;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,9 +61,15 @@ public class CommentsActivity extends ListActivity implements Maskable {
             newCommentButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(CommentsActivity.this, CommentActivity.class);
-                    intent.putExtra(ProductActivity.TAG_PRODUCT_ID, productId);
-                    startActivity(intent);
+                    if (MyApp.getCurrentUser() == null) {
+                        Intent intent = new Intent(CommentsActivity.this, LoginActivity.class);
+                        intent.putExtra("NEXT_ACTIVITY", CommentActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(CommentsActivity.this, CommentActivity.class);
+                        intent.putExtra(ProductActivity.TAG_PRODUCT_ID, productId);
+                        startActivity(intent);
+                    }
                 }
             });
             TextView textView = (TextView) view.findViewById(R.id.textView);
