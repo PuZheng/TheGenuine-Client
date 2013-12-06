@@ -135,7 +135,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
     }
 
     private List<String> getPicUrlList() {
-        return verificationInfo != null ? verificationInfo.getPicUrlList() : productResponse.getProduct().getPicUrlList();
+        return verificationInfo != null ? verificationInfo.getPicUrlList() : productResponse.getSPU().getPicUrlList();
     }
 
     private int getCommentsCnt() {
@@ -143,7 +143,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
     }
 
     private float getRating() {
-        return verificationInfo != null ? verificationInfo.getRating() : productResponse.getProduct().getRating();
+        return verificationInfo != null ? verificationInfo.getRating() : productResponse.getSPU().getRating();
     }
 
     private void shareInit() {
@@ -198,7 +198,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
             if (verificationInfo != null) {
                 getActionBar().setTitle(verificationInfo.getName());
             } else {
-                getActionBar().setTitle(productResponse.getProduct().getName());
+                getActionBar().setTitle(productResponse.getSPU().getName());
             }
         }
     }
@@ -259,7 +259,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
             if (verificationInfo != null) {
                 fragments.add(VerificationInfoFragment.getInstance(ProductActivity.this, verificationInfo));
             } else {
-                fragments.add(ProductFragment.getInstance(ProductActivity.this, productResponse.getProduct()));
+                fragments.add(ProductFragment.getInstance(ProductActivity.this, productResponse.getSPU()));
             }
             fragments.add(RecommendationsFragment.createNearByProductsFragment(ProductActivity.this));
 
@@ -279,11 +279,11 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
     }
 
     private int getProductId() {
-        return verificationInfo != null ? verificationInfo.getProductId() : productResponse.getProduct().getId();
+        return verificationInfo != null ? verificationInfo.getProductId() : productResponse.getSPU().getId();
     }
 
     private int getVendorId() {
-        return verificationInfo != null ? verificationInfo.getVendorId() : productResponse.getProduct().getVendorId();
+        return verificationInfo != null ? verificationInfo.getVendorId() : productResponse.getSPU().getVendorId();
     }
 
     class MyCoverAdapter extends FragmentPagerAdapter {
