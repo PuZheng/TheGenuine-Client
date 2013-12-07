@@ -3,6 +3,8 @@ package com.puzheng.the_genuine.data_structure;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 
 /**
@@ -10,18 +12,23 @@ import java.util.Date;
  */
 public class SKU implements Parcelable {
 
+    private int id;
     private SPU spu;
+    @SerializedName("manufacture_time")
     private Date manufactureDate;
+    @SerializedName("expire_time")
     private Date expireDate;
-    private Date expiredDate;
 
-    public SKU(SPU spu, Date manufactureDate, Date expireDate) {
+    public SKU(int id, SPU spu, Date manufactureDate, Date expireDate) {
+        this.id = id;
         this.spu = spu;
         this.manufactureDate = manufactureDate;
         this.expireDate = expireDate;
     }
 
     public SKU(Parcel source) {
+        id = source.readInt();
+        //spu = source.readParcelable(SPU.class.getClassLoader());
         spu = new SPU(source);
         manufactureDate = new Date(source.readLong());
         expireDate = new Date(source.readLong());
@@ -35,6 +42,7 @@ public class SKU implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         spu.writeToParcel(dest, flags);
         dest.writeLong(manufactureDate.getTime());
         dest.writeLong(expireDate.getTime());
@@ -60,7 +68,11 @@ public class SKU implements Parcelable {
         return manufactureDate;
     }
 
-    public Date getExpiredDate() {
-        return expiredDate;
+    public Date getExpireDate() {
+        return expireDate;
+    }
+
+    public int getId() {
+        return id;
     }
 }

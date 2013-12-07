@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.Pair;
 
 import com.puzheng.the_genuine.data_structure.User;
 
@@ -19,21 +21,32 @@ import java.security.NoSuchAlgorithmException;
 public class Misc {
     private static final String TAG = "Misc";
 
-    public static String humanizeDistance(int distance) {
-        if (distance < 1000) {
-            return String.valueOf(distance) + "米";
+    public static void assertDirExists(String dir) {
+        File file = new File(dir);
+        if (!file.exists()) {
+            if (!file.mkdirs()) {
+                Log.e(TAG, "can't create directory: " + dir);
+            }
         }
-        return String.valueOf(distance / 1000) + "千米";
     }
 
-    public static String humanizeNum(int favorCnt) {
-        if (favorCnt < 1000) {
-            return String.valueOf(favorCnt);
+    public static void clearUserPrefs(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("user", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
+    }
+
+    public static File getExternalCacheDir(Context context) {
+        if (hasExternalCacheDir()) {
+            File ret = context.getExternalCacheDir();
+            if (ret != null) {
+                return ret;
+            }
         }
-        if (favorCnt < 10000) {
-            return String.valueOf(favorCnt / 1000) + "千+";
-        }
-        return String.valueOf(favorCnt / 10000) + "万+";
+        File ret = new File(getStorageDir() + "cache/");
+        ret.mkdirs();
+        return ret;
     }
 
     public static String getMd5Hash(String input) {
@@ -55,40 +68,44 @@ public class Misc {
         }
     }
 
-    public static boolean isEmptyString(String s) {
-        return s == null || s.length() == 0;
-    }
-
-    public static boolean isExternalStorageRemovable() {
-        return Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD || Environment.isExternalStorageRemovable();
-    }
-
-    public static File getExternalCacheDir(Context context) {
-        if (hasExternalCacheDir()) {
-            File ret = context.getExternalCacheDir();
-            if (ret != null) {
-                return ret;
-            }
-        }
-        File ret = new File(getStorageDir() + "cache/");
-        ret.mkdirs();
-        return ret;
-    }
-
-    public static boolean hasExternalCacheDir() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
+    public static Pair<String, Integer> getServerAddress(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String ip = sharedPreferences.getString("server_ip", "192.168.1.8");
+        int port = sharedPreferences.getInt("server_port", 5000);
+        return new Pair<String, Integer>(ip, port);
     }
 
     public static String getStorageDir() {
         return Environment.getExternalStorageDirectory() + "/Android/data/TheGenium/";
     }
 
-    public static String truncate(String s, int maxSize) {
-        if (s.length() <= maxSize) {
-            return s;
-        } else {
-            return s.substring(0, maxSize - 2) + "..";
+    public static boolean hasExternalCacheDir() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
+    }
+
+    public static String humanizeDistance(int distance) {
+        if (distance < 1000) {
+            return String.valueOf(distance) + "米";
         }
+        return String.valueOf(distance / 1000) + "千米";
+    }
+
+    public static String humanizeNum(int favorCnt) {
+        if (favorCnt < 1000) {
+            return String.valueOf(favorCnt);
+        }
+        if (favorCnt < 10000) {
+            return String.valueOf(favorCnt / 1000) + "千+";
+        }
+        return String.valueOf(favorCnt / 10000) + "万+";
+    }
+
+    public static boolean isEmptyString(String s) {
+        return s == null || s.length() == 0;
+    }
+
+    public static boolean isExternalStorageRemovable() {
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD || Environment.isExternalStorageRemovable();
     }
 
     public static User readUserPrefs(Context c) {
@@ -111,19 +128,12 @@ public class Misc {
         editor.commit();
     }
 
-    public static void assertDirExists(String dir) {
-        File file = new File(dir);
-        if (!file.exists()) {
-            if (!file.mkdirs()) {
-                Log.e(TAG, "can't create directory: " + dir);
-            }
+    public static String truncate(String s, int maxSize) {
+        if (s.length() <= maxSize) {
+            return s;
+        } else {
+            return s.substring(0, maxSize - 2) + "..";
         }
     }
 
-    public static void clearUserPrefs(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences("user", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.clear();
-        editor.commit();
-    }
 }

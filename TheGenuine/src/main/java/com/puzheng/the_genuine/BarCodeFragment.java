@@ -11,9 +11,15 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.view.*;
+import android.util.Pair;
+import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.puzheng.the_genuine.camera.AmbientLightManager;
@@ -84,7 +90,9 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
             builder.run(new PoliteBackgroundTask.XRunnable<VerificationInfo>() {
                 @Override
                 public VerificationInfo run() throws Exception {
-                    return WebService.getInstance(BarCodeFragment.this.getActivity()).verify(resultString);
+                    Pair<Float, Float> location = MyApp.getLocation();
+                    return WebService.getInstance(BarCodeFragment.this.getActivity()).verify(resultString,
+                            location.first, location.second);
                 }
             });
             builder.after(new PoliteBackgroundTask.OnAfter<VerificationInfo>() {

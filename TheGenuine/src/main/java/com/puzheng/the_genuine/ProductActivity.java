@@ -259,7 +259,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
             if (verificationInfo != null) {
                 fragments.add(VerificationInfoFragment.getInstance(ProductActivity.this, verificationInfo));
             } else {
-                fragments.add(ProductFragment.getInstance(ProductActivity.this, productResponse.getSPU()));
+                fragments.add(SPUFragment.getInstance(ProductActivity.this, productResponse.getSPU()));
             }
             fragments.add(RecommendationsFragment.createNearByProductsFragment(ProductActivity.this));
 

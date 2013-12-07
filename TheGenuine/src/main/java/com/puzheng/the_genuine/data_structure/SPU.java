@@ -3,6 +3,8 @@ package com.puzheng.the_genuine.data_structure;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,7 @@ public class SPU implements Parcelable {
     private String name;
     private String code;
     private Vendor vendor;
+    @SerializedName("pic_url_list")
     private List<String> picUrlList;
     private float rating;
 
@@ -49,6 +52,16 @@ public class SPU implements Parcelable {
         picUrlList = new ArrayList<String>();
         source.readStringList(picUrlList);
         rating = source.readFloat();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(name);
+        dest.writeString(code);
+        dest.writeParcelable(vendor, flags);
+        dest.writeStringList(picUrlList);
+        dest.writeFloat(rating);
     }
 
     @Override
@@ -88,13 +101,5 @@ public class SPU implements Parcelable {
         return vendor.getName();
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(name);
-        dest.writeString(code);
-        dest.writeParcelable(vendor, flags);
-        dest.writeStringList(picUrlList);
-        dest.writeFloat(rating);
-    }
+
 }

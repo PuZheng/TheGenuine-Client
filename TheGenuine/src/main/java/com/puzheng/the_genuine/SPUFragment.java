@@ -13,14 +13,14 @@ import com.puzheng.the_genuine.data_structure.SPU;
 /**
  * Created by xc on 13-12-4.
  */
-public class ProductFragment extends Fragment {
-    private static ProductFragment instance;
+public class SPUFragment extends Fragment {
+    private static SPUFragment instance;
     private final Context context;
-    private final SPU SPU;
+    private final SPU spu;
 
-    public ProductFragment(Context context, SPU SPU) {
+    public SPUFragment(Context context, SPU spu) {
         this.context = context;
-        this.SPU = SPU;
+        this.spu = spu;
     }
 
     @Override
@@ -28,17 +28,17 @@ public class ProductFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_product, container, false);
         TextView textView = (TextView) rootView.findViewById(R.id.textViewCode);
-        textView.setText(SPU.getCode());
+        textView.setText(spu.getCode());
         textView = (TextView) rootView.findViewById(R.id.textViewName);
-        textView.setText(SPU.getName());
+        textView.setText(spu.getName());
         textView = (TextView) rootView.findViewById(R.id.textViewVendorName);
-        textView.setText(SPU.getVendorName());
+        textView.setText(spu.getVendorName());
         return rootView;
     }
 
     public static Fragment getInstance(Context context, SPU SPU) {
         if (instance == null) {
-            instance = new ProductFragment(context, SPU);
+            instance = new SPUFragment(context, SPU);
         }
         return instance;
     }
