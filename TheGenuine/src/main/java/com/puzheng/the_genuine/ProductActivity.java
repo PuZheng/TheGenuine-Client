@@ -77,7 +77,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ProductActivity.this, CommentsActivity.class);
-                intent.putExtra(TAG_PRODUCT_ID, verificationInfo.getProductId());
+                intent.putExtra(TAG_PRODUCT_ID, verificationInfo.getSku().getSpu().getId());
                 intent.putExtra(TAG_COMMENTS_CNT, verificationInfo.getCommentsCnt());
                 startActivity(intent);
             }
@@ -135,7 +135,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
     }
 
     private List<String> getPicUrlList() {
-        return verificationInfo != null ? verificationInfo.getPicUrlList() : productResponse.getSPU().getPicUrlList();
+        return verificationInfo != null ? verificationInfo.getSku().getSpu().getPicUrlList() : productResponse.getSPU().getPicUrlList();
     }
 
     private int getCommentsCnt() {
@@ -143,7 +143,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
     }
 
     private float getRating() {
-        return verificationInfo != null ? verificationInfo.getRating() : productResponse.getSPU().getRating();
+        return verificationInfo != null ? verificationInfo.getSku().getSpu().getRating() : productResponse.getSPU().getRating();
     }
 
     private void shareInit() {
@@ -196,7 +196,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             getActionBar().setDisplayHomeAsUpEnabled(true);
             if (verificationInfo != null) {
-                getActionBar().setTitle(verificationInfo.getName());
+                getActionBar().setTitle(verificationInfo.getSku().getSpu().getName());
             } else {
                 getActionBar().setTitle(productResponse.getSPU().getName());
             }
@@ -279,11 +279,12 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
     }
 
     private int getProductId() {
-        return verificationInfo != null ? verificationInfo.getProductId() : productResponse.getSPU().getId();
+        return verificationInfo != null ? verificationInfo.getSku().getSpu().getId() : productResponse.getSPU().getId();
     }
 
     private int getVendorId() {
-        return verificationInfo != null ? verificationInfo.getVendorId() : productResponse.getSPU().getVendorId();
+        return verificationInfo != null ? verificationInfo.getSku().getSpu().getVendorId() :
+                productResponse.getSPU().getVendorId();
     }
 
     class MyCoverAdapter extends FragmentPagerAdapter {
