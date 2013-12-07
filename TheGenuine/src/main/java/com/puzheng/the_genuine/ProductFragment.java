@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.puzheng.the_genuine.data_structure.Product;
+import com.puzheng.the_genuine.data_structure.SPU;
 
 /**
  * Created by xc on 13-12-4.
@@ -16,11 +16,11 @@ import com.puzheng.the_genuine.data_structure.Product;
 public class ProductFragment extends Fragment {
     private static ProductFragment instance;
     private final Context context;
-    private final Product product;
+    private final SPU SPU;
 
-    public ProductFragment(Context context, Product product) {
+    public ProductFragment(Context context, SPU SPU) {
         this.context = context;
-        this.product = product;
+        this.SPU = SPU;
     }
 
     @Override
@@ -28,17 +28,17 @@ public class ProductFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_product, container, false);
         TextView textView = (TextView) rootView.findViewById(R.id.textViewCode);
-        textView.setText(product.getCode());
+        textView.setText(SPU.getCode());
         textView = (TextView) rootView.findViewById(R.id.textViewName);
-        textView.setText(product.getName());
+        textView.setText(SPU.getName());
         textView = (TextView) rootView.findViewById(R.id.textViewVendorName);
-        textView.setText(product.getVendorName());
+        textView.setText(SPU.getVendorName());
         return rootView;
     }
 
-    public static Fragment getInstance(Context context, Product product) {
+    public static Fragment getInstance(Context context, SPU SPU) {
         if (instance == null) {
-            instance = new ProductFragment(context, product);
+            instance = new ProductFragment(context, SPU);
         }
         return instance;
     }

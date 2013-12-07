@@ -3,82 +3,10 @@ package com.puzheng.the_genuine.data_structure;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 /**
  * Created by xc on 13-11-19.
  */
 public class VerificationInfo implements Parcelable {
-
-    private int productId;
-    private String name;
-    private String code;
-    private Date manufactureDate;
-    private Date expiredDate;
-    private int vendorId;
-    private String vendorName;
-    private List<String> picUrlList;
-    private float rating;
-    private int nearbyRecommendationsCnt;
-    private int sameVendorRecommendationsCnt;
-    private int commentsCnt;
-
-    public VerificationInfo(int productId, String name, String code, Date manufactureDate, Date expiredDate,
-                            int vendorId, String vendor, List<String> picUrlList,
-                            float rating, int nearbyRecommendationsCnt, int sameVendorRecommendationsCnt, int commentsCnt) {
-        this.productId = productId;
-        this.name = name;
-        this.code = code;
-        this.manufactureDate = manufactureDate;
-        this.expiredDate = expiredDate;
-        this.vendorId = vendorId;
-        this.vendorName = vendor;
-        this.picUrlList = new ArrayList<String>();
-        this.picUrlList.addAll(picUrlList);
-        this.rating = rating;
-        this.nearbyRecommendationsCnt = nearbyRecommendationsCnt;
-        this.sameVendorRecommendationsCnt = sameVendorRecommendationsCnt;
-        this.commentsCnt = commentsCnt;
-    }
-
-    public VerificationInfo(Parcel source) {
-        productId = source.readInt();
-        name = source.readString();
-        code = source.readString();
-        manufactureDate = new Date(source.readLong());
-        expiredDate = new Date(source.readLong());
-        vendorId = source.readInt();
-        vendorName = source.readString();
-        picUrlList = new ArrayList<String>();
-        source.readStringList(picUrlList);
-        rating = source.readFloat();
-        nearbyRecommendationsCnt = source.readInt();
-        sameVendorRecommendationsCnt = source.readInt();
-        commentsCnt = source.readInt();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(productId);
-        dest.writeString(name);
-        dest.writeString(code);
-        dest.writeLong(manufactureDate.getTime());
-        dest.writeLong(expiredDate.getTime());
-        dest.writeInt(vendorId);
-        dest.writeString(vendorName);
-        dest.writeStringList(picUrlList);
-        dest.writeFloat(rating);
-        dest.writeInt(nearbyRecommendationsCnt);
-        dest.writeInt(sameVendorRecommendationsCnt);
-        dest.writeInt(commentsCnt);
-    }
 
     public static final Creator<VerificationInfo> CREATOR = new Creator<VerificationInfo>() {
         @Override
@@ -92,51 +20,51 @@ public class VerificationInfo implements Parcelable {
         }
     };
 
-    public int getVendorId() {
-        return vendorId;
+    private SKU sku;
+    private int nearbyRecommendationsCnt;
+    private int sameVendorRecommendationsCnt;
+    private int commentsCnt;
+
+    public VerificationInfo(SKU sku, int nearbyRecommendationsCnt, int sameVendorRecommendationsCnt, int commentsCnt) {
+        this.sku = sku;
+        this.nearbyRecommendationsCnt = nearbyRecommendationsCnt;
+        this.sameVendorRecommendationsCnt = sameVendorRecommendationsCnt;
+        this.commentsCnt = commentsCnt;
     }
 
-    public String getCode() {
-        return code;
+    public VerificationInfo(Parcel source) {
+        sku = new SKU(source);
+        nearbyRecommendationsCnt = source.readInt();
+        sameVendorRecommendationsCnt = source.readInt();
+        commentsCnt = source.readInt();
     }
 
-    public float getRating() {
-        return rating;
-    }
-
-    public int getSameVendorRecommendationsCnt() {
-        return sameVendorRecommendationsCnt;
-    }
-
-    public int getNearbyRecommendationsCnt() {
-        return nearbyRecommendationsCnt;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public int getCommentsCnt() {
         return commentsCnt;
     }
 
-    public List<String> getPicUrlList() {
-        return picUrlList;
+    public int getNearbyRecommendationsCnt() {
+        return nearbyRecommendationsCnt;
     }
 
-    public String getName() {
-        return name;
+    public int getSameVendorRecommendationsCnt() {
+        return sameVendorRecommendationsCnt;
     }
 
-    public String getVendorName() {
-        return vendorName;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(sku, flags);
+        dest.writeInt(nearbyRecommendationsCnt);
+        dest.writeInt(sameVendorRecommendationsCnt);
+        dest.writeInt(commentsCnt);
     }
 
-    public Date getManufactureDate() {
-        return manufactureDate;
-    }
-
-    public Date getExpiredDate() {
-        return expiredDate;
-    }
-
-    public int getProductId() {
-        return productId;
+    public SKU getSku() {
+        return sku;
     }
 }

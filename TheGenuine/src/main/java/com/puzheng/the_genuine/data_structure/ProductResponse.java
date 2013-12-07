@@ -8,20 +8,20 @@ import android.os.Parcelable;
  */
 public class ProductResponse implements Parcelable {
 
-    private Product product;
+    private SPU spu;
     private int nearbyRecommendationsCnt;
     private int sameVendorRecommendationsCnt;
     private int commentsCnt;
 
-    public ProductResponse(Product product, int nearbyRecommendationsCnt, int sameVendorRecommendationsCnt, int commentsCnt) {
-        this.product = product;
+    public ProductResponse(SPU spu, int nearbyRecommendationsCnt, int sameVendorRecommendationsCnt, int commentsCnt) {
+        this.spu = spu;
         this.nearbyRecommendationsCnt = nearbyRecommendationsCnt;
         this.sameVendorRecommendationsCnt = sameVendorRecommendationsCnt;
         this.commentsCnt = commentsCnt;
     }
 
     public ProductResponse(Parcel source) {
-        product = new Product(source);
+        spu = new SPU(source);
         nearbyRecommendationsCnt = source.readInt();
         sameVendorRecommendationsCnt = source.readInt();
         commentsCnt = source.readInt();
@@ -29,7 +29,7 @@ public class ProductResponse implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        product.writeToParcel(dest, flags);
+        spu.writeToParcel(dest, flags);
         dest.writeInt(nearbyRecommendationsCnt);
         dest.writeInt(sameVendorRecommendationsCnt);
         dest.writeInt(commentsCnt);
@@ -41,8 +41,8 @@ public class ProductResponse implements Parcelable {
     }
 
 
-    public Product getProduct() {
-        return product;
+    public SPU getSPU() {
+        return spu;
     }
 
     public int getNearbyRecommendationsCnt() {

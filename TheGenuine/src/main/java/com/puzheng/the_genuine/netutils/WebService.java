@@ -6,14 +6,21 @@ import android.util.Pair;
 import com.puzheng.the_genuine.data_structure.Category;
 import com.puzheng.the_genuine.data_structure.Comment;
 import com.puzheng.the_genuine.data_structure.Recommendation;
+import com.puzheng.the_genuine.data_structure.SKU;
+import com.puzheng.the_genuine.data_structure.SPU;
 import com.puzheng.the_genuine.data_structure.Store;
 import com.puzheng.the_genuine.data_structure.User;
+import com.puzheng.the_genuine.data_structure.Vendor;
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by xc on 13-11-20.
@@ -103,8 +110,9 @@ public class WebService {
         List<String> picUrlList = new ArrayList<String>();
         picUrlList.add("http://pmgs.kongfz.com/data/pre_show_pic/78/236/2490.jpg");
         picUrlList.add("http://t1.baidu.com/it/u=1193376269,1094496181&fm=21&gp=0.jpg");
-        return new VerificationInfo(1, "茅台酒", "123456", new Date(1384935011000L), new Date(1385935011000L),
-                1, "贵州茅台酒业", picUrlList, 4.5F, 10, 20, 100);
+        SPU spu = new SPU(1, "茅台酒", "123456", new Vendor(1, "贵州茅台酒业"), picUrlList, 4.0F);
+        SKU sku = new SKU(spu, new Date(1384935011000L), new Date(1385935011000L));
+        return new VerificationInfo(sku, 10, 20, 100);
     }
 
     public List<Comment> getComments(int productId) {
