@@ -32,20 +32,20 @@ public class VerificationInfoFragment extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_verification_info, container, false);
         TextView textView = (TextView)rootView.findViewById(R.id.textViewCode);
-        textView.setText(verificationInfo.getCode());
+        textView.setText(verificationInfo.getSku().getSpu().getCode());
         textView = (TextView)rootView.findViewById(R.id.textViewName);
-        textView.setText(verificationInfo.getName());
+        textView.setText(verificationInfo.getSku().getSpu().getName());
         textView = (TextView)rootView.findViewById(R.id.textViewVendorName);
-        textView.setText(verificationInfo.getVendorName());
+        textView.setText(verificationInfo.getSku().getSpu().getVendorName());
         textView = (TextView)rootView.findViewById(R.id.textViewManufactureDate);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        textView.setText(simpleDateFormat.format(verificationInfo.getManufactureDate()));
+        textView.setText(simpleDateFormat.format(verificationInfo.getSku().getManufactureDate()));
         textView = (TextView)rootView.findViewById(R.id.textViewExpiredDate);
-        textView.setText(simpleDateFormat.format(verificationInfo.getExpiredDate()));
+        textView.setText(simpleDateFormat.format(verificationInfo.getSku().getExpiredDate()));
 
         Date now = new Date();
         // expried
-        if (now.after(verificationInfo.getExpiredDate())) {
+        if (now.after(verificationInfo.getSku().getExpiredDate())) {
             textView.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
         }
         return rootView;

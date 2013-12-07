@@ -13,7 +13,11 @@ import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by xc on 13-11-20.
