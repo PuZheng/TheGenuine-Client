@@ -7,10 +7,10 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,9 +35,9 @@ import com.viewpagerindicator.CirclePageIndicator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductActivity extends FragmentActivity implements ViewPager.OnPageChangeListener, TabHost.OnTabChangeListener {
+public class SPUActivity extends ActionBarActivity implements ViewPager.OnPageChangeListener, TabHost.OnTabChangeListener {
 
-    private static final String TAG = "ProductActivity";
+    private static final String TAG = "SPUActivity";
     public static final String TAG_PRODUCT_ID = "ProductId";
     public static final String TAG_COMMENTS_CNT = "CommentsCnt";
     private ViewPager viewPager;
@@ -49,7 +49,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product);
+        setContentView(R.layout.activity_spu);
         verificationInfo = getIntent().getParcelableExtra(MainActivity.TAG_VERIFICATION_INFO);
         productResponse = getIntent().getParcelableExtra(MainActivity.TAG_PRODUCT_RESPONSE);
 
@@ -76,7 +76,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ProductActivity.this, CommentsActivity.class);
+                Intent intent = new Intent(SPUActivity.this, CommentsActivity.class);
                 intent.putExtra(TAG_PRODUCT_ID, verificationInfo.getSku().getSpu().getId());
                 intent.putExtra(TAG_COMMENTS_CNT, verificationInfo.getCommentsCnt());
                 startActivity(intent);
@@ -123,7 +123,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         mediaPlayer.start();
 
         NavBar navBar = (NavBar) findViewById(R.id.navBar);
-        navBar.setContext(ProductActivity.this);
+        navBar.setContext(SPUActivity.this);
     }
 
     private int getSameVendorRecommendationsCnt() {
@@ -169,7 +169,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
             @Override
             public void onClick(View v) {
                 // 打开平台选择面板，参数2为打开分享面板时是否强制登录,false为不强制登录
-                mController.openShare(ProductActivity.this, false);
+                mController.openShare(SPUActivity.this, false);
             }
         });
     }
@@ -182,7 +182,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
             TextView title = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
             int color = getResources().getColor(android.R.color.darker_gray);
             if (i == 0) {
-                color = getResources().getColor(R.color.highlighted_tab);
+                color = getResources().getColor(R.color.base_color1);
             }
             title.setTextColor(color);
         }
@@ -225,7 +225,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         for (int i = 0; i < tabHost.getTabWidget().getChildCount(); ++i) {
             int color = getResources().getColor(android.R.color.darker_gray);
             if (i == pos) {
-                color = getResources().getColor(R.color.highlighted_tab);
+                color = getResources().getColor(R.color.base_color1);
             }
             TextView title = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
             title.setTextColor(color);
@@ -257,13 +257,13 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
             super(fm);
             fragments = new ArrayList<Fragment>();
             if (verificationInfo != null) {
-                fragments.add(VerificationInfoFragment.getInstance(ProductActivity.this, verificationInfo));
+                fragments.add(VerificationInfoFragment.getInstance(SPUActivity.this, verificationInfo));
             } else {
-                fragments.add(SPUFragment.getInstance(ProductActivity.this, productResponse.getSPU()));
+                fragments.add(SPUFragment.getInstance(SPUActivity.this, productResponse.getSPU()));
             }
-            fragments.add(RecommendationsFragment.createNearByProductsFragment(ProductActivity.this));
+            fragments.add(RecommendationsFragment.createNearByProductsFragment(SPUActivity.this));
 
-            fragments.add(RecommendationsFragment.createSameVendorProductsFragment(ProductActivity.this,
+            fragments.add(RecommendationsFragment.createSameVendorProductsFragment(SPUActivity.this,
                     getVendorId(), getProductId()));
         }
 
@@ -294,7 +294,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
             super(fm);
             fragments = new ArrayList<Fragment>();
             for (String url : picUrlList) {
-                fragments.add(new CoverFragment(ProductActivity.this, url));
+                fragments.add(new CoverFragment(SPUActivity.this, url));
                 Log.d(TAG, url);
             }
         }

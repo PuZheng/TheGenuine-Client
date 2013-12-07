@@ -102,7 +102,7 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
                 public void onAfter(VerificationInfo verificationInfo) {
                     Intent intent;
                     if (verificationInfo != null) {
-                        intent = new Intent(BarCodeFragment.this.getActivity(), ProductActivity.class);
+                        intent = new Intent(BarCodeFragment.this.getActivity(), SPUActivity.class);
                         intent.putExtra(TAG_VERIFICATION_INFO, verificationInfo);
                     } else {
                         intent = new Intent(BarCodeFragment.this.getActivity(), CounterfeitActivity.class);

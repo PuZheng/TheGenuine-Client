@@ -1,14 +1,17 @@
 package com.puzheng.the_genuine;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
+
 import com.puzheng.the_genuine.data_structure.Store;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.GetImageTask;
@@ -39,7 +42,10 @@ public class NearbyFragment extends ListFragment implements Maskable {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
+        // execute task here, otherwise "java.lang.IllegalStateException: Content view not yet created" will
+        // generated
+        super.onActivityCreated(savedInstanceState);
         new GetNearbyListTask(this).execute();
     }
 

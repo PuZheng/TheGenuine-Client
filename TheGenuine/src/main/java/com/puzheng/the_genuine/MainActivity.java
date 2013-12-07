@@ -139,7 +139,7 @@ public class MainActivity extends Activity implements BackPressedInterface {
                 public void onAfter(VerificationInfo verificationInfo) {
                     Intent intent;
                     if (verificationInfo != null) {
-                        intent = new Intent(MainActivity.this, ProductActivity.class);
+                        intent = new Intent(MainActivity.this, SPUActivity.class);
                         intent.putExtra(TAG_VERIFICATION_INFO, verificationInfo);
                     } else {
                         intent = new Intent(MainActivity.this, CounterfeitActivity.class);

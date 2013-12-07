@@ -1,17 +1,13 @@
 package com.puzheng.the_genuine;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.Toast;
-import com.puzheng.the_genuine.data_structure.Comment;
-import com.puzheng.the_genuine.data_structure.VerificationInfo;
+
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.Misc;
 import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
@@ -28,7 +24,7 @@ public class CommentActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
-        mProductID = getIntent().getIntExtra(ProductActivity.TAG_PRODUCT_ID, 0);
+        mProductID = getIntent().getIntExtra(SPUActivity.TAG_PRODUCT_ID, 0);
         mEditText = (EditText) findViewById(R.id.editText);
         mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
         try {

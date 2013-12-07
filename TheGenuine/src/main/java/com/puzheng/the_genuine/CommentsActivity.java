@@ -12,7 +12,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.BaseAdapter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
+
 import com.puzheng.the_genuine.data_structure.Comment;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.GetImageTask;
@@ -33,8 +38,8 @@ public class CommentsActivity extends ListActivity implements Maskable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments);
         // Show the Up button in the action bar.
-        productId = getIntent().getIntExtra(ProductActivity.TAG_PRODUCT_ID, 0);
-        commentsCnt = getIntent().getIntExtra(ProductActivity.TAG_COMMENTS_CNT, 0);
+        productId = getIntent().getIntExtra(SPUActivity.TAG_PRODUCT_ID, 0);
+        commentsCnt = getIntent().getIntExtra(SPUActivity.TAG_COMMENTS_CNT, 0);
         mask = findViewById(R.id.mask);
         main = findViewById(R.id.main);
         setupActionBar();
@@ -67,7 +72,7 @@ public class CommentsActivity extends ListActivity implements Maskable {
                         startActivity(intent);
                     } else {
                         Intent intent = new Intent(CommentsActivity.this, CommentActivity.class);
-                        intent.putExtra(ProductActivity.TAG_PRODUCT_ID, productId);
+                        intent.putExtra(SPUActivity.TAG_PRODUCT_ID, productId);
                         startActivity(intent);
                     }
                 }
