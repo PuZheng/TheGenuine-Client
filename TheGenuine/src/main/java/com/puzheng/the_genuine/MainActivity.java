@@ -9,6 +9,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.Window;
 import android.widget.Toast;
@@ -128,7 +129,8 @@ public class MainActivity extends Activity implements BackPressedInterface {
             builder.run(new PoliteBackgroundTask.XRunnable<VerificationInfo>() {
                 @Override
                 public VerificationInfo run() throws Exception {
-                    return WebService.getInstance(MainActivity.this).verify(code);
+                    Pair<Float, Float> pair = MyApp.getLocation();
+                    return WebService.getInstance(MainActivity.this).verify(code, pair.first, pair.second);
                 }
             });
             builder.after(new PoliteBackgroundTask.OnAfter<VerificationInfo>() {

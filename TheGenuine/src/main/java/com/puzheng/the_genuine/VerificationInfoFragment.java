@@ -41,11 +41,11 @@ public class VerificationInfoFragment extends Fragment {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         textView.setText(simpleDateFormat.format(verificationInfo.getSku().getManufactureDate()));
         textView = (TextView)rootView.findViewById(R.id.textViewExpiredDate);
-        textView.setText(simpleDateFormat.format(verificationInfo.getSku().getExpiredDate()));
+        textView.setText(simpleDateFormat.format(verificationInfo.getSku().getExpireDate()));
 
         Date now = new Date();
         // expried
-        if (now.after(verificationInfo.getSku().getExpiredDate())) {
+        if (now.after(verificationInfo.getSku().getExpireDate())) {
             textView.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
         }
         return rootView;
