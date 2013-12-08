@@ -30,6 +30,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.controller.RequestType;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.media.UMImage;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.ArrayList;
@@ -151,10 +152,8 @@ public class SPUActivity extends ActionBarActivity implements ViewPager.OnPageCh
                 RequestType.SOCIAL);
 
         mController.setShareContent("360真品鉴别让您不再上当, http://www.foo.com");
-    /*
-            mController.setShareMedia(new UMImage(this,
-                    "http://www.umeng.com/images/pic/banner_module_social.png"));
-    */
+        mController.setShareMedia(new UMImage(this,
+                "http://www.umeng.com/images/pic/banner_module_social.png"));
         mController.getConfig().removePlatform(SHARE_MEDIA.EMAIL, SHARE_MEDIA.DOUBAN, SHARE_MEDIA.RENREN);
         String appID = "wx061490cf3011fbd0";
         // 微信图文分享必须设置一个url
