@@ -261,10 +261,9 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
             } else {
                 fragments.add(SPUFragment.getInstance(ProductActivity.this, productResponse.getSPU()));
             }
-            fragments.add(RecommendationsFragment.createNearByProductsFragment(ProductActivity.this));
+            fragments.add(RecommendationsFragment.createNearByProductsFragment(ProductActivity.this, getProductId()));
 
-            fragments.add(RecommendationsFragment.createSameVendorProductsFragment(ProductActivity.this,
-                    getVendorId(), getProductId()));
+            fragments.add(RecommendationsFragment.createSameVendorProductsFragment(ProductActivity.this, getProductId()));
         }
 
         @Override

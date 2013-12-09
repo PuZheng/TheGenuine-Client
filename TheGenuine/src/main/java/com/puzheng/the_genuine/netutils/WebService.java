@@ -13,7 +13,7 @@ import com.puzheng.the_genuine.data_structure.Recommendation;
 import com.puzheng.the_genuine.data_structure.Store;
 import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
-import com.puzheng.the_genuine.utils.HttpUtil;
+import com.puzheng.the_genuine.utils.HTTPUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -118,19 +118,15 @@ public class WebService {
         return ret;
     }
 
-    public List<Recommendation> getRecommendations(int queryType, List<Object> args) throws IOException, JSONException {
+    public List<Recommendation> getRecommendations(String queryType, int productId) throws IOException, JSONException {
         HashMap<String, String> params = new HashMap<String, String>();
-        String spu_id = "";
-        if (args != null) {
-            spu_id = String.valueOf(args.get(1));
-        }
-        params.put("spu_id", spu_id);
-        params.put("kind", String.valueOf(queryType));
+        params.put("spu_id", String.valueOf(productId));
+        params.put("kind", queryType);
         Pair<Float, Float> location = MyApp.getLocation();
         params.put("longitude", String.valueOf(location.first));
         params.put("latitude", String.valueOf(location.second));
-        String url = HttpUtil.composeUrl("rcmd_list", "rcmd-list", params);
-        String result = HttpUtil.getStringResult(url);
+        String url = HTTPUtil.composeUrl("rcmd-ws", "rcmd-list", params);
+        String result = HTTPUtil.getStringResult(url);
         JSONObject object = new JSONObject(result);
 
         Type type = new TypeToken<List<Recommendation>>() {
@@ -141,7 +137,21 @@ public class WebService {
     }
 
     public InputStream getStreamFromUrl(String sUrl) throws IOException {
-        URL url = new URL(sUrl);
+        URL url;
+        if (sUrl.toLowerCase().startsWith(HTTPUtil.HTTP) || sUrl.toLowerCase().startsWith(HTTPUtil.HTTPS)) {
+            url = new URL(sUrl);
+        } else {
+            Pair<String, Integer> serverAddress = MyApp.getServerAddress();
+            StringBuilder target = new StringBuilder(HTTPUtil.HTTP);
+            target.append(serverAddress.first).append(":").append(serverAddress.second);
+            if (sUrl.startsWith("/")) {
+                target.append(sUrl);
+            }else {
+                target.append("/").append(sUrl);
+            }
+
+            url = new URL(target.toString());
+        }
         return url.openStream();
     }
 
@@ -159,8 +169,8 @@ public class WebService {
         Map<String, String> params = new HashMap<String, String>();
         params.put("longitude", String.valueOf(longitude));
         params.put("latitude", String.valueOf(latitude));
-        String url = HttpUtil.composeUrl("tag", "tag/"+code, params);
-        String result = HttpUtil.getStringResult(url);
+        String url = HTTPUtil.composeUrl("tag", "tag/" + code, params);
+        String result = HTTPUtil.getStringResult(url);
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         return gson.fromJson(result, VerificationInfo.class);
     }

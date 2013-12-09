@@ -11,7 +11,7 @@ public class Recommendation {
     @SerializedName("spu_name") String productName;
     private int distance;
     @SerializedName("favor_cnt") private int favorCnt;
-    private String picUrl;
+    @SerializedName("pic_url") private String picUrl;
     @SerializedName("msrp") private int priceInCents;
     private float rating;
 

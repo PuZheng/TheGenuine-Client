@@ -8,18 +8,12 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.TextView;
-
+import android.widget.*;
 import com.puzheng.the_genuine.data_structure.Recommendation;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.GetImageTask;
 import com.puzheng.the_genuine.utils.Misc;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,33 +22,25 @@ import java.util.List;
 public class RecommendationsFragment extends ListFragment implements Maskable {
 
 
-    private static final int NEARYBY = 1;
-    private static final int SAME_VENDOR = 2;
+    private static final String NEARYBY = "nearby";
+    private static final String SAME_VENDOR = "same_vendor";
     public static final int SAME_CATEGORY = 3;
     private Context context;
-    private int queryType;
-    private List<Object> args;
+    private String queryType;
+    private int productId;
     private View mask;
     private View error;
     private View no_data;
 
-    private RecommendationsFragment(Context context, int queryType) {
-        new RecommendationsFragment(context, queryType, null);
-    }
-
-    public RecommendationsFragment(Context context, int queryType, List<Object> args) {
+    public RecommendationsFragment(Context context, String queryType, int productId) {
         this.context = context;
         this.queryType = queryType;
-        this.args = new ArrayList<Object>();
-        if (args != null) {
-            this.args.addAll(args);
-        }
-
+        this.productId = productId;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        new GetRecommendationsTask(this, queryType, args).execute();
+        new GetRecommendationsTask(this, queryType, productId).execute();
     }
 
     @Override
@@ -82,16 +68,12 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
         mask.setVisibility(View.GONE);
     }
 
-    public static RecommendationsFragment createNearByProductsFragment(Context context) {
-        return new RecommendationsFragment(context, NEARYBY);
+    public static RecommendationsFragment createNearByProductsFragment(Context context, int productId) {
+        return new RecommendationsFragment(context, NEARYBY, productId);
     }
 
-    public static RecommendationsFragment createSameVendorProductsFragment(Context context, int vendorId,
-                                                            int productId) {
-        List<Object> args = new ArrayList<Object>();
-        args.add(vendorId);
-        args.add(productId);
-        return new RecommendationsFragment(context, SAME_VENDOR, args);
+    public static RecommendationsFragment createSameVendorProductsFragment(Context context, int productId) {
+        return new RecommendationsFragment(context, SAME_VENDOR, productId);
     }
 
     @Override
@@ -108,24 +90,21 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
 
         private final Maskable maskable;
         private final ListFragment listFragment;
-        private final int queryType;
-        private final List<Object> args;
+        private final String queryType;
+        private final int productId;
         private List<Recommendation> recommendations;
 
-        GetRecommendationsTask(ListFragment listFragment, int queryType, List<Object> args) {
-            this.maskable = (Maskable)listFragment;
+        GetRecommendationsTask(ListFragment listFragment, String queryType, int productId) {
+            this.maskable = (Maskable) listFragment;
             this.listFragment = listFragment;
             this.queryType = queryType;
-            this.args = new ArrayList<Object>();
-            if (args != null) {
-                this.args.addAll(args);
-            }
+            this.productId = productId;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                recommendations = WebService.getInstance(getActivity()).getRecommendations(queryType, args);
+                recommendations = WebService.getInstance(getActivity()).getRecommendations(queryType, productId);
             } catch (Exception e) {
                 return false;
             }
@@ -139,11 +118,11 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
 
 
         @Override
-        protected  void onPostExecute(Boolean b) {
+        protected void onPostExecute(Boolean b) {
             if (b) {
                 listFragment.setListAdapter(new MyRecommendationsAdapter(recommendations));
-                this.maskable.unmask(b);
             }
+            this.maskable.unmask(b);
         }
     }
 
@@ -200,13 +179,13 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
             }
             ViewHolder viewHolder;
             if (convertView.getTag() == null) {
-                viewHolder = new ViewHolder((ImageView)convertView.findViewById(R.id.imageView),
-                        (TextView)convertView.findViewById(R.id.textViewProductName),
-                        (TextView)convertView.findViewById(R.id.textViewDistance),
-                        (TextView)convertView.findViewById(R.id.textViewFavorCnt),
-                        (TextView)convertView.findViewById(R.id.textViewPrice),
-                        (Button)convertView.findViewById(R.id.button),
-                        (RatingBar)convertView.findViewById(R.id.ratingBar));
+                viewHolder = new ViewHolder((ImageView) convertView.findViewById(R.id.imageView),
+                        (TextView) convertView.findViewById(R.id.textViewProductName),
+                        (TextView) convertView.findViewById(R.id.textViewDistance),
+                        (TextView) convertView.findViewById(R.id.textViewFavorCnt),
+                        (TextView) convertView.findViewById(R.id.textViewPrice),
+                        (Button) convertView.findViewById(R.id.button),
+                        (RatingBar) convertView.findViewById(R.id.ratingBar));
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();

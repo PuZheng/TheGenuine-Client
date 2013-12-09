@@ -110,6 +110,12 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
                     startActivity(intent);
                 }
             });
+            builder.exceptionHandler(new PoliteBackgroundTask.ExceptionHandler() {
+                @Override
+                public void run(Exception e) {
+                    BarCodeFragment.this.onResume();
+                }
+            });
             builder.create().start();
         }
     }
