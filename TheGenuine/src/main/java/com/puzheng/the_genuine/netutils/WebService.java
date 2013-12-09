@@ -5,6 +5,8 @@ import android.util.Pair;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.puzheng.the_genuine.MyApp;
 import com.puzheng.the_genuine.data_structure.Category;
 import com.puzheng.the_genuine.data_structure.Comment;
 import com.puzheng.the_genuine.data_structure.Recommendation;
@@ -12,9 +14,12 @@ import com.puzheng.the_genuine.data_structure.Store;
 import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.utils.HttpUtil;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -113,12 +118,25 @@ public class WebService {
         return ret;
     }
 
-    public List<Recommendation> getRecommendations(int queryType, List<Object> args) {
-        List<Recommendation> ret = new ArrayList<Recommendation>();
-        ret.add(new Recommendation(2, "五粮液", 100, 120,
-                "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 500));
-        ret.add(new Recommendation(2, "五粮液", 100, 120,
-                "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 500));
+    public List<Recommendation> getRecommendations(int queryType, List<Object> args) throws IOException, JSONException {
+        HashMap<String, String> params = new HashMap<String, String>();
+        String spu_id = "";
+        if (args != null) {
+            spu_id = String.valueOf(args.get(1));
+        }
+        params.put("spu_id", spu_id);
+        params.put("kind", String.valueOf(queryType));
+        Pair<Float, Float> location = MyApp.getLocation();
+        params.put("longitude", String.valueOf(location.first));
+        params.put("latitude", String.valueOf(location.second));
+        String url = HttpUtil.composeUrl("rcmd_list", "rcmd-list", params);
+        String result = HttpUtil.getStringResult(url);
+        JSONObject object = new JSONObject(result);
+
+        Type type = new TypeToken<List<Recommendation>>() {
+        }.getType();
+        Gson gson = new Gson();
+        List<Recommendation> ret = gson.fromJson(object.getString("data"), type);
         return ret;
     }
 
@@ -139,7 +157,7 @@ public class WebService {
 
     public VerificationInfo verify(String code, float longitude, float latitude) throws IOException {
         Map<String, String> params = new HashMap<String, String>();
-        params.put("longitue", String.valueOf(longitude));
+        params.put("longitude", String.valueOf(longitude));
         params.put("latitude", String.valueOf(latitude));
         String url = HttpUtil.composeUrl("tag", "tag/"+code, params);
         String result = HttpUtil.getStringResult(url);
