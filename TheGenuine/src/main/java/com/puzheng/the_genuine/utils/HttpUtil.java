@@ -22,7 +22,9 @@ import java.util.Map;
 /**
  * Created by abc549825@163.com(https://github.com/abc549825) at 12-06.
  */
-public class HttpUtil {
+public class HTTPUtil {
+    public static final String HTTP = "http://";
+    public static final String HTTPS = "https://";
     private static final int DEAFULT_TIME_OUT_MILLSECONDS = 10000;
 
     public static String composeUrl(String blueprint, String path) {
@@ -30,9 +32,13 @@ public class HttpUtil {
     }
 
     public static String composeUrl(String blueprint, String path, Map<String, String> params) {
+        return composeUrl(blueprint, path, params, HTTP);
+    }
+
+    public static String composeUrl(String blueprint, String path, Map<String, String> params, String protocol) {
         Pair<String, Integer> pair = MyApp.getServerAddress();
         StringBuilder ret = new StringBuilder();
-        ret.append(String.format("http://%s:%d/%s/%s", pair.first, pair.second, blueprint, path));
+        ret.append(String.format("%s%s:%d/%s/%s", protocol, pair.first, pair.second, blueprint, path));
         if (params != null) {
             if (MyApp.getCurrentUser() != null) {
                 params.put("auth_token", MyApp.getCurrentUser().getToken());
