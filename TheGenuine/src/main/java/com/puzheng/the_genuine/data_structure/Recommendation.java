@@ -12,7 +12,7 @@ public class Recommendation {
     private int distance;
     @SerializedName("favor_cnt") private int favorCnt;
     private String picUrl;
-    @SerializedName("msrp") int priceInCents;
+    @SerializedName("msrp") private int priceInCents;
     private float rating;
 
     public Recommendation(int productId, String productName, int distance, int favorCnt,
