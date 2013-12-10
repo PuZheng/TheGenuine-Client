@@ -62,19 +62,30 @@ public class CommentsActivity extends ListActivity implements Maskable {
                 @Override
                 public void onClick(View v) {
                     if (MyApp.getCurrentUser() == null) {
-                        Intent intent = new Intent(CommentsActivity.this, LoginActivity.class);
-                        intent.putExtra("NEXT_ACTIVITY", CommentActivity.class);
-                        startActivity(intent);
+                        MyApp.doLoginIn(CommentsActivity.this);
                     } else {
-                        Intent intent = new Intent(CommentsActivity.this, CommentActivity.class);
-                        intent.putExtra(ProductActivity.TAG_PRODUCT_ID, productId);
-                        startActivity(intent);
+                        addComment();
                     }
                 }
             });
             TextView textView = (TextView) view.findViewById(R.id.textView);
             textView.setText("评论(" + Misc.humanizeNum(commentsCnt) + ")");
 
+        }
+    }
+
+    private void addComment() {
+        Intent intent = new Intent(this, CommentActivity.class);
+        intent.putExtra(ProductActivity.TAG_PRODUCT_ID, productId);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == MyApp.LOGIN_ACTION) {
+                addComment();
+            }
         }
     }
 
