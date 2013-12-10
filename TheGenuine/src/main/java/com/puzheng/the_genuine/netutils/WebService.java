@@ -14,6 +14,8 @@ import com.puzheng.the_genuine.data_structure.Store;
 import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.utils.HttpUtil;
+import com.puzheng.the_genuine.utils.Misc;
+import com.tencent.weibo.sdk.android.component.sso.tools.MD5Tools;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
@@ -142,13 +144,15 @@ public class WebService {
         params.put("latitude", String.valueOf(location.second));
         String url = HttpUtil.composeUrl("rcmd-ws", "rcmd-list", params);
         String result = HttpUtil.getStringResult(url);
-        JSONObject object = new JSONObject(result);
+        if (!Misc.isEmptyString(result)) {
+            JSONObject object = new JSONObject(result);
 
-        Type type = new TypeToken<List<Recommendation>>() {
-        }.getType();
-        Gson gson = new Gson();
-        List<Recommendation> ret = gson.fromJson(object.getString("data"), type);
-        return ret;
+            Type type = new TypeToken<List<Recommendation>>() {
+            }.getType();
+            Gson gson = new Gson();
+            return gson.fromJson(object.getString("data"), type);
+        }
+        return null;
     }
 
     public InputStream getStreamFromUrl(String sUrl) throws IOException {
@@ -179,6 +183,17 @@ public class WebService {
         }
         return Pair.create(new User(1, "张三", "asdflkjlkjasdf"), false);
     }
+
+    public User login(String email, String password) throws IOException {
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("name", email);
+        map.put("password", password);
+        String url = HttpUtil.composeUrl("user-ws", "login", map);
+        String result = HttpUtil.postStringResult(url);
+        Gson gson = new Gson();
+        return gson.fromJson(result, User.class);
+    }
+
 
     public boolean addFavor(int spu_id) throws IOException {
         String url = HttpUtil.composeUrl("favor-ws", "favor/" + spu_id);

@@ -60,8 +60,21 @@ public class HttpUtil {
         return sendRequest(url, "GET", null);
     }
 
+    public static HttpResponse post(String url) throws IOException {
+        return sendRequest(url, "POST", null);
+    }
+
     public static String getStringResult(String url) throws IOException {
         HttpResponse response = get(url);
+        if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+            return EntityUtils.toString(response.getEntity(), "UTF-8");
+        } else {
+            return null;
+        }
+    }
+
+    public static String postStringResult(String url) throws IOException {
+        HttpResponse response = post(url);
         if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             return EntityUtils.toString(response.getEntity(), "UTF-8");
         } else {
