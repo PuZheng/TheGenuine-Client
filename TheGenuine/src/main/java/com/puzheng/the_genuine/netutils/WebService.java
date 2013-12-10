@@ -13,7 +13,9 @@ import com.puzheng.the_genuine.data_structure.Recommendation;
 import com.puzheng.the_genuine.data_structure.Store;
 import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
-import com.puzheng.the_genuine.utils.HTTPUtil;
+import com.puzheng.the_genuine.utils.HttpUtil;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -125,8 +127,8 @@ public class WebService {
         Pair<Float, Float> location = MyApp.getLocation();
         params.put("longitude", String.valueOf(location.first));
         params.put("latitude", String.valueOf(location.second));
-        String url = HTTPUtil.composeUrl("rcmd-ws", "rcmd-list", params);
-        String result = HTTPUtil.getStringResult(url);
+        String url = HttpUtil.composeUrl("rcmd-ws", "rcmd-list", params);
+        String result = HttpUtil.getStringResult(url);
         JSONObject object = new JSONObject(result);
 
         Type type = new TypeToken<List<Recommendation>>() {
@@ -138,11 +140,11 @@ public class WebService {
 
     public InputStream getStreamFromUrl(String sUrl) throws IOException {
         URL url;
-        if (sUrl.toLowerCase().startsWith(HTTPUtil.HTTP) || sUrl.toLowerCase().startsWith(HTTPUtil.HTTPS)) {
+        if (sUrl.toLowerCase().startsWith(HttpUtil.HTTP) || sUrl.toLowerCase().startsWith(HttpUtil.HTTPS)) {
             url = new URL(sUrl);
         } else {
             Pair<String, Integer> serverAddress = MyApp.getServerAddress();
-            StringBuilder target = new StringBuilder(HTTPUtil.HTTP);
+            StringBuilder target = new StringBuilder(HttpUtil.HTTP);
             target.append(serverAddress.first).append(":").append(serverAddress.second);
             if (sUrl.startsWith("/")) {
                 target.append(sUrl);
@@ -165,12 +167,18 @@ public class WebService {
         return Pair.create(new User(1, "张三", "asdflkjlkjasdf"), false);
     }
 
+    public boolean addFavor(int spu_id) throws IOException {
+        String url = HttpUtil.composeUrl("user-ws", "favor/" + spu_id);
+        HttpResponse response = HttpUtil.get(url);
+        return response.getStatusLine().getStatusCode() == HttpStatus.SC_OK;
+    }
+
     public VerificationInfo verify(String code, float longitude, float latitude) throws IOException {
         Map<String, String> params = new HashMap<String, String>();
         params.put("longitude", String.valueOf(longitude));
         params.put("latitude", String.valueOf(latitude));
-        String url = HTTPUtil.composeUrl("tag", "tag/" + code, params);
-        String result = HTTPUtil.getStringResult(url);
+        String url = HttpUtil.composeUrl("tag-ws", "tag/" + code, params);
+        String result = HttpUtil.getStringResult(url);
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         return gson.fromJson(result, VerificationInfo.class);
     }
