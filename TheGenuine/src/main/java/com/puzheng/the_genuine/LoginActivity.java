@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -25,12 +26,14 @@ import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.views.NavBar;
 
+import java.util.List;
+
 /**
  * Activity which displays a register_or_login screen to the user, offering registration as
  * well.
  */
-public class LoginActivity extends Activity {
-
+public class LoginActivity extends Activity implements BackPressedInterface{
+    private BackPressedHandle mBackPressedHandle = new BackPressedHandle();
 
     /**
      * The default email to populate the email field with.
@@ -52,6 +55,11 @@ public class LoginActivity extends Activity {
     private View mLoginFormView;
     private View mLoginStatusView;
     private TextView mLoginStatusMessageView;
+
+    @Override
+    public void doBackPressed() {
+        this.finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -245,14 +253,6 @@ public class LoginActivity extends Activity {
                 } else {
                     Toast.makeText(LoginActivity.this, "您已经成功登录", Toast.LENGTH_SHORT).show();
                 }
-                Class nextClass = (Class) getIntent().getSerializableExtra("NEXT_ACTIVITY");
-                if (nextClass != null) {
-                    Intent intent = new Intent(LoginActivity.this, nextClass);
-                    startActivity(intent);
-                }else{
-                    Intent intent = new Intent(LoginActivity.this, AccountSettingsActivity.class);
-                    startActivity(intent);
-                }
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -265,5 +265,19 @@ public class LoginActivity extends Activity {
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_CANCELED);
+        if (isTop()) {
+            mBackPressedHandle.doBackPressed(this, this);
+        }else{
+            super.onBackPressed();
+        }
+    }
+
+    private boolean isTop() {
+        return getIntent().getBooleanExtra("ISTOPACTIVITY", false);
     }
 }

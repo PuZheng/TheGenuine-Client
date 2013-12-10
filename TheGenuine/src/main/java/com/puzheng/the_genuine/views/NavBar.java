@@ -51,25 +51,7 @@ public class NavBar extends LinearLayout {
         Bundle bundle = new Bundle();
         bundle.putBoolean("Favor", true);
         initTab(R.id.favor, CategoriesActivity.class, bundle);
-
-        // account settings is special
-        ImageButton imageButton = (ImageButton) findViewById(R.id.account);
-        imageButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mCurrentActiveTabId == R.id.account) {
-                    return;
-                }
-                Intent intent;
-                if (MyApp.getCurrentUser() != null) {
-                    intent = new Intent(context, AccountSettingsActivity.class);
-                } else {
-                    intent = new Intent(context, LoginActivity.class);
-                }
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                context.startActivity(intent);
-            }
-        });
+        initTab(R.id.account, AccountSettingsActivity.class, bundle);
     }
 
     private void initTab(final int resId, final Class<?> activityClass, final Bundle bundle) {
