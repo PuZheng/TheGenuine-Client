@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * Created by abc549825@163.com(https://github.com/abc549825) at 12-06.
  */
-public class HTTPUtil {
+public class HttpUtil {
     public static final String HTTP = "http://";
     public static final String HTTPS = "https://";
     private static final int DEAFULT_TIME_OUT_MILLSECONDS = 10000;
@@ -56,8 +56,12 @@ public class HTTPUtil {
         return ret.toString();
     }
 
+    public static HttpResponse get(String url) throws IOException {
+        return sendRequest(url, "GET", null);
+    }
+
     public static String getStringResult(String url) throws IOException {
-        HttpResponse response = sendRequest(url, "GET", null);
+        HttpResponse response = get(url);
         if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             return EntityUtils.toString(response.getEntity(), "UTF-8");
         } else {
@@ -92,5 +96,4 @@ public class HTTPUtil {
         }
         return response;
     }
-
 }
