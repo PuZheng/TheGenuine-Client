@@ -119,7 +119,7 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
 
         @Override
         protected void onPostExecute(Boolean b) {
-            if (b) {
+            if (b && recommendations != null) {
                 listFragment.setListAdapter(new MyRecommendationsAdapter(recommendations));
             }
             this.maskable.unmask(b);

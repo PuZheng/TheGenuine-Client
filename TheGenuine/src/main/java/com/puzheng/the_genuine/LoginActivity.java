@@ -32,6 +32,7 @@ import java.util.List;
  * Activity which displays a register_or_login screen to the user, offering registration as
  * well.
  */
+//TODO 注册
 public class LoginActivity extends Activity implements BackPressedInterface{
     private BackPressedHandle mBackPressedHandle = new BackPressedHandle();
 
@@ -219,40 +220,29 @@ public class LoginActivity extends Activity implements BackPressedInterface{
         }
     }
 
-    /**
-     * Represents an asynchronous register_or_login/registration task used to authenticate
-     * the user.
-     */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        Pair<User, Boolean> pair;
 
         @Override
         protected Boolean doInBackground(Void... params) {
-
             try {
-                pair = WebService.getInstance(LoginActivity.this).register_or_login(mEmail, mPassword);
+                User user = WebService.getInstance(LoginActivity.this).login(mEmail, mPassword);
+                if (user != null) {
+                    MyApp.setCurrentUser(user);
+                    return true;
+                }
             } catch (Exception e) {
-                return false;
+                e.printStackTrace();
             }
-            if (pair == null) {
-                return false;
-            }
-            MyApp.setCurrentUser(pair.first);
-            return true;
+            return false;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
-
             if (success) {
-                if (pair.second) {
-                    Toast.makeText(LoginActivity.this, "您已经成功注册", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(LoginActivity.this, "您已经成功登录", Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(LoginActivity.this, "您已经成功登录", Toast.LENGTH_SHORT).show();
                 setResult(RESULT_OK);
                 finish();
             } else {
