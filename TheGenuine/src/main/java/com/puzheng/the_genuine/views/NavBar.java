@@ -51,7 +51,7 @@ public class NavBar extends LinearLayout {
         Bundle bundle = new Bundle();
         bundle.putBoolean("Favor", true);
         initTab(R.id.favor, CategoriesActivity.class, bundle);
-        initTab(R.id.account, AccountSettingsActivity.class, bundle);
+        initTab(R.id.account, AccountSettingsActivity.class, null);
     }
 
     private void initTab(final int resId, final Class<?> activityClass, final Bundle bundle) {

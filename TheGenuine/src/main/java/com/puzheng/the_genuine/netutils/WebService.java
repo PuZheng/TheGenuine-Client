@@ -72,6 +72,19 @@ public class WebService {
         return ret;
     }
 
+    public List<Category> getFavorCategories() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        List<Category> ret = new ArrayList<Category>();
+        for (int i = 0; i < 10; ++i) {
+            ret.add(new Category(i, "香烟", 100, "http://t1.baidu.com/it/u=2048806342,2776893942&fm=21&gp=0.jpg"));
+        }
+        return ret;
+    }
+
     public List<Comment> getComments(int productId) {
         try {
             Thread.sleep(1000);
@@ -168,8 +181,8 @@ public class WebService {
     }
 
     public boolean addFavor(int spu_id) throws IOException {
-        String url = HttpUtil.composeUrl("user-ws", "favor/" + spu_id);
-        HttpResponse response = HttpUtil.get(url);
+        String url = HttpUtil.composeUrl("spu-ws", "favor/" + spu_id);
+        HttpResponse response = HttpUtil.post(url);
         return response.getStatusLine().getStatusCode() == HttpStatus.SC_OK;
     }
 

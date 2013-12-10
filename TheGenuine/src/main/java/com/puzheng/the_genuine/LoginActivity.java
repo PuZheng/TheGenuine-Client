@@ -253,6 +253,7 @@ public class LoginActivity extends Activity implements BackPressedInterface{
                 } else {
                     Toast.makeText(LoginActivity.this, "您已经成功登录", Toast.LENGTH_SHORT).show();
                 }
+                setResult(RESULT_OK);
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

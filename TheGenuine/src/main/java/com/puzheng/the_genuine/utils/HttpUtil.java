@@ -96,4 +96,8 @@ public class HttpUtil {
         }
         return response;
     }
+
+    public static HttpResponse post(String url) throws IOException {
+        return sendRequest(url, "POST", null);
+    }
 }

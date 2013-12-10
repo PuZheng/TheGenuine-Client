@@ -10,13 +10,14 @@ import android.view.*;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
-
 import com.puzheng.the_genuine.data_structure.Category;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.search.SearchActivity;
 import com.puzheng.the_genuine.utils.GetImageTask;
 import com.puzheng.the_genuine.views.NavBar;
 
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
 public class CategoriesActivity extends ActionBarActivity implements Maskable, BackPressedInterface {
@@ -24,11 +25,7 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
     private View mask;
     private GridView gridView;
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
-
-    @Override
-    public void onBackPressed() {
-        backPressedHandle.doBackPressed(this, this);
-    }
+    private boolean isFavorActivity = false;
 
     @Override
     public void doBackPressed() {
@@ -36,26 +33,15 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_categories);
-        NavBar navBar = (NavBar) findViewById(R.id.navBar);
-        navBar.setContext(this);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (getIntent().getBooleanExtra("Favor", false)) {
-            actionBar.setTitle("您的收藏");
-            navBar.enableTab(NavBar.FAVOR, true);
-        } else {
-            actionBar.setTitle("360真品");
-        }
-        actionBar.setSubtitle("分类列表");
-        mask = findViewById(R.id.mask);
-        gridView = (GridView) findViewById(R.id.gridView);
-        new GetCategoriesTask(gridView, this).execute();
-
+    public void mask() {
+        mask.setVisibility(View.VISIBLE);
+        gridView.setVisibility(View.GONE);
     }
 
+    @Override
+    public void onBackPressed() {
+        backPressedHandle.doBackPressed(this, this);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -77,15 +63,44 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
     }
 
     @Override
-    public void mask() {
-        mask.setVisibility(View.VISIBLE);
-        gridView.setVisibility(View.GONE);
-    }
-
-    @Override
     public void unmask(Boolean b) {
         mask.setVisibility(View.GONE);
         gridView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        isFavorActivity = getIntent().getBooleanExtra("Favor", false);
+        setContentView(R.layout.activity_categories);
+        NavBar navBar = (NavBar) findViewById(R.id.navBar);
+        navBar.setContext(this);
+        mask = findViewById(R.id.mask);
+        gridView = (GridView) findViewById(R.id.gridView);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setSubtitle("分类列表");
+        if (isFavorActivity) {
+            actionBar.setTitle("您的收藏");
+            navBar.enableTab(NavBar.FAVOR, true);
+            if (MyApp.getCurrentUser() == null) {
+                HashMap<String, Serializable> map = new HashMap<String, Serializable>();
+                map.put("ISTOPACTIVITY", true);
+                MyApp.doLoginIn(CategoriesActivity.this, map);
+                return;
+            }
+        } else {
+            actionBar.setTitle("360真品");
+        }
+        new GetCategoriesTask(gridView, this).execute();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == MyApp.LOGIN_ACTION) {
+                new GetCategoriesTask(gridView, this).execute();
+            }
+        }
     }
 
     private class GetCategoriesTask extends AsyncTask<Void, Void, Boolean> {
@@ -101,7 +116,11 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                categories = WebService.getInstance(gridView.getContext()).getCategories();
+                if (isFavorActivity) {
+                    categories = WebService.getInstance(gridView.getContext()).getFavorCategories();
+                } else {
+                    categories = WebService.getInstance(gridView.getContext()).getCategories();
+                }
                 return true;
             } catch (Exception e) {
                 return false;
@@ -109,17 +128,16 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
         }
 
         @Override
-        protected void onPreExecute() {
-            maskable.mask();
-        }
-
-
-        @Override
         protected void onPostExecute(Boolean b) {
             if (b) {
-                this.maskable.unmask(b);
                 gridView.setAdapter(new MyCategoriesAdapter(categories));
             }
+            this.maskable.unmask(b);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            maskable.mask();
         }
     }
 
@@ -148,15 +166,6 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
             return categories.get(position).getId();
         }
 
-        private class ViewHolder {
-            ImageButton imageButton;
-
-            ViewHolder(ImageButton imageButton) {
-                this.imageButton = imageButton;
-            }
-
-        }
-
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -183,6 +192,15 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
             });
             new GetImageTask(viewHolder.imageButton, comment.getPicUrl()).execute();
             return convertView;
+        }
+
+        private class ViewHolder {
+            ImageButton imageButton;
+
+            ViewHolder(ImageButton imageButton) {
+                this.imageButton = imageButton;
+            }
+
         }
     }
 }
