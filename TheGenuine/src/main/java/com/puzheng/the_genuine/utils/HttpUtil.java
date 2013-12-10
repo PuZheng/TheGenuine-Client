@@ -60,10 +60,6 @@ public class HttpUtil {
         return sendRequest(url, "GET", null);
     }
 
-    public static HttpResponse post(String url) throws IOException {
-        return sendRequest(url, "POST", null);
-    }
-
     public static String getStringResult(String url) throws IOException {
         HttpResponse response = get(url);
         if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
@@ -71,6 +67,10 @@ public class HttpUtil {
         } else {
             return null;
         }
+    }
+
+    public static HttpResponse post(String url) throws IOException {
+        return sendRequest(url, "POST", null);
     }
 
     public static String postStringResult(String url) throws IOException {
@@ -108,9 +108,5 @@ public class HttpUtil {
             response = new DefaultHttpClient(params).execute(hp);
         }
         return response;
-    }
-
-    public static HttpResponse post(String url) throws IOException {
-        return sendRequest(url, "POST", null);
     }
 }
