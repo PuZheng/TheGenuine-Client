@@ -174,7 +174,7 @@ public class WebService {
     public User login(String email, String password) throws IOException {
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("name", email);
-        map.put("password", MD5Tools.toMD5(password).toLowerCase());
+        map.put("password", password);
         String url = HttpUtil.composeUrl("user-ws", "login", map);
         String result = HttpUtil.postStringResult(url);
         Gson gson = new Gson();
