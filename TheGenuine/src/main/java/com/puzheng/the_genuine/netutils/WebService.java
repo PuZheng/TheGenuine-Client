@@ -181,7 +181,7 @@ public class WebService {
     }
 
     public boolean addFavor(int spu_id) throws IOException {
-        String url = HttpUtil.composeUrl("spu-ws", "favor/" + spu_id);
+        String url = HttpUtil.composeUrl("favor-ws", "favor/" + spu_id);
         HttpResponse response = HttpUtil.post(url);
         return response.getStatusLine().getStatusCode() == HttpStatus.SC_OK;
     }
