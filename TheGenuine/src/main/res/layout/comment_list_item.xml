@@ -9,8 +9,8 @@
     android:paddingRight="10dp">
 
     <ImageView
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/image_view_list_item_width"
+        android:layout_height="@dimen/image_view_list_item_height"
         android:id="@+id/imageView"
         android:scaleType="fitCenter"
         android:layout_gravity="center_vertical"

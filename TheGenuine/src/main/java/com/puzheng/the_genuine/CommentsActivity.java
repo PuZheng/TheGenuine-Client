@@ -24,7 +24,8 @@ import java.util.List;
 public class CommentsActivity extends ListActivity implements Maskable {
 
     private int productId;
-    private int commentsCnt;
+    private TextView mCountTextView;
+
     private View mask;
     private View main;
 
@@ -34,7 +35,6 @@ public class CommentsActivity extends ListActivity implements Maskable {
         setContentView(R.layout.activity_comments);
         // Show the Up button in the action bar.
         productId = getIntent().getIntExtra(ProductActivity.TAG_PRODUCT_ID, 0);
-        commentsCnt = getIntent().getIntExtra(ProductActivity.TAG_COMMENTS_CNT, 0);
         mask = findViewById(R.id.mask);
         main = findViewById(R.id.main);
         setupActionBar();
@@ -68,9 +68,7 @@ public class CommentsActivity extends ListActivity implements Maskable {
                     }
                 }
             });
-            TextView textView = (TextView) view.findViewById(R.id.textView);
-            textView.setText("评论(" + Misc.humanizeNum(commentsCnt) + ")");
-
+            mCountTextView = (TextView) view.findViewById(R.id.textView);
         }
     }
 
@@ -114,10 +112,9 @@ public class CommentsActivity extends ListActivity implements Maskable {
         new GetCommentsTask(this).execute(productId);
     }
 
-    private class GetCommentsTask extends AsyncTask<Integer, Void, Boolean> {
+    private class GetCommentsTask extends AsyncTask<Integer, Void, List<Comment>> {
         private final ListActivity listActivity;
         private final Maskable maskable;
-        private List<Comment> comments;
 
         public GetCommentsTask(ListActivity listActivity) {
             this.listActivity = listActivity;
@@ -125,14 +122,14 @@ public class CommentsActivity extends ListActivity implements Maskable {
         }
 
         @Override
-        protected Boolean doInBackground(Integer... params) {
+        protected List<Comment> doInBackground(Integer... params) {
             int productId = params[0];
             try {
-                comments = WebService.getInstance(this.listActivity).getComments(productId);
-                return true;
+                return WebService.getInstance(this.listActivity).getComments(productId);
             } catch (Exception e) {
-                return false;
+                return null;
             }
+
         }
 
         @Override
@@ -140,13 +137,18 @@ public class CommentsActivity extends ListActivity implements Maskable {
             maskable.mask();
         }
 
-
         @Override
-        protected void onPostExecute(Boolean b) {
+        protected void onPostExecute(List<Comment> commentList) {
+            boolean b = commentList != null;
+            String text = "加载评论失败";
             if (b) {
-                this.maskable.unmask(b);
-                listActivity.setListAdapter(new MyCommentsAdapter(comments));
+                listActivity.setListAdapter(new MyCommentsAdapter(commentList));
+                text = "评论(" + Misc.humanizeNum(commentList.size()) + ")";
             }
+            if (mCountTextView != null) {
+                mCountTextView.setText(text);
+            }
+            this.maskable.unmask(b);
         }
     }
 
@@ -192,12 +194,9 @@ public class CommentsActivity extends ListActivity implements Maskable {
             }
         }
 
-        ;
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-
-
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.comment_list_item, null);
             }
