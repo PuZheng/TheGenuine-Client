@@ -3,7 +3,6 @@ package com.puzheng.the_genuine.views;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
-import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -11,13 +10,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-import com.puzheng.the_genuine.AccountSettingsActivity;
-import com.puzheng.the_genuine.CategoriesActivity;
-import com.puzheng.the_genuine.LoginActivity;
-import com.puzheng.the_genuine.MainActivity;
-import com.puzheng.the_genuine.MyApp;
-import com.puzheng.the_genuine.NearbyActivity;
-import com.puzheng.the_genuine.R;
+import com.puzheng.the_genuine.*;
 
 /**
  * Created by xc on 13-11-26.
@@ -45,16 +38,14 @@ public class NavBar extends LinearLayout {
         int tab = a.getInteger(R.styleable.NavBar_enabledTab, GO_HOME);
         enableTab(tab, false);
 
-        initTab(R.id.go_home, MainActivity.class, null);
-        initTab(R.id.genuines, CategoriesActivity.class, null);
-        initTab(R.id.nearby, NearbyActivity.class, null);
-        Bundle bundle = new Bundle();
-        bundle.putBoolean("Favor", true);
-        initTab(R.id.favor, CategoriesActivity.class, bundle);
-        initTab(R.id.account, AccountSettingsActivity.class, null);
+        initTab(R.id.go_home, MainActivity.class);
+        initTab(R.id.genuines, CategoriesActivity.class);
+        initTab(R.id.nearby, NearbyActivity.class);
+        initTab(R.id.favor, FavorCategoriesActivity.class);
+        initTab(R.id.account, AccountSettingsActivity.class);
     }
 
-    private void initTab(final int resId, final Class<?> activityClass, final Bundle bundle) {
+    private void initTab(final int resId, final Class<?> activityClass) {
         ImageButton imageButton = (ImageButton) findViewById(resId);
         imageButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -63,9 +54,6 @@ public class NavBar extends LinearLayout {
                     return;
                 }
                 Intent intent = new Intent(context, activityClass);
-                if (bundle != null) {
-                    intent.putExtras(bundle);
-                }
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 context.startActivity(intent);
             }

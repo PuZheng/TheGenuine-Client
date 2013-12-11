@@ -20,11 +20,12 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
-public class CategoriesActivity extends ActionBarActivity implements Maskable, BackPressedInterface {
+public class FavorCategoriesActivity extends ActionBarActivity implements Maskable, BackPressedInterface {
 
     private View mask;
     private GridView gridView;
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
+    private boolean isFavorActivity = false;
 
     @Override
     public void doBackPressed() {
@@ -68,8 +69,18 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == MyApp.LOGIN_ACTION) {
+                new GetCategoriesTask(gridView, this).execute();
+            }
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isFavorActivity = getIntent().getBooleanExtra("Favor", false);
         setContentView(R.layout.activity_categories);
         NavBar navBar = (NavBar) findViewById(R.id.navBar);
         navBar.setContext(this);
@@ -77,14 +88,24 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
         gridView = (GridView) findViewById(R.id.gridView);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setSubtitle("分类列表");
-        actionBar.setTitle("360真品");
+        actionBar.setTitle("您的收藏");
+        navBar.enableTab(NavBar.FAVOR, true);
+        if (MyApp.getCurrentUser() == null) {
+            HashMap<String, Serializable> map = new HashMap<String, Serializable>();
+            map.put("ISTOPACTIVITY", true);
+            MyApp.doLoginIn(FavorCategoriesActivity.this, map);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         new GetCategoriesTask(gridView, this).execute();
     }
 
-    private class GetCategoriesTask extends AsyncTask<Void, Void, Boolean> {
+    private class GetCategoriesTask extends AsyncTask<Void, Void, List<Category>> {
         private final GridView gridView;
         private final Maskable maskable;
-        private List<Category> categories;
 
         public GetCategoriesTask(GridView gridView, Maskable maskable) {
             this.gridView = gridView;
@@ -92,19 +113,19 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected List<Category> doInBackground(Void... params) {
             try {
-                categories = WebService.getInstance(gridView.getContext()).getCategories();
-                return true;
+                return WebService.getInstance(gridView.getContext()).getFavorCategories();
             } catch (Exception e) {
-                return false;
+                return null;
             }
         }
 
         @Override
-        protected void onPostExecute(Boolean b) {
+        protected void onPostExecute(List<Category> list) {
+            boolean b = list != null;
             if (b) {
-                gridView.setAdapter(new MyCategoriesAdapter(categories));
+                gridView.setAdapter(new MyCategoriesAdapter(list));
             }
             this.maskable.unmask(b);
         }
@@ -122,7 +143,7 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
 
         public MyCategoriesAdapter(List<Category> categories) {
             this.categories = categories;
-            inflater = (LayoutInflater) CategoriesActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            inflater = (LayoutInflater) FavorCategoriesActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         @Override
@@ -158,7 +179,7 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
             viewHolder.imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(CategoriesActivity.this, ProductListActivity.class);
+                    Intent intent = new Intent(FavorCategoriesActivity.this, ProductListActivity.class);
                     intent.putExtra("category_id", comment.getId());
                     intent.putExtra("categoryName", comment.getName());
                     startActivity(intent);
