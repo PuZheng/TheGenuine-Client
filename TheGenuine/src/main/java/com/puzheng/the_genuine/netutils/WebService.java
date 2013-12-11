@@ -74,16 +74,30 @@ public class WebService {
         return ret;
     }
 
-    public List<Category> getFavorCategories() {
+    public HashMap<String, List<Recommendation>> getFavorCategories() {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        List<Category> ret = new ArrayList<Category>();
-        for (int i = 0; i < 10; ++i) {
-            ret.add(new Category(i, "香烟", 100, "http://t1.baidu.com/it/u=2048806342,2776893942&fm=21&gp=0.jpg"));
-        }
+        HashMap<String, List<Recommendation>> ret = new HashMap<String, List<Recommendation>>();
+        ArrayList<Recommendation> list = new ArrayList<Recommendation>();
+        list.add(new Recommendation(1, "红塔山", 1000, 120,
+                "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 500));
+        list.add(new Recommendation(2, "塔红山", 100, 120,
+                "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 5000));
+        list.add(new Recommendation(3, "山塔红", 500, 120,
+                "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 100));
+        ret.put("香烟", list);
+
+        ArrayList<Recommendation> list1 = new ArrayList<Recommendation>();
+        list1.add(new Recommendation(1, "五粮液1", 1000, 120,
+                "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 500));
+        list1.add(new Recommendation(2, "五粮液2", 100, 120,
+                "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 5000));
+        list1.add(new Recommendation(3, "五粮液3", 500, 120,
+                "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 100));
+        ret.put("酒", list1);
         return ret;
     }
 
