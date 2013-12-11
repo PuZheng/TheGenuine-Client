@@ -18,6 +18,7 @@ import com.puzheng.the_genuine.utils.Misc;
 import com.tencent.weibo.sdk.android.component.sso.tools.MD5Tools;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,14 +52,16 @@ public class WebService {
         return instance;
     }
 
-    public boolean addComment(int spu_id, String comment, float rating) throws IOException {
+    public void addComment(int spu_id, String comment, float rating) throws Exception {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("spu_id", String.valueOf(spu_id));
         params.put("content", comment);
         params.put("rating", String.valueOf(rating));
         String url = HttpUtil.composeUrl("comment-ws", "comment", params);
         HttpResponse response = HttpUtil.post(url);
-        return response.getStatusLine().getStatusCode() == HttpStatus.SC_OK;
+        if(response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+            throw new Exception(EntityUtils.toString(response.getEntity()));
+        }
     }
 
     public List<Category> getCategories() {

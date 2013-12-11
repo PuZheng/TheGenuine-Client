@@ -49,24 +49,21 @@ public class CommentActivity extends Activity {
                     Toast.makeText(CommentActivity.this, R.string.add_comment_empty, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                PoliteBackgroundTask.Builder<Boolean> builder = new PoliteBackgroundTask.Builder<Boolean>(CommentActivity.this);
+                PoliteBackgroundTask.Builder<Void> builder = new PoliteBackgroundTask.Builder<Void>(CommentActivity.this);
                 builder.msg("正在提交");
                 final String finalComment = comment;
-                builder.run(new PoliteBackgroundTask.XRunnable<Boolean>() {
+                builder.run(new PoliteBackgroundTask.XRunnable<Void>() {
                     @Override
-                    public Boolean run() throws Exception {
-                        return WebService.getInstance(CommentActivity.this).addComment(mProductID, finalComment, mRatingBar.getRating());
+                    public Void run() throws Exception {
+                        WebService.getInstance(CommentActivity.this).addComment(mProductID, finalComment, mRatingBar.getRating());
+                        return null;
                     }
                 });
-                builder.after(new PoliteBackgroundTask.OnAfter<Boolean>() {
+                builder.after(new PoliteBackgroundTask.OnAfter<Void>() {
                     @Override
-                    public void onAfter(Boolean aBoolean) {
-                        if (aBoolean) {
-                            Toast.makeText(CommentActivity.this, R.string.add_comment_succeed, Toast.LENGTH_SHORT).show();
-                            CommentActivity.this.finish();
-                        } else {
-                            Toast.makeText(CommentActivity.this, R.string.add_comment_failure, Toast.LENGTH_SHORT).show();
-                        }
+                    public void onAfter(Void v) {
+                        Toast.makeText(CommentActivity.this, R.string.add_comment_succeed, Toast.LENGTH_SHORT).show();
+                        CommentActivity.this.finish();
                     }
                 });
                 builder.create().start();
