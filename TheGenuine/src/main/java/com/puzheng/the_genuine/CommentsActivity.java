@@ -217,7 +217,7 @@ public class CommentsActivity extends ListActivity implements Maskable {
             viewHolder.textViewUserName.setText(comment.getUserName());
             viewHolder.ratingBar.setRating(comment.getRating());
             viewHolder.textViewContent.setText(comment.getContent());
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.DATE_FORMAT);
             viewHolder.textViewDate.setText(simpleDateFormat.format(comment.getDate()));
             if (Misc.isEmptyString(comment.getUserSmallAvatar())) {
                 new GetImageTask(viewHolder.avatar, comment.getUserSmallAvatar()).execute();

@@ -146,6 +146,10 @@
             android:label="ProductListActivity"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.puzheng.the_genuine.FavorCategoriesActivity"
+            android:label="@string/title_activity_categories"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="android.app.default_searchable"

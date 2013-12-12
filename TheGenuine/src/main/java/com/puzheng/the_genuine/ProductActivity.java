@@ -1,9 +1,12 @@
 package com.puzheng.the_genuine;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,16 +18,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.TabHost;
-import android.widget.TextView;
+import android.widget.*;
 
 import com.puzheng.the_genuine.data_structure.ProductResponse;
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
+import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.Misc;
+import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
 import com.puzheng.the_genuine.views.NavBar;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.controller.RequestType;
@@ -32,19 +32,72 @@ import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.viewpagerindicator.CirclePageIndicator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductActivity extends FragmentActivity implements ViewPager.OnPageChangeListener, TabHost.OnTabChangeListener {
 
-    private static final String TAG = "ProductActivity";
     public static final String TAG_PRODUCT_ID = "ProductId";
     public static final String TAG_COMMENTS_CNT = "CommentsCnt";
+    private static final String TAG = "ProductActivity";
     private ViewPager viewPager;
     private VerificationInfo verificationInfo;
     private ProductResponse productResponse;
     private ViewPager viewPagerCover;
     private TabHost tabHost;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        if (menuItem.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(menuItem);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int i) {
+        int pos = viewPager.getCurrentItem();
+        tabHost.setCurrentTab(pos);
+    }
+
+    @Override
+    public void onPageScrolled(int i, float v, int i2) {
+
+    }
+
+    @Override
+    public void onPageSelected(int i) {
+
+    }
+
+    @Override
+    public void onTabChanged(String s) {
+        int pos = tabHost.getCurrentTab();
+        for (int i = 0; i < tabHost.getTabWidget().getChildCount(); ++i) {
+            int color = getResources().getColor(android.R.color.darker_gray);
+            if (i == pos) {
+                color = getResources().getColor(R.color.highlighted_tab);
+            }
+            TextView title = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+            title.setTextColor(color);
+        }
+        viewPager.setCurrentItem(pos);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == MyApp.LOGIN_ACTION) {
+                doAddFavor();
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +112,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
 
         setupActionBar();
         shareInit();
+        favorInit();
 
         if (verificationInfo == null) {
             ImageView imageView = (ImageView) findViewById(R.id.imageView);
@@ -126,8 +180,56 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         navBar.setContext(ProductActivity.this);
     }
 
-    private int getSameVendorRecommendationsCnt() {
-        return verificationInfo != null ? verificationInfo.getSameVendorRecommendationsCnt() : productResponse.getSameVendorRecommendationsCnt();
+    private void doAddFavor() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ProductActivity.this);
+        builder.setTitle("收藏");
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                PoliteBackgroundTask.Builder<Boolean> task = new PoliteBackgroundTask.Builder<Boolean>(ProductActivity.this);
+                task.msg("正在收藏");
+                task.run(new PoliteBackgroundTask.XRunnable<Boolean>() {
+                    @Override
+                    public Boolean run() throws Exception {
+                        try {
+                            return WebService.getInstance(ProductActivity.this).addFavor(getProductId());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            return null;
+                        }
+                    }
+                }).after(new PoliteBackgroundTask.OnAfter<Boolean>() {
+                    @Override
+                    public void onAfter(Boolean aBoolean) {
+                        if (aBoolean) {
+                            Toast.makeText(ProductActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(ProductActivity.this, "收藏失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).create().start();
+            }
+        }).setNegativeButton(android.R.string.cancel, null);
+        builder.show();
+    }
+
+    private void favorInit() {
+        ImageButton button = (ImageButton) findViewById(R.id.imageButtonFavor);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (MyApp.getCurrentUser() == null) {
+                    MyApp.doLoginIn(ProductActivity.this);
+                } else {
+                    doAddFavor();
+                }
+
+            }
+        });
+    }
+
+    private int getCommentsCnt() {
+        return verificationInfo != null ? verificationInfo.getCommentsCnt() : productResponse.getCommentsCnt();
     }
 
     private int getNearbyRecommendationsCnt() {
@@ -138,40 +240,21 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         return verificationInfo != null ? verificationInfo.getSku().getSpu().getPicUrlList() : productResponse.getSPU().getPicUrlList();
     }
 
-    private int getCommentsCnt() {
-        return verificationInfo != null ? verificationInfo.getCommentsCnt() : productResponse.getCommentsCnt();
+    private int getProductId() {
+        return verificationInfo != null ? verificationInfo.getSku().getSpu().getId() : productResponse.getSPU().getId();
     }
 
     private float getRating() {
         return verificationInfo != null ? verificationInfo.getSku().getSpu().getRating() : productResponse.getSPU().getRating();
     }
 
-    private void shareInit() {
-        final UMSocialService mController = UMServiceFactory.getUMSocialService("com.umeng.share",
-                RequestType.SOCIAL);
+    private int getSameVendorRecommendationsCnt() {
+        return verificationInfo != null ? verificationInfo.getSameVendorRecommendationsCnt() : productResponse.getSameVendorRecommendationsCnt();
+    }
 
-        mController.setShareContent("360真品鉴别让您不再上当, http://www.foo.com");
-    /*
-            mController.setShareMedia(new UMImage(this,
-                    "http://www.umeng.com/images/pic/banner_module_social.png"));
-    */
-        mController.getConfig().removePlatform(SHARE_MEDIA.EMAIL, SHARE_MEDIA.DOUBAN, SHARE_MEDIA.RENREN);
-        String appID = "wx061490cf3011fbd0";
-        // 微信图文分享必须设置一个url
-        String contentUrl = "http://www.umeng.com/social";
-        // 添加微信平台，参数1为当前Activity, 参数2为用户申请的AppID, 参数3为点击分享内容跳转到的目标url
-        mController.getConfig().supportWXPlatform(this, appID, contentUrl);
-        // 支持微信朋友圈
-        mController.getConfig().supportWXCirclePlatform(this, appID, contentUrl);
-
-        ImageButton imageButton = (ImageButton) findViewById(R.id.imageButtonShare);
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 打开平台选择面板，参数2为打开分享面板时是否强制登录,false为不强制登录
-                mController.openShare(ProductActivity.this, false);
-            }
-        });
+    private int getVendorId() {
+        return verificationInfo != null ? verificationInfo.getSku().getSpu().getVendorId() :
+                productResponse.getSPU().getVendorId();
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -203,36 +286,33 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         }
     }
 
-    @Override
-    public void onPageScrolled(int i, float v, int i2) {
+    private void shareInit() {
+        final UMSocialService mController = UMServiceFactory.getUMSocialService("com.umeng.share",
+                RequestType.SOCIAL);
 
-    }
+        mController.setShareContent("360真品鉴别让您不再上当, http://www.foo.com");
+    /*
+            mController.setShareMedia(new UMImage(this,
+                    "http://www.umeng.com/images/pic/banner_module_social.png"));
+    */
+        mController.getConfig().removePlatform(SHARE_MEDIA.EMAIL, SHARE_MEDIA.DOUBAN, SHARE_MEDIA.RENREN);
+        String appID = "wx061490cf3011fbd0";
+        // 微信图文分享必须设置一个url
+        String contentUrl = "http://www.umeng.com/social";
+        // 添加微信平台，参数1为当前Activity, 参数2为用户申请的AppID, 参数3为点击分享内容跳转到的目标url
+        mController.getConfig().supportWXPlatform(this, appID, contentUrl);
+        // 支持微信朋友圈
+        mController.getConfig().supportWXCirclePlatform(this, appID, contentUrl);
 
-    @Override
-    public void onPageSelected(int i) {
-
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int i) {
-        int pos = viewPager.getCurrentItem();
-        tabHost.setCurrentTab(pos);
-    }
-
-    @Override
-    public void onTabChanged(String s) {
-        int pos = tabHost.getCurrentTab();
-        for (int i = 0; i < tabHost.getTabWidget().getChildCount(); ++i) {
-            int color = getResources().getColor(android.R.color.darker_gray);
-            if (i == pos) {
-                color = getResources().getColor(R.color.highlighted_tab);
+        ImageButton imageButton = (ImageButton) findViewById(R.id.imageButtonShare);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 打开平台选择面板，参数2为打开分享面板时是否强制登录,false为不强制登录
+                mController.openShare(ProductActivity.this, false);
             }
-            TextView title = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-            title.setTextColor(color);
-        }
-        viewPager.setCurrentItem(pos);
+        });
     }
-
 
     class MyTabFactory implements TabHost.TabContentFactory {
 
@@ -267,23 +347,14 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         }
 
         @Override
-        public Fragment getItem(int position) {
-            return fragments.get(position);
-        }
-
-        @Override
         public int getCount() {
             return fragments.size();
         }
-    }
 
-    private int getProductId() {
-        return verificationInfo != null ? verificationInfo.getSku().getSpu().getId() : productResponse.getSPU().getId();
-    }
-
-    private int getVendorId() {
-        return verificationInfo != null ? verificationInfo.getSku().getSpu().getVendorId() :
-                productResponse.getSPU().getVendorId();
+        @Override
+        public Fragment getItem(int position) {
+            return fragments.get(position);
+        }
     }
 
     class MyCoverAdapter extends FragmentPagerAdapter {
@@ -299,26 +370,13 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         }
 
         @Override
-        public Fragment getItem(int i) {
-            return fragments.get(i);
-        }
-
-        @Override
         public int getCount() {
             return fragments.size();
         }
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem) {
-        if (menuItem.getItemId() == android.R.id.home) {
-            finish();
+        @Override
+        public Fragment getItem(int i) {
+            return fragments.get(i);
         }
-        return super.onOptionsItemSelected(menuItem);
     }
 }

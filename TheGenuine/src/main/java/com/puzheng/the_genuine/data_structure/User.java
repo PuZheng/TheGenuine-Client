@@ -9,6 +9,7 @@ public class User {
     @SerializedName("user_id")
     private final int id;
     private final String name;
+    @SerializedName("auth_token")
     private final String token;
     private String picUrl;
 

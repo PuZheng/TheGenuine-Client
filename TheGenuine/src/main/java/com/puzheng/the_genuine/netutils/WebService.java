@@ -6,16 +6,11 @@ import android.util.Pair;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.puzheng.the_genuine.Constants;
 import com.puzheng.the_genuine.MyApp;
-import com.puzheng.the_genuine.data_structure.Category;
-import com.puzheng.the_genuine.data_structure.Comment;
-import com.puzheng.the_genuine.data_structure.Recommendation;
-import com.puzheng.the_genuine.data_structure.Store;
-import com.puzheng.the_genuine.data_structure.User;
-import com.puzheng.the_genuine.data_structure.VerificationInfo;
+import com.puzheng.the_genuine.data_structure.*;
 import com.puzheng.the_genuine.utils.HttpUtil;
 import com.puzheng.the_genuine.utils.Misc;
-import com.tencent.weibo.sdk.android.component.sso.tools.MD5Tools;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.util.EntityUtils;
@@ -26,13 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by xc on 13-11-20.
@@ -64,6 +53,12 @@ public class WebService {
         }
     }
 
+    public boolean addFavor(int spu_id) throws IOException {
+        String url = HttpUtil.composeUrl("favor-ws", "favor/" + spu_id);
+        HttpResponse response = HttpUtil.post(url);
+        return response.getStatusLine().getStatusCode() == HttpStatus.SC_OK;
+    }
+
     public List<Category> getCategories() {
         try {
             Thread.sleep(1000);
@@ -90,6 +85,27 @@ public class WebService {
             return gson.fromJson(jsonObject.getString("data"), type);
         }
         return null;
+    }
+
+    public HashMap<String, List<Favor>> getFavorCategories() throws IOException, JSONException {
+        String url = HttpUtil.composeUrl("favor-ws", "favors", getLocationMap());
+        String result = HttpUtil.getStringResult(url);
+        if (!Misc.isEmptyString(result)) {
+            HashMap<String, List<Favor>> ret = new HashMap<String, List<Favor>>();
+            JSONObject jsonObject = new JSONObject(result);
+            Iterator iter = jsonObject.keys();
+            Type type = new TypeToken<List<Favor>>() {
+            }.getType();
+            Gson gson = new GsonBuilder().setDateFormat(Constants.DATE_FORMAT).create();
+            while (iter.hasNext()) {
+                String key = (String) iter.next();
+                List<Favor> list = gson.fromJson(jsonObject.getString(key), type);
+                ret.put(key, list);
+            }
+            return ret;
+        } else {
+            return null;
+        }
     }
 
     public List<Store> getNearbyStoreList() {
@@ -129,9 +145,7 @@ public class WebService {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("spu_id", String.valueOf(productId));
         params.put("kind", queryType);
-        Pair<Float, Float> location = MyApp.getLocation();
-        params.put("longitude", String.valueOf(location.first));
-        params.put("latitude", String.valueOf(location.second));
+        params.putAll(getLocationMap());
         String url = HttpUtil.composeUrl("rcmd-ws", "rcmd-list", params);
         String result = HttpUtil.getStringResult(url);
         if (!Misc.isEmptyString(result)) {
@@ -164,16 +178,6 @@ public class WebService {
         return url.openStream();
     }
 
-
-    public Pair<User, Boolean> register_or_login(String mEmail, String mPassword) {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return Pair.create(new User(1, "张三", "asdflkjlkjasdf"), false);
-    }
-
     public User login(String email, String password) throws IOException {
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("name", email);
@@ -184,21 +188,28 @@ public class WebService {
         return gson.fromJson(result, User.class);
     }
 
-
-    public boolean addFavor(int spu_id) throws IOException {
-        String url = HttpUtil.composeUrl("user-ws", "favor/" + spu_id);
-        HttpResponse response = HttpUtil.get(url);
-        return response.getStatusLine().getStatusCode() == HttpStatus.SC_OK;
+    public Pair<User, Boolean> register_or_login(String mEmail, String mPassword) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return Pair.create(new User(1, "张三", "asdflkjlkjasdf"), false);
     }
 
-    public VerificationInfo verify(String code, float longitude, float latitude) throws IOException {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("longitude", String.valueOf(longitude));
-        params.put("latitude", String.valueOf(latitude));
-        String url = HttpUtil.composeUrl("tag-ws", "tag/" + code, params);
+    public VerificationInfo verify(String code) throws IOException {
+        String url = HttpUtil.composeUrl("tag-ws", "tag/" + code, getLocationMap());
         String result = HttpUtil.getStringResult(url);
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        Gson gson = new GsonBuilder().setDateFormat(Constants.DATE_FORMAT).create();
         return gson.fromJson(result, VerificationInfo.class);
+    }
+
+    private HashMap<String, String> getLocationMap() {
+        HashMap<String, String> params = new HashMap<String, String>();
+        Pair<Double, Double> location = MyApp.getLocation();
+        params.put("longitude", String.valueOf(location.first));
+        params.put("latitude", String.valueOf(location.second));
+        return params;
     }
 
     private void sort(List<Recommendation> list, final int idx) {

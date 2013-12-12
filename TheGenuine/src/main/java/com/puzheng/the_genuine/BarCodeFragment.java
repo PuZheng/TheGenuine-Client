@@ -90,9 +90,7 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
             builder.run(new PoliteBackgroundTask.XRunnable<VerificationInfo>() {
                 @Override
                 public VerificationInfo run() throws Exception {
-                    Pair<Float, Float> location = MyApp.getLocation();
-                    return WebService.getInstance(BarCodeFragment.this.getActivity()).verify(resultString,
-                            location.first, location.second);
+                    return WebService.getInstance(BarCodeFragment.this.getActivity()).verify(resultString);
                 }
             });
             builder.after(new PoliteBackgroundTask.OnAfter<VerificationInfo>() {

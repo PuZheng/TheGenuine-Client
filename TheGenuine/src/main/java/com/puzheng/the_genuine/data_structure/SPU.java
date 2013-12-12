@@ -31,13 +31,15 @@ public class SPU implements Parcelable {
     @SerializedName("pic_url_list")
     private List<String> picUrlList;
     private float rating;
+    private float msrp;
 
-    public SPU(int id, String name, String code, Vendor vendor, List<String> picUrlList, float rating) {
+    public SPU(int id, String name, String code, Vendor vendor, List<String> picUrlList, float rating, float msrp) {
         this.id = id;
         this.name = name;
         this.code = code;
         this.vendor = vendor;
-        this.picUrlList =  new ArrayList<String>();
+        this.msrp = msrp;
+        this.picUrlList = new ArrayList<String>();
         if (picUrlList != null) {
             this.picUrlList.addAll(picUrlList);
         }
@@ -48,20 +50,11 @@ public class SPU implements Parcelable {
         id = source.readInt();
         name = source.readString();
         code = source.readString();
+        msrp = source.readFloat();
         vendor = source.readParcelable(Vendor.class.getClassLoader());
         picUrlList = new ArrayList<String>();
         source.readStringList(picUrlList);
         rating = source.readFloat();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(name);
-        dest.writeString(code);
-        dest.writeParcelable(vendor, flags);
-        dest.writeStringList(picUrlList);
-        dest.writeFloat(rating);
     }
 
     @Override
@@ -75,6 +68,14 @@ public class SPU implements Parcelable {
 
     public int getId() {
         return id;
+    }
+
+    public float getMsrp() {
+        return msrp;
+    }
+
+    public void setMsrp(float msrp) {
+        this.msrp = msrp;
     }
 
     public String getName() {
@@ -101,5 +102,15 @@ public class SPU implements Parcelable {
         return vendor.getName();
     }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(name);
+        dest.writeString(code);
+        dest.writeFloat(msrp);
+        dest.writeParcelable(vendor, flags);
+        dest.writeStringList(picUrlList);
+        dest.writeFloat(rating);
+    }
 
 }
