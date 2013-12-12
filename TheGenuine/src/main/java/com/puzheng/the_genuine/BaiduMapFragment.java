@@ -15,11 +15,15 @@ import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.BMapManager;
 import com.baidu.mapapi.map.*;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
+import com.puzheng.the_genuine.data_structure.StoreResponse;
+
+import java.util.List;
 
 /**
  * Created by abc549825@163.com(https://github.com/abc549825) at 11-27.
  */
 public class BaiduMapFragment extends Fragment {
+    private List<StoreResponse> mStoreList;
     private BMapManager mBMapManager;
     private MapView mMapView;
     private LocationClient mLocationClient;
@@ -32,6 +36,10 @@ public class BaiduMapFragment extends Fragment {
     private TextView popupText = null;
     private MyOverlay mOverlay = null;
     boolean isFirstLoc = true;//是否首次定位
+
+    public BaiduMapFragment(List<StoreResponse> storeList) {
+        this.mStoreList = storeList;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,27 +83,22 @@ public class BaiduMapFragment extends Fragment {
         if (myLocationOverlay != null) {
             int currentLat = (int) (myLocationOverlay.getMyLocation().latitude * 1E6);
             int currentLon = (int) (myLocationOverlay.getMyLocation().longitude * 1E6);
-            GeoPoint p1 = new GeoPoint(currentLat + 1000, currentLon + 1000);
-            GeoPoint p2 = new GeoPoint(currentLat + 200, currentLon + 200);
+
             //准备overlay图像数据，根据实情情况修复
             Drawable mark = getResources().getDrawable(R.drawable.icon_marka);
             Drawable mark2 = getResources().getDrawable(R.drawable.icon_markb);
-            //用OverlayItem准备Overlay数据
-            OverlayItem item1 = new OverlayItem(p1, "肯德基", "item1");
-            //使用setMarker()方法设置overlay图片,如果不设置则使用构建ItemizedOverlay时的默认设置
-            OverlayItem item2 = new OverlayItem(p2, "麦当劳", "item2");
-            item2.setMarker(mark2);
 
             //创建IteminizedOverlay
             mOverlay = new MyOverlay(mark, mapView);
             //将IteminizedOverlay添加到MapView中
-
             mapView.getOverlays().add(mOverlay);
 
-            //现在所有准备工作已准备好，使用以下方法管理overlay.
-            //添加overlay, 当批量添加Overlay时使用addItem(List<OverlayItem>)效率更高
-            mOverlay.addItem(item1);
-            mOverlay.addItem(item2);
+            for (StoreResponse storeResponse : mStoreList) {
+                GeoPoint p = new GeoPoint((int)(storeResponse.getStore().getLatitude() * 1E6), ((int) (storeResponse.getStore().getLongitude() * 1E6)));
+                OverlayItem item = new OverlayItem(p, storeResponse.getStore().getName(), storeResponse.getStore().getDesc());
+//                item.setMarker(mark2);
+                mOverlay.addItem(item);
+            }
 
             pop = new PopupOverlay(mapView, new PopupClickListener() {
                 @Override

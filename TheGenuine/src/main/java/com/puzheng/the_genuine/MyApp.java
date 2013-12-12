@@ -37,6 +37,14 @@ public class MyApp extends Application {
         initMap();
     }
 
+    @Override
+    public void onTerminate() {
+        if (mLocationClient != null) {
+            mLocationClient.stop();
+        }
+        super.onTerminate();
+    }
+
     private void initMap() {
         if (mLocationClient != null) {
             return;

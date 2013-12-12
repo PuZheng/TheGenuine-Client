@@ -81,10 +81,9 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
         new GetCategoriesTask(gridView, this).execute();
     }
 
-    private class GetCategoriesTask extends AsyncTask<Void, Void, Boolean> {
+    private class GetCategoriesTask extends AsyncTask<Void, Void, List<Category>> {
         private final GridView gridView;
         private final Maskable maskable;
-        private List<Category> categories;
 
         public GetCategoriesTask(GridView gridView, Maskable maskable) {
             this.gridView = gridView;
@@ -92,19 +91,19 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected List<Category> doInBackground(Void... params) {
             try {
-                categories = WebService.getInstance(gridView.getContext()).getCategories();
-                return true;
+                return WebService.getInstance(gridView.getContext()).getCategories();
             } catch (Exception e) {
-                return false;
+                return null;
             }
         }
 
         @Override
-        protected void onPostExecute(Boolean b) {
+        protected void onPostExecute(List<Category> list) {
+            boolean b = list != null;
             if (b) {
-                gridView.setAdapter(new MyCategoriesAdapter(categories));
+                gridView.setAdapter(new MyCategoriesAdapter(list));
             }
             this.maskable.unmask(b);
         }
@@ -154,17 +153,17 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            final Category comment = (Category) getItem(position);
+            final Category category = (Category) getItem(position);
             viewHolder.imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(CategoriesActivity.this, ProductListActivity.class);
-                    intent.putExtra("category_id", comment.getId());
-                    intent.putExtra("categoryName", comment.getName());
+                    intent.putExtra("category_id", category.getId());
+                    intent.putExtra("categoryName", category.getName());
                     startActivity(intent);
                 }
             });
-            new GetImageTask(viewHolder.imageButton, comment.getPicUrl()).execute();
+            new GetImageTask(viewHolder.imageButton, category.getPicUrl()).execute();
             return convertView;
         }
 

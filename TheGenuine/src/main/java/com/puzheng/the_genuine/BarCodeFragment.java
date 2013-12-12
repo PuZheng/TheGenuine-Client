@@ -11,7 +11,6 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -100,7 +99,7 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
                 public void onAfter(VerificationInfo verificationInfo) {
                     Intent intent;
                     if (verificationInfo != null) {
-                        intent = new Intent(BarCodeFragment.this.getActivity(), ProductActivity.class);
+                        intent = new Intent(BarCodeFragment.this.getActivity(), SPUActivity.class);
                         intent.putExtra(TAG_VERIFICATION_INFO, verificationInfo);
                     } else {
                         intent = new Intent(BarCodeFragment.this.getActivity(), CounterfeitActivity.class);

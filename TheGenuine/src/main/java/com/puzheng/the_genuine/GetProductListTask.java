@@ -4,7 +4,10 @@ import android.content.Context;
 import android.os.AsyncTask;
 import com.puzheng.the_genuine.data_structure.Recommendation;
 import com.puzheng.the_genuine.netutils.WebService;
+import com.puzheng.the_genuine.utils.BadResponseException;
+import org.json.JSONException;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -20,8 +23,8 @@ class GetProductListByName implements GetProductListInterface {
     }
 
     @Override
-    public List<Recommendation> getProductList(int sortIdx) {
-        return WebService.getInstance(this.context).getProductListByName(this.query, sortIdx);
+    public List<Recommendation> getProductList(String orderBy) throws JSONException, BadResponseException, IOException {
+        return WebService.getInstance(this.context).getProductListByName(this.query, orderBy);
     }
 }
 
@@ -35,8 +38,8 @@ class GetProductListByCategory implements GetProductListInterface {
     }
 
     @Override
-    public List<Recommendation> getProductList(int sortIdx) {
-        return WebService.getInstance(this.context).getProductListByCategory(this.category_id, sortIdx);
+    public List<Recommendation> getProductList(String orderBy) throws JSONException, BadResponseException, IOException {
+        return WebService.getInstance(this.context).getProductListByCategory(this.category_id, orderBy);
     }
 }
 
@@ -51,11 +54,13 @@ public class GetProductListTask extends AsyncTask<Void, Void, List<Recommendatio
 
     @Override
     protected List<Recommendation> doInBackground(Void... params) {
-        int sortIdx = mFragment.getSortIdx();
-        if (sortIdx != Constants.INVALID_ARGUMENT) {
+        String sortIdx = mFragment.getOrderBy();
+        try {
             return this.mGetProductListClass.getProductList(sortIdx);
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     @Override

@@ -23,7 +23,7 @@ import java.util.List;
 
 public class CommentsActivity extends ListActivity implements Maskable {
 
-    private int productId;
+    private int spuId;
     private TextView mCountTextView;
 
     private View mask;
@@ -34,7 +34,7 @@ public class CommentsActivity extends ListActivity implements Maskable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments);
         // Show the Up button in the action bar.
-        productId = getIntent().getIntExtra(ProductActivity.TAG_PRODUCT_ID, 0);
+        spuId = getIntent().getIntExtra(Constants.TAG_SPU_ID, 0);
         mask = findViewById(R.id.mask);
         main = findViewById(R.id.main);
         setupActionBar();
@@ -74,7 +74,7 @@ public class CommentsActivity extends ListActivity implements Maskable {
 
     private void addComment() {
         Intent intent = new Intent(this, CommentActivity.class);
-        intent.putExtra(ProductActivity.TAG_PRODUCT_ID, productId);
+        intent.putExtra(Constants.TAG_SPU_ID, spuId);
         startActivity(intent);
     }
 
@@ -109,7 +109,7 @@ public class CommentsActivity extends ListActivity implements Maskable {
     @Override
     protected void onResume() {
         super.onResume();
-        new GetCommentsTask(this).execute(productId);
+        new GetCommentsTask(this).execute(spuId);
     }
 
     private class GetCommentsTask extends AsyncTask<Integer, Void, List<Comment>> {

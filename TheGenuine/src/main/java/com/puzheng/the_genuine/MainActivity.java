@@ -9,16 +9,17 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.Window;
 import android.widget.Toast;
 
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.netutils.WebService;
+import com.puzheng.the_genuine.utils.BadResponseException;
 import com.puzheng.the_genuine.utils.Misc;
 import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
@@ -129,7 +130,11 @@ public class MainActivity extends Activity implements BackPressedInterface {
             builder.run(new PoliteBackgroundTask.XRunnable<VerificationInfo>() {
                 @Override
                 public VerificationInfo run() throws Exception {
-                    return WebService.getInstance(MainActivity.this).verify(code);
+                    try {
+                        return WebService.getInstance(MainActivity.this).verify(code);
+                    } catch (Exception e) {
+                        return null;
+                    }
                 }
             });
             builder.after(new PoliteBackgroundTask.OnAfter<VerificationInfo>() {
@@ -138,7 +143,7 @@ public class MainActivity extends Activity implements BackPressedInterface {
                 public void onAfter(VerificationInfo verificationInfo) {
                     Intent intent;
                     if (verificationInfo != null) {
-                        intent = new Intent(MainActivity.this, ProductActivity.class);
+                        intent = new Intent(MainActivity.this, SPUActivity.class);
                         intent.putExtra(TAG_VERIFICATION_INFO, verificationInfo);
                     } else {
                         intent = new Intent(MainActivity.this, CounterfeitActivity.class);

@@ -20,27 +20,25 @@ import java.util.List;
  * Created by xc on 13-11-21.
  */
 public class RecommendationsFragment extends ListFragment implements Maskable {
-
-
     private static final String NEARYBY = "nearby";
     private static final String SAME_VENDOR = "same_vendor";
     public static final int SAME_CATEGORY = 3;
     private Context context;
     private String queryType;
-    private int productId;
+    private int mSpuId;
     private View mask;
     private View error;
     private View no_data;
 
-    public RecommendationsFragment(Context context, String queryType, int productId) {
+    public RecommendationsFragment(Context context, String queryType, int spu_id) {
         this.context = context;
         this.queryType = queryType;
-        this.productId = productId;
+        this.mSpuId = spu_id;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        new GetRecommendationsTask(this, queryType, productId).execute();
+        new GetRecommendationsTask(this, queryType, mSpuId).execute();
     }
 
     @Override
@@ -77,6 +75,11 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
     }
 
     @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.list_fragment_base, container, false);
@@ -91,20 +94,20 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
         private final Maskable maskable;
         private final ListFragment listFragment;
         private final String queryType;
-        private final int productId;
+        private final int spuId;
         private List<Recommendation> recommendations;
 
-        GetRecommendationsTask(ListFragment listFragment, String queryType, int productId) {
+        GetRecommendationsTask(ListFragment listFragment, String queryType, int spuId) {
             this.maskable = (Maskable) listFragment;
             this.listFragment = listFragment;
             this.queryType = queryType;
-            this.productId = productId;
+            this.spuId = spuId;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                recommendations = WebService.getInstance(getActivity()).getRecommendations(queryType, productId);
+                recommendations = WebService.getInstance(getActivity()).getRecommendations(queryType, spuId);
             } catch (Exception e) {
                 return false;
             }
@@ -130,16 +133,14 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
         ImageView imageView;
         TextView textViewProductName;
         TextView textViewPrice;
-        TextView textViewDistance;
         TextView textViewFavorCnt;
         Button button;
         RatingBar ratingBar;
 
-        ViewHolder(ImageView imageView, TextView textViewProductName, TextView textViewDistance,
+        ViewHolder(ImageView imageView, TextView textViewProductName,
                    TextView textViewFavorCnt, TextView textViewPrice, Button button, RatingBar ratingBar) {
             this.imageView = imageView;
             this.textViewProductName = textViewProductName;
-            this.textViewDistance = textViewDistance;
             this.textViewFavorCnt = textViewFavorCnt;
             this.textViewPrice = textViewPrice;
             this.button = button;
@@ -169,7 +170,7 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
 
         @Override
         public long getItemId(int position) {
-            return recommendations.get(position).getProductId();
+            return recommendations.get(position).getSpuId();
         }
 
         @Override
@@ -181,7 +182,6 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
             if (convertView.getTag() == null) {
                 viewHolder = new ViewHolder((ImageView) convertView.findViewById(R.id.imageView),
                         (TextView) convertView.findViewById(R.id.textViewProductName),
-                        (TextView) convertView.findViewById(R.id.textViewDistance),
                         (TextView) convertView.findViewById(R.id.textViewFavorCnt),
                         (TextView) convertView.findViewById(R.id.textViewPrice),
                         (Button) convertView.findViewById(R.id.button),
@@ -191,19 +191,20 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            Recommendation recommendation = (Recommendation) getItem(position);
+            final Recommendation recommendation = (Recommendation) getItem(position);
             new GetImageTask(viewHolder.imageView, recommendation.getPicUrl()).execute();
 
             viewHolder.textViewProductName.setText(recommendation.getProductName());
-            viewHolder.textViewDistance.setText(Misc.humanizeDistance(recommendation.getDistance()));
             viewHolder.textViewFavorCnt.setText("人气" + Misc.humanizeNum(recommendation.getFavorCnt()));
             viewHolder.textViewPrice.setText(String.valueOf(recommendation.getPriceInYuan()));
             viewHolder.ratingBar.setRating(recommendation.getRating());
+            viewHolder.button.setText(Misc.humanizeDistance(recommendation.getDistance()));
             viewHolder.button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), NearbyActivity.class);
                     intent.putExtra("current", NearbyActivity.NEARBY_LIST);
+                    intent.putExtra(Constants.TAG_SPU_ID, recommendation.getSpuId());
                     getActivity().startActivity(intent);
                 }
             });

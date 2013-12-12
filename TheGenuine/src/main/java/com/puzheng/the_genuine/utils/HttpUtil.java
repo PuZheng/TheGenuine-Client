@@ -60,12 +60,14 @@ public class HttpUtil {
         return sendRequest(url, "GET", null);
     }
 
-    public static String getStringResult(String url) throws IOException {
+    public static String getStringResult(String url) throws IOException, BadResponseException {
         HttpResponse response = get(url);
-        if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-            return EntityUtils.toString(response.getEntity(), "UTF-8");
+        int statusCode = response.getStatusLine().getStatusCode();
+        String result = EntityUtils.toString(response.getEntity(), "UTF-8");
+        if (statusCode == HttpStatus.SC_OK) {
+            return result;
         } else {
-            return null;
+            throw new BadResponseException(statusCode, result);
         }
     }
 
@@ -73,12 +75,14 @@ public class HttpUtil {
         return sendRequest(url, "POST", null);
     }
 
-    public static String postStringResult(String url) throws IOException {
+    public static String postStringResult(String url) throws IOException, BadResponseException {
         HttpResponse response = post(url);
-        if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-            return EntityUtils.toString(response.getEntity(), "UTF-8");
+        int statusCode = response.getStatusLine().getStatusCode();
+        String result = EntityUtils.toString(response.getEntity(), "UTF-8");
+        if (statusCode == HttpStatus.SC_OK) {
+            return result;
         } else {
-            return null;
+            throw new BadResponseException(statusCode, result);
         }
     }
 

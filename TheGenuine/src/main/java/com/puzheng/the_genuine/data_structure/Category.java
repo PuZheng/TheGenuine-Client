@@ -1,5 +1,7 @@
 package com.puzheng.the_genuine.data_structure;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by xc on 13-11-28.
  */
@@ -7,13 +9,12 @@ public class Category {
 
     private int id;
     private String name;
-    private int productNum;
+    @SerializedName("pic_url")
     private String picUrl;
 
-    public Category(int id, String name, int productNum, String picUrl) {
+    public Category(int id, String name, String picUrl) {
         this.id = id;
         this.name = name;
-        this.productNum = productNum;
         this.picUrl = picUrl;
     }
 
@@ -23,10 +24,6 @@ public class Category {
 
     public String getName() {
         return name;
-    }
-
-    public int getProductNum() {
-        return productNum;
     }
 
     public String getPicUrl() {

@@ -2,13 +2,13 @@ package com.puzheng.the_genuine.netutils;
 
 import android.content.Context;
 import android.util.Pair;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.puzheng.the_genuine.Constants;
 import com.puzheng.the_genuine.MyApp;
 import com.puzheng.the_genuine.data_structure.*;
+import com.puzheng.the_genuine.utils.BadResponseException;
 import com.puzheng.the_genuine.utils.HttpUtil;
 import com.puzheng.the_genuine.utils.Misc;
 import org.apache.http.HttpResponse;
@@ -21,7 +21,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.URL;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by xc on 13-11-20.
@@ -41,122 +43,100 @@ public class WebService {
         return instance;
     }
 
-    public void addComment(int spu_id, String comment, float rating) throws Exception {
+    public void addComment(int spu_id, String comment, float rating) throws IOException, BadResponseException {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("spu_id", String.valueOf(spu_id));
         params.put("content", comment);
         params.put("rating", String.valueOf(rating));
         String url = HttpUtil.composeUrl("comment-ws", "comment", params);
-        HttpResponse response = HttpUtil.post(url);
-        if(response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-            throw new Exception(EntityUtils.toString(response.getEntity()));
-        }
+        HttpUtil.postStringResult(url);
     }
 
-    public boolean addFavor(int spu_id) throws IOException {
+    public boolean addFavor(int spu_id) throws IOException, BadResponseException {
         String url = HttpUtil.composeUrl("favor-ws", "favor/" + spu_id);
-        HttpResponse response = HttpUtil.post(url);
-        return response.getStatusLine().getStatusCode() == HttpStatus.SC_OK;
+        HttpUtil.postStringResult(url);
+        return true;
     }
 
-    public List<Category> getCategories() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        List<Category> ret = new ArrayList<Category>();
-        for (int i = 0; i < 10; ++i) {
-            ret.add(new Category(i, "香烟", 100, "http://t1.baidu.com/it/u=2048806342,2776893942&fm=21&gp=0.jpg"));
-        }
-        return ret;
+    public List<Category> getCategories() throws IOException, JSONException, BadResponseException {
+        String url = HttpUtil.composeUrl("spu-ws", "spu-type-list");
+        String result = HttpUtil.getStringResult(url);
+        JSONObject object = new JSONObject(result);
+        Type type = new TypeToken<List<Category>>() {
+        }.getType();
+        Gson gson = new Gson();
+        return gson.fromJson(object.getString("data"), type);
     }
 
-    public List<Comment> getComments(int spuId) throws IOException, JSONException {
+    public List<Comment> getComments(int spuId) throws IOException, JSONException, BadResponseException {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("spu_id", String.valueOf(spuId));
         String url = HttpUtil.composeUrl("comment-ws", "comment-list", params);
         String result = HttpUtil.getStringResult(url);
-        if (!Misc.isEmptyString(result)) {
-            JSONObject jsonObject = new JSONObject(result);
-            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-            Type type = new TypeToken<List<Comment>>() {
-            }.getType();
-            return gson.fromJson(jsonObject.getString("data"), type);
-        }
-        return null;
+        JSONObject jsonObject = new JSONObject(result);
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        Type type = new TypeToken<List<Comment>>() {
+        }.getType();
+        return gson.fromJson(jsonObject.getString("data"), type);
     }
 
-    public HashMap<String, List<Favor>> getFavorCategories() throws IOException, JSONException {
+    public HashMap<String, List<Favor>> getFavorCategories() throws IOException, JSONException, BadResponseException {
         String url = HttpUtil.composeUrl("favor-ws", "favors", getLocationMap());
         String result = HttpUtil.getStringResult(url);
-        if (!Misc.isEmptyString(result)) {
-            HashMap<String, List<Favor>> ret = new HashMap<String, List<Favor>>();
-            JSONObject jsonObject = new JSONObject(result);
-            Iterator iter = jsonObject.keys();
-            Type type = new TypeToken<List<Favor>>() {
-            }.getType();
-            Gson gson = new GsonBuilder().setDateFormat(Constants.DATE_FORMAT).create();
-            while (iter.hasNext()) {
-                String key = (String) iter.next();
-                List<Favor> list = gson.fromJson(jsonObject.getString(key), type);
-                ret.put(key, list);
-            }
-            return ret;
-        } else {
-            return null;
+        HashMap<String, List<Favor>> ret = new HashMap<String, List<Favor>>();
+        Type type = new TypeToken<List<Favor>>() {
+        }.getType();
+        Gson gson = new GsonBuilder().setDateFormat(Constants.DATE_FORMAT).create();
+
+        JSONObject jsonObject = new JSONObject(result);
+        Iterator iter = jsonObject.keys();
+        while (iter.hasNext()) {
+            String key = (String) iter.next();
+            List<Favor> list = gson.fromJson(jsonObject.getString(key), type);
+            ret.put(key, list);
         }
-    }
-
-    public List<Store> getNearbyStoreList() {
-        List<Store> result = new ArrayList<Store>();
-        Store s1 = new Store(1, "麦当劳", "http://pica.nipic.com/2008-05-24/2008524155151338_2.jpg", 4.5f, "A区B座C栋D号", 5000);
-        result.add(s1);
-        Store s2 = new Store(3, "肯德基", "http://upload.northnews.cn/2013/0723/1374545598503.jpg", 4f, "F区E座D栋C号", 2000);
-        result.add(s2);
-        return result;
-    }
-
-    public List<Recommendation> getProductListByCategory(int category_id, int sortIdx) {
-        List<Recommendation> ret = new ArrayList<Recommendation>();
-        ret.add(new Recommendation(1, "五粮液", 1000, 120,
-                "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 500));
-        ret.add(new Recommendation(2, "五粮液", 100, 120,
-                "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 5000));
-        ret.add(new Recommendation(3, "五粮液", 500, 120,
-                "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 100));
-        sort(ret, sortIdx);
         return ret;
     }
 
-    public List<Recommendation> getProductListByName(String query, int sortIdx) {
-        List<Recommendation> ret = new ArrayList<Recommendation>();
-        ret.add(new Recommendation(1, "五粮液2", 1000, 120,
-                "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 500));
-        ret.add(new Recommendation(2, "五粮液1", 100, 120,
-                "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 5000));
-        ret.add(new Recommendation(3, "五粮液23", 500, 120,
-                "http://www.vatsliquor.com/UploadFile/images/01.jpg", 4, 100));
-        sort(ret, sortIdx);
-        return ret;
+    public List<StoreResponse> getNearbyStoreList(int spu_id) throws IOException, JSONException, BadResponseException {
+        HashMap<String, String> params = getLocationMap();
+        if (spu_id != Constants.INVALID_ARGUMENT) {
+            params.put("spu_id", String.valueOf(spu_id));
+        }
+        String url = HttpUtil.composeUrl("retailer-ws", "retailer-list", params);
+        String result = HttpUtil.getStringResult(url);
+        JSONObject object = new JSONObject(result);
+        Type type = new TypeToken<List<StoreResponse>>() {
+        }.getType();
+        Gson gson = new Gson();
+        return gson.fromJson(object.getString("data"), type);
     }
 
-    public List<Recommendation> getRecommendations(String queryType, int productId) throws IOException, JSONException {
-        HashMap<String, String> params = new HashMap<String, String>();
+    public List<Recommendation> getProductListByCategory(int category_id, String orderBy) throws IOException, JSONException, BadResponseException {
+        HashMap<String, String> params = getLocationMap();
+        params.put("spu_type_id", String.valueOf(category_id));
+        params.put("order_by", orderBy);
+        return getProductList(params);
+    }
+
+    public List<Recommendation> getProductListByName(String query, String orderBy) throws IOException, JSONException, BadResponseException {
+        HashMap<String, String> params = getLocationMap();
+        params.put("kw", query);
+        params.put("order_by", orderBy);
+        return getProductList(params);
+    }
+
+    public List<Recommendation> getRecommendations(String queryType, int productId) throws IOException, JSONException, BadResponseException {
+        HashMap<String, String> params = getLocationMap();
         params.put("spu_id", String.valueOf(productId));
         params.put("kind", queryType);
-        params.putAll(getLocationMap());
         String url = HttpUtil.composeUrl("rcmd-ws", "rcmd-list", params);
         String result = HttpUtil.getStringResult(url);
-        if (!Misc.isEmptyString(result)) {
-            JSONObject object = new JSONObject(result);
-
-            Type type = new TypeToken<List<Recommendation>>() {
-            }.getType();
-            Gson gson = new Gson();
-            return gson.fromJson(object.getString("data"), type);
-        }
-        return null;
+        JSONObject object = new JSONObject(result);
+        Type type = new TypeToken<List<Recommendation>>() {
+        }.getType();
+        Gson gson = new Gson();
+        return gson.fromJson(object.getString("data"), type);
     }
 
     public InputStream getStreamFromUrl(String sUrl) throws IOException {
@@ -169,7 +149,7 @@ public class WebService {
             target.append(serverAddress.first).append(":").append(serverAddress.second);
             if (sUrl.startsWith("/")) {
                 target.append(sUrl);
-            }else {
+            } else {
                 target.append("/").append(sUrl);
             }
 
@@ -178,7 +158,7 @@ public class WebService {
         return url.openStream();
     }
 
-    public User login(String email, String password) throws IOException {
+    public User login(String email, String password) throws IOException, BadResponseException {
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("name", email);
         map.put("password", password);
@@ -197,7 +177,7 @@ public class WebService {
         return Pair.create(new User(1, "张三", "asdflkjlkjasdf"), false);
     }
 
-    public VerificationInfo verify(String code) throws IOException {
+    public VerificationInfo verify(String code) throws IOException, BadResponseException {
         String url = HttpUtil.composeUrl("tag-ws", "tag/" + code, getLocationMap());
         String result = HttpUtil.getStringResult(url);
         Gson gson = new GsonBuilder().setDateFormat(Constants.DATE_FORMAT).create();
@@ -212,23 +192,14 @@ public class WebService {
         return params;
     }
 
-    private void sort(List<Recommendation> list, final int idx) {
-        Comparator<Recommendation> comparator = new Comparator<Recommendation>() {
-            @Override
-            public int compare(Recommendation lhs, Recommendation rhs) {
-                switch (idx) {
-                    case 0:
-                        return lhs.getPriceInYuan() - rhs.getPriceInYuan();
-                    case 1:
-                        return lhs.getDistance() - rhs.getDistance();
-                    case 2:
-                        return lhs.getProductName().compareTo(rhs.getProductName());
-                    default:
-                        return 0;
-                }
-
-            }
-        };
-        Collections.sort(list, comparator);
+    private List<Recommendation> getProductList(HashMap<String, String> params) throws IOException, JSONException, BadResponseException {
+        String url = HttpUtil.composeUrl("spu-ws", "spu-list", params);
+        String result = HttpUtil.getStringResult(url);
+        JSONObject object = new JSONObject(result);
+        Type type = new TypeToken<List<Recommendation>>() {
+        }.getType();
+        Gson gson = new Gson();
+        return gson.fromJson(object.getString("data"), type);
     }
+
 }

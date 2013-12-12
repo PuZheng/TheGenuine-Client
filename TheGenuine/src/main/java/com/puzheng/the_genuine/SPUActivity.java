@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -36,11 +35,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductActivity extends FragmentActivity implements ViewPager.OnPageChangeListener, TabHost.OnTabChangeListener {
+public class SPUActivity extends FragmentActivity implements ViewPager.OnPageChangeListener, TabHost.OnTabChangeListener {
 
-    public static final String TAG_PRODUCT_ID = "ProductId";
-    public static final String TAG_COMMENTS_CNT = "CommentsCnt";
-    private static final String TAG = "ProductActivity";
+    private static final String TAG = "SPUActivity";
     private ViewPager viewPager;
     private VerificationInfo verificationInfo;
     private ProductResponse productResponse;
@@ -130,9 +127,8 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ProductActivity.this, CommentsActivity.class);
-                intent.putExtra(TAG_PRODUCT_ID, verificationInfo.getSku().getSpu().getId());
-                intent.putExtra(TAG_COMMENTS_CNT, verificationInfo.getCommentsCnt());
+                Intent intent = new Intent(SPUActivity.this, CommentsActivity.class);
+                intent.putExtra(Constants.TAG_SPU_ID, verificationInfo.getSku().getSpu().getId());
                 startActivity(intent);
             }
         });
@@ -177,22 +173,22 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
         mediaPlayer.start();
 
         NavBar navBar = (NavBar) findViewById(R.id.navBar);
-        navBar.setContext(ProductActivity.this);
+        navBar.setContext(SPUActivity.this);
     }
 
     private void doAddFavor() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(ProductActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(SPUActivity.this);
         builder.setTitle("收藏");
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                PoliteBackgroundTask.Builder<Boolean> task = new PoliteBackgroundTask.Builder<Boolean>(ProductActivity.this);
+                PoliteBackgroundTask.Builder<Boolean> task = new PoliteBackgroundTask.Builder<Boolean>(SPUActivity.this);
                 task.msg("正在收藏");
                 task.run(new PoliteBackgroundTask.XRunnable<Boolean>() {
                     @Override
                     public Boolean run() throws Exception {
                         try {
-                            return WebService.getInstance(ProductActivity.this).addFavor(getProductId());
+                            return WebService.getInstance(SPUActivity.this).addFavor(getProductId());
                         } catch (IOException e) {
                             e.printStackTrace();
                             return null;
@@ -202,9 +198,9 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
                     @Override
                     public void onAfter(Boolean aBoolean) {
                         if (aBoolean) {
-                            Toast.makeText(ProductActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SPUActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(ProductActivity.this, "收藏失败", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SPUActivity.this, "收藏失败", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }).create().start();
@@ -219,7 +215,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
             @Override
             public void onClick(View v) {
                 if (MyApp.getCurrentUser() == null) {
-                    MyApp.doLoginIn(ProductActivity.this);
+                    MyApp.doLoginIn(SPUActivity.this);
                 } else {
                     doAddFavor();
                 }
@@ -309,7 +305,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
             @Override
             public void onClick(View v) {
                 // 打开平台选择面板，参数2为打开分享面板时是否强制登录,false为不强制登录
-                mController.openShare(ProductActivity.this, false);
+                mController.openShare(SPUActivity.this, false);
             }
         });
     }
@@ -337,13 +333,13 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
             super(fm);
             fragments = new ArrayList<Fragment>();
             if (verificationInfo != null) {
-                fragments.add(VerificationInfoFragment.getInstance(ProductActivity.this, verificationInfo));
+                fragments.add(VerificationInfoFragment.getInstance(SPUActivity.this, verificationInfo));
             } else {
-                fragments.add(SPUFragment.getInstance(ProductActivity.this, productResponse.getSPU()));
+                fragments.add(SPUFragment.getInstance(SPUActivity.this, productResponse.getSPU()));
             }
-            fragments.add(RecommendationsFragment.createNearByProductsFragment(ProductActivity.this, getProductId()));
+            fragments.add(RecommendationsFragment.createNearByProductsFragment(SPUActivity.this, getProductId()));
 
-            fragments.add(RecommendationsFragment.createSameVendorProductsFragment(ProductActivity.this, getProductId()));
+            fragments.add(RecommendationsFragment.createSameVendorProductsFragment(SPUActivity.this, getProductId()));
         }
 
         @Override
@@ -364,7 +360,7 @@ public class ProductActivity extends FragmentActivity implements ViewPager.OnPag
             super(fm);
             fragments = new ArrayList<Fragment>();
             for (String url : picUrlList) {
-                fragments.add(new CoverFragment(ProductActivity.this, url));
+                fragments.add(new CoverFragment(SPUActivity.this, url));
                 Log.d(TAG, url);
             }
         }

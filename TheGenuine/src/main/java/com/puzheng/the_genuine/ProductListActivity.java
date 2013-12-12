@@ -18,7 +18,8 @@ import com.puzheng.the_genuine.views.NavBar;
  */
 public class ProductListActivity extends ActionBarActivity implements ActionBar.TabListener {
     private int mCategoryId;
-    private String[] sortableString;
+    private String[] orderByDescs;
+    private String[] orderByStrs;
     private ProductListFragmentPageAdapter mPageAdapter;
     private ViewPager mViewPager;
     private boolean inSearchMode;
@@ -66,7 +67,8 @@ public class ProductListActivity extends ActionBarActivity implements ActionBar.
         mQuery = getIntent().getStringExtra(SearchManager.QUERY);
         inSearchMode = mCategoryId == Constants.INVALID_ARGUMENT;
         setContentView(R.layout.activity_product_list);
-        sortableString = getResources().getStringArray(R.array.short_list);
+        orderByDescs = getResources().getStringArray(R.array.order_by_list);
+        orderByStrs = getResources().getStringArray(R.array.order_by_str_list);
         NavBar navBar = (NavBar) findViewById(R.id.navBar);
         navBar.setContext(this);
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -104,34 +106,34 @@ public class ProductListActivity extends ActionBarActivity implements ActionBar.
 
         @Override
         public int getCount() {
-            return sortableString.length;
+            return orderByDescs.length;
         }
 
         @Override
         public Fragment getItem(int i) {
             if (inSearchMode) {
-                return ProductListFragmentByName.newInstance(i, mQuery);
+                return ProductListFragmentByName.newInstance(orderByStrs[i], mQuery);
             } else {
-                return ProductListFragmentByCategory.newInstance(i, mCategoryId);
+                return ProductListFragmentByCategory.newInstance(orderByStrs[i], mCategoryId);
             }
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return sortableString[position];
+            return orderByDescs[position];
         }
     }
 }
 
 abstract class ProductListFragment extends ListFragment {
-    private int sortIdx;
+    private String orderBy;
 
-    ProductListFragment(int sortIdx) {
-        this.sortIdx = sortIdx;
+    ProductListFragment(String orderBy) {
+        this.orderBy = orderBy;
     }
 
-    public int getSortIdx() {
-        return sortIdx;
+    public String getOrderBy() {
+        return orderBy;
     }
 
 }
@@ -139,13 +141,13 @@ abstract class ProductListFragment extends ListFragment {
 class ProductListFragmentByName extends ProductListFragment {
     private String mQuery;
 
-    ProductListFragmentByName(int sortIdx, String query) {
-        super(sortIdx);
+    ProductListFragmentByName(String orderBy, String query) {
+        super(orderBy);
         this.mQuery = query;
     }
 
-    public static ProductListFragment newInstance(int sortIdx, String query) {
-        return new ProductListFragmentByName(sortIdx, query);
+    public static ProductListFragment newInstance(String orderBy, String query) {
+        return new ProductListFragmentByName(orderBy, query);
     }
 
     @Override
@@ -159,13 +161,13 @@ class ProductListFragmentByName extends ProductListFragment {
 class ProductListFragmentByCategory extends ProductListFragment {
     private int mCategoryId;
 
-    private ProductListFragmentByCategory(int sortIdx, int categoryId) {
-        super(sortIdx);
+    private ProductListFragmentByCategory(String orderBy, int categoryId) {
+        super(orderBy);
         this.mCategoryId = categoryId;
     }
 
-    public static ProductListFragment newInstance(int sortIdx, int categoryId) {
-        return new ProductListFragmentByCategory(sortIdx, categoryId);
+    public static ProductListFragment newInstance(String orderBy, int categoryId) {
+        return new ProductListFragmentByCategory(orderBy, categoryId);
     }
 
     @Override

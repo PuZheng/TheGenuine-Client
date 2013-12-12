@@ -108,7 +108,7 @@
                     android:id="@android:id/tabs"
                     android:layout_width="fill_parent"
                     android:background="@drawable/tab_indicator_holo"
-                    android:layout_height="wrap_content"></TabWidget>
+                    android:layout_height="wrap_content"/>
 
                 <FrameLayout
                     android:id="@android:id/tabcontent"
