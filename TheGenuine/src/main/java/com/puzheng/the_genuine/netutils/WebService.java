@@ -18,6 +18,7 @@ import com.puzheng.the_genuine.utils.Misc;
 import com.tencent.weibo.sdk.android.component.sso.tools.MD5Tools;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,14 +52,16 @@ public class WebService {
         return instance;
     }
 
-    public boolean addComment(int mProductID, String comment, float rating) {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    public void addComment(int spu_id, String comment, float rating) throws Exception {
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("spu_id", String.valueOf(spu_id));
+        params.put("content", comment);
+        params.put("rating", String.valueOf(rating));
+        String url = HttpUtil.composeUrl("comment-ws", "comment", params);
+        HttpResponse response = HttpUtil.post(url);
+        if(response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+            throw new Exception(EntityUtils.toString(response.getEntity()));
         }
-
-        return true;
     }
 
     public List<Category> getCategories() {
@@ -74,19 +77,19 @@ public class WebService {
         return ret;
     }
 
-    public List<Comment> getComments(int productId) {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    public List<Comment> getComments(int spuId) throws IOException, JSONException {
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("spu_id", String.valueOf(spuId));
+        String url = HttpUtil.composeUrl("comment-ws", "comment-list", params);
+        String result = HttpUtil.getStringResult(url);
+        if (!Misc.isEmptyString(result)) {
+            JSONObject jsonObject = new JSONObject(result);
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+            Type type = new TypeToken<List<Comment>>() {
+            }.getType();
+            return gson.fromJson(jsonObject.getString("data"), type);
         }
-        List<Comment> ret = new ArrayList<Comment>();
-        for (int i = 0; i < 100; ++i) {
-            ret.add(new Comment(1, 1, "张三",
-                    "http://c.hiphotos.baidu.com/image/w%3D230/sign=d882f8216963f6241c5d3e00b745eb32/b3b7d0a20cf431ade17230214936acaf2edd9801.jpg",
-                    "just so so", new Date(1384935011000L), 4.5F));
-        }
-        return ret;
+        return null;
     }
 
     public List<Store> getNearbyStoreList() {

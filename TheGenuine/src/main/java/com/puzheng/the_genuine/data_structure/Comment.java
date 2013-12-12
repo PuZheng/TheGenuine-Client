@@ -1,5 +1,7 @@
 package com.puzheng.the_genuine.data_structure;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 
 /**
@@ -8,10 +10,14 @@ import java.util.Date;
 public class Comment {
 
     private int id;
+    @SerializedName("user_id")
     private int userId;
+    @SerializedName("user_name")
     private String userName;
+    @SerializedName("user_avatar")
     private String userSmallAvatar;
     private String content;
+    @SerializedName("create_time")
     private Date date;
     private float rating;
 
@@ -26,23 +32,6 @@ public class Comment {
         this.rating = rating;
     }
 
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getUserSmallAvatar() {
-        return userSmallAvatar;
-    }
-
     public String getContent() {
         return content;
     }
@@ -51,7 +40,23 @@ public class Comment {
         return date;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public float getRating() {
         return rating;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getUserSmallAvatar() {
+        return userSmallAvatar;
     }
 }
