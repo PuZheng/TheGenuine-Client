@@ -13,9 +13,14 @@ import android.nfc.NfcAdapter;
 import android.nfc.tech.NfcA;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
+
 import com.puzheng.the_genuine.views.NavBar;
 
 /**
@@ -26,6 +31,7 @@ public class NfcFragment extends Fragment {
     private Button enableNFCButton;
     private View mask;
     private NfcAdapter mNfcAdapter;
+    private TextView textView;
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
     public static void setupForegroundDispatch(final Activity activity, NfcAdapter adapter) {
@@ -63,6 +69,7 @@ public class NfcFragment extends Fragment {
                 startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
             }
         });
+        textView = (TextView) rootView.findViewById(R.id.textView);
         ImageButton imageButton = (ImageButton) rootView.findViewById(R.id.imageButton);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,8 +100,10 @@ public class NfcFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (!mNfcAdapter.isEnabled()) {
+            textView.setVisibility(View.GONE);
             enableNFCButton.setVisibility(View.VISIBLE);
         } else {
+            textView.setVisibility(View.VISIBLE);
             enableNFCButton.setVisibility(View.GONE);
             startAnim();
             /**

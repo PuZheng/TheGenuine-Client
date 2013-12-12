@@ -20,24 +20,12 @@
         android:layout_alignParentLeft="true"
         android:contentDescription="商品图片" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/button"
-        android:background="@drawable/apptheme_btn_default_holo_light"
-        android:textColor="@android:color/white"
-        android:text="100米"
-        android:textSize="12dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true" />
-
     <LinearLayout
         android:id="@+id/mid"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/imageView"
-        android:layout_toLeftOf="@id/button"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:layout_centerVertical="true">
@@ -49,14 +37,31 @@
             android:textSize="18dp"
             android:id="@+id/textViewProductName" />
 
-        <RatingBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:isIndicator="true"
-            android:numStars="5"
-            style="@style/RatingBarSmallAppTheme"
-            android:stepSize="0.5"
-            android:id="@+id/ratingBar" />
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <RatingBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:isIndicator="true"
+                android:numStars="5"
+                style="@style/RatingBarSmallAppTheme"
+                android:stepSize="0.5"
+                android:layout_centerVertical="true"
+                android:id="@+id/ratingBar" />
+
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:id="@+id/button"
+                android:text="最近100米"
+                android:textSize="10dp"
+                style="@style/ButtonAppTheme"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
 
 
         <RelativeLayout

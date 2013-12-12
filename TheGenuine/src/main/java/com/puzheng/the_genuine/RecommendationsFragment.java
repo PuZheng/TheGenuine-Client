@@ -8,7 +8,13 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RatingBar;
+import android.widget.TextView;
+
 import com.puzheng.the_genuine.data_structure.Recommendation;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.GetImageTask;
@@ -198,7 +204,7 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
             viewHolder.textViewFavorCnt.setText("人气" + Misc.humanizeNum(recommendation.getFavorCnt()));
             viewHolder.textViewPrice.setText(String.valueOf(recommendation.getPriceInYuan()));
             viewHolder.ratingBar.setRating(recommendation.getRating());
-            viewHolder.button.setText(Misc.humanizeDistance(recommendation.getDistance()));
+            viewHolder.button.setText("最近" + Misc.humanizeDistance(recommendation.getDistance()));
             viewHolder.button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

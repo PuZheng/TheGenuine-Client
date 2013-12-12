@@ -65,13 +65,14 @@
             android:id="@+id/textView" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="请开启NFC功能"
             android:id="@+id/enableNFCButton"
             android:layout_below="@+id/imageView"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
+            style="@style/ButtonAppTheme"
             android:visibility="gone" />
     </LinearLayout>
 
