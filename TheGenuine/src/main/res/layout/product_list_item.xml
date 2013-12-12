@@ -60,7 +60,6 @@
                 android:id="@+id/textViewDistance"
                 android:layout_alignParentRight="true"
                 android:textColor="@android:color/darker_gray"
-                android:text="100米"
                 android:includeFontPadding="false"
                 android:layout_gravity="right" />
         </RelativeLayout>
@@ -68,7 +67,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="￥16"
             android:includeFontPadding="false"
             android:textColor="#fc8c43"
             android:textSize="14dp"

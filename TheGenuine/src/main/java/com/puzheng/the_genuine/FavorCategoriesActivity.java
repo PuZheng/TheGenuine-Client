@@ -2,6 +2,7 @@ package com.puzheng.the_genuine;
 
 import android.app.FragmentManager;
 import android.app.ListFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -13,13 +14,20 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.SparseArray;
 import android.view.*;
 import android.widget.*;
-import com.puzheng.the_genuine.data_structure.Recommendation;
+import com.puzheng.the_genuine.data_structure.Favor;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.search.SearchActivity;
+import com.puzheng.the_genuine.utils.GetImageTask;
+import com.puzheng.the_genuine.utils.Misc;
 import com.puzheng.the_genuine.views.NavBar;
+import org.json.JSONException;
 
+import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FavorCategoriesActivity extends ActionBarActivity implements BackPressedInterface {
     private final String mDrawerTitle = "选择分类";
@@ -29,7 +37,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
     private CharSequence mTitle = "分类";
     private List<String> mPlanetTitles;
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
-    private SparseArray<List<Recommendation>> mData;
+    private SparseArray<List<Favor>> mData;
 
     @Override
     public void doBackPressed() {
@@ -86,6 +94,10 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
+            if (requestCode == MyApp.LOGIN_ACTION) {
+                new GetFavorsTask().execute();
+
+            }
         }
     }
 
@@ -130,6 +142,8 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
             HashMap<String, Serializable> map = new HashMap<String, Serializable>();
             map.put("ISTOPACTIVITY", true);
             MyApp.doLoginIn(FavorCategoriesActivity.this, map);
+        } else {
+            new GetFavorsTask().execute();
         }
     }
 
@@ -140,18 +154,12 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
         mDrawerToggle.syncState();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        new GetCategoriesTask().execute();
-    }
-
     private void selectItem(int position) {
         // update the main content by replacing fragments
         ListFragment fragment = new ListFragment();
         if (mData != null) {
-            fragment.setListAdapter(new ProductListAdapter(mData.get(position), FavorCategoriesActivity.this));
-        }else{
+            fragment.setListAdapter(new FavorListAdapter(mData.get(position), FavorCategoriesActivity.this));
+        } else {
             fragment.setEmptyText(getString(R.string.search_no_result_found));
         }
 
@@ -177,37 +185,34 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
         }
     }
 
-    private class GetCategoriesTask extends AsyncTask<Void, Void, HashMap<String, List<Recommendation>>> {
-
-        public GetCategoriesTask() {
-        }
+    class GetFavorsTask extends AsyncTask<Void, Void, HashMap<String, List<Favor>>> {
 
         @Override
-        protected HashMap<String, List<Recommendation>> doInBackground(Void... params) {
+        protected HashMap<String, List<Favor>> doInBackground(Void... params) {
             try {
                 return WebService.getInstance(FavorCategoriesActivity.this).getFavorCategories();
             } catch (Exception e) {
+                e.printStackTrace();
                 return null;
             }
         }
 
         @Override
-        protected void onPostExecute(HashMap<String, List<Recommendation>> map) {
-            boolean b = map != null;
-            if (b) {
+        protected void onPostExecute(HashMap<String, List<Favor>> map) {
+            if (map != null) {
                 String format = "%s(%d)";
                 mPlanetTitles = new ArrayList<String>();
-                mData = new SparseArray<List<Recommendation>>();
-                mData.put(0, new ArrayList<Recommendation>());
+                mData = new SparseArray<List<Favor>>();
+                mData.put(0, new ArrayList<Favor>());
                 int idx = 1;
                 int totalCnt = 0;
-                for (Map.Entry<String, List<Recommendation>> entry : map.entrySet()) {
-                    List<Recommendation> value = entry.getValue();
+                for (Map.Entry<String, List<Favor>> entry : map.entrySet()) {
+                    List<Favor> value = entry.getValue();
                     int size = value.size();
                     totalCnt += size;
                     mPlanetTitles.add(String.format(format, entry.getKey(), size));
                     mData.append(idx, value);
-                    List<Recommendation> allData = mData.get(0);
+                    List<Favor> allData = mData.get(0);
                     allData.addAll(entry.getValue());
                     idx++;
                 }
@@ -217,7 +222,81 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
                 if (mDrawerList.getCheckedItemPosition() == AdapterView.INVALID_POSITION) {
                     selectItem(0);
                 }
+            } else {
+                setActionBarTitle("加载失败");
             }
+        }
+    }
+}
+
+class FavorListAdapter extends BaseAdapter {
+    private List<Favor> mFavorList;
+    private LayoutInflater inflater;
+
+    public FavorListAdapter(List<Favor> list, Context context) {
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.mFavorList = list;
+    }
+
+    @Override
+    public int getCount() {
+        return mFavorList.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return mFavorList.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return mFavorList.get(position).getId();
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.product_list_item, null);
+        }
+        ViewHolder viewHolder;
+        if (convertView.getTag() == null) {
+            viewHolder = new ViewHolder((ImageView) convertView.findViewById(R.id.imageView),
+                    (TextView) convertView.findViewById(R.id.textViewProductName),
+                    (TextView) convertView.findViewById(R.id.textViewDistance),
+                    (TextView) convertView.findViewById(R.id.textViewPrice),
+                    (RatingBar) convertView.findViewById(R.id.ratingBar));
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
+
+        Favor favor = (Favor) getItem(position);
+        List<String> picList = favor.getSpu().getPicUrlList();
+        try {
+            new GetImageTask(viewHolder.imageView, picList.get(0)).execute();
+        } catch (IndexOutOfBoundsException ignore) {
+        }
+
+        viewHolder.textViewProductName.setText(favor.getSpu().getName());
+        viewHolder.textViewDistance.setText(Misc.humanizeDistance(favor.getDistance()));
+        viewHolder.textViewPrice.setText("￥" + favor.getSpu().getMsrp());
+        viewHolder.ratingBar.setRating(favor.getSpu().getRating());
+        return convertView;
+    }
+
+    private class ViewHolder {
+        ImageView imageView;
+        TextView textViewProductName;
+        TextView textViewPrice;
+        TextView textViewDistance;
+        RatingBar ratingBar;
+
+        ViewHolder(ImageView imageView, TextView textViewProductName, TextView textViewDistance, TextView textViewPrice, RatingBar ratingBar) {
+            this.imageView = imageView;
+            this.textViewProductName = textViewProductName;
+            this.textViewDistance = textViewDistance;
+            this.textViewPrice = textViewPrice;
+            this.ratingBar = ratingBar;
         }
     }
 }

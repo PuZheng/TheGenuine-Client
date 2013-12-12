@@ -33,9 +33,7 @@ public class AccountSettingsActivity extends Activity implements  BackPressedInt
         super.onCreate(savedInstanceState);
 
         if (MyApp.getCurrentUser() == null) {
-            HashMap<String, Serializable> map = new HashMap<String, Serializable>();
-            map.put("ISTOPACTIVITY", true);
-            MyApp.doLoginIn(AccountSettingsActivity.this, map);
+            login();
         }
 
         setContentView(R.layout.activity_account_settings);
@@ -45,13 +43,17 @@ public class AccountSettingsActivity extends Activity implements  BackPressedInt
             @Override
             public void onClick(View v) {
                 MyApp.unsetCurrentUser();
-                Intent intent = new Intent(AccountSettingsActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
+                login();
             }
         });
         NavBar navBar = (NavBar) findViewById(R.id.navBar);
         navBar.setContext(this);
+    }
+
+    private void login() {
+        HashMap<String, Serializable> map = new HashMap<String, Serializable>();
+        map.put("ISTOPACTIVITY", true);
+        MyApp.doLoginIn(AccountSettingsActivity.this, map);
     }
 
     @Override

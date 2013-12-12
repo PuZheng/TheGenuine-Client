@@ -6,8 +6,10 @@ import com.google.gson.annotations.SerializedName;
  * Created by xc on 13-11-29.
  */
 public class User {
-    @SerializedName("user_id") private final int id;
+    @SerializedName("user_id")
+    private final int id;
     private final String name;
+    @SerializedName("auth_token")
     private final String token;
 
     public User(int id, String name, String token) {

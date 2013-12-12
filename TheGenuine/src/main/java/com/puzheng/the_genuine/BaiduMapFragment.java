@@ -33,8 +33,6 @@ public class BaiduMapFragment extends Fragment {
     private MyOverlay mOverlay = null;
     boolean isFirstLoc = true;//是否首次定位
 
-    private final static String KEY = "UTW8RC2pRPD9oGrGn8jXgcnO";
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         viewCache = inflater.inflate(R.layout.map_text_view, null);
@@ -42,9 +40,9 @@ public class BaiduMapFragment extends Fragment {
         popupText = (TextView) viewCache.findViewById(R.id.textcache);
 
         mBMapManager = new BMapManager(this.getActivity());
-        mBMapManager.init(KEY, null);
+        mBMapManager.init(Constants.BAIDU_MAP_KEY, null);
         mLocationClient = new LocationClient(this.getActivity());
-        mLocationClient.setAK(KEY);
+        mLocationClient.setAK(Constants.BAIDU_MAP_KEY);
         mLocationData = new LocationData();
 
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);

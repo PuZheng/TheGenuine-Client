@@ -38,7 +38,7 @@ public class VerificationInfoFragment extends Fragment {
         textView = (TextView)rootView.findViewById(R.id.textViewVendorName);
         textView.setText(verificationInfo.getSku().getSpu().getVendorName());
         textView = (TextView)rootView.findViewById(R.id.textViewManufactureDate);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.DATE_FORMAT);
         textView.setText(simpleDateFormat.format(verificationInfo.getSku().getManufactureDate()));
         textView = (TextView)rootView.findViewById(R.id.textViewExpiredDate);
         textView.setText(simpleDateFormat.format(verificationInfo.getSku().getExpireDate()));
