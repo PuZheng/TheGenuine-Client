@@ -6,18 +6,21 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
+
 import com.puzheng.the_genuine.data_structure.Category;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.search.SearchActivity;
 import com.puzheng.the_genuine.utils.GetImageTask;
 import com.puzheng.the_genuine.views.NavBar;
 
-import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
 
 public class CategoriesActivity extends ActionBarActivity implements Maskable, BackPressedInterface {
@@ -157,7 +160,7 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
             viewHolder.imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(CategoriesActivity.this, ProductListActivity.class);
+                    Intent intent = new Intent(CategoriesActivity.this, SPUListActivity.class);
                     intent.putExtra("category_id", category.getId());
                     intent.putExtra("categoryName", category.getName());
                     startActivity(intent);

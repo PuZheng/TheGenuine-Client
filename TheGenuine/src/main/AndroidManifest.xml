@@ -142,10 +142,10 @@
         </activity>
 
         <activity
-            android:name=".ProductListActivity"
+            android:name=".SPUListActivity"
             android:label="ProductListActivity"
             android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.puzheng.the_genuine.FavorCategoriesActivity"
             android:label="@string/title_activity_categories"

@@ -20,12 +20,14 @@
         android:layout_alignParentLeft="true"
         android:contentDescription="商品图片" />
 
+
     <LinearLayout
         android:id="@+id/mid"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/imageView"
+        android:layout_toLeftOf="@id/imageView2"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:layout_centerVertical="true">
@@ -51,7 +53,6 @@
                 android:layout_centerVertical="true"
                 android:id="@+id/ratingBar" />
 
-
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
@@ -60,6 +61,7 @@
                 android:textSize="10dp"
                 style="@style/ButtonAppTheme"
                 android:layout_alignParentRight="true"
+                android:focusable="false"
                 android:layout_centerVertical="true" />
         </RelativeLayout>
 
@@ -99,4 +101,13 @@
                 android:id="@+id/textViewPrice" />
         </RelativeLayout>
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_alignParentRight="true"
+        android:id="@+id/imageView2"
+        android:src="@drawable/navigation_next_item"
+        android:layout_centerVertical="true" />
+
 </RelativeLayout>

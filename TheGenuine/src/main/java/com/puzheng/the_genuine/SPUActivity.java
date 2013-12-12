@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,9 +18,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TabHost;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.puzheng.the_genuine.data_structure.ProductResponse;
+import com.puzheng.the_genuine.data_structure.SPUResponse;
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.Misc;
@@ -35,14 +42,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SPUActivity extends FragmentActivity implements ViewPager.OnPageChangeListener, TabHost.OnTabChangeListener {
+public class SPUActivity extends FragmentActivity implements ViewPager.OnPageChangeListener, TabHost.OnTabChangeListener, Maskable {
 
     private static final String TAG = "SPUActivity";
     private ViewPager viewPager;
     private VerificationInfo verificationInfo;
-    private ProductResponse productResponse;
+    private SPUResponse spuResponse;
     private ViewPager viewPagerCover;
     private TabHost tabHost;
+    private int spu_id;
+    private View mask;
+    private View main;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -99,14 +109,29 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product);
+        setContentView(R.layout.activity_spu);
         verificationInfo = getIntent().getParcelableExtra(MainActivity.TAG_VERIFICATION_INFO);
-        productResponse = getIntent().getParcelableExtra(MainActivity.TAG_PRODUCT_RESPONSE);
+        spu_id = (int) getIntent().getLongExtra(Constants.TAG_SPU_ID, -1L);
 
-        if (verificationInfo == null && productResponse == null) {
+        mask = findViewById(R.id.mask);
+        main = findViewById(R.id.main);
+        if (verificationInfo == null && spu_id == -1) {
             throw new IllegalArgumentException("必须传入产品信息或者验证信息");
         }
+        if (verificationInfo != null) {
+            initViews();
+            MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.good);
+            mediaPlayer.setLooping(false);
+            mediaPlayer.start();
+        } else {
+            new GetSPUTask(this).execute(spu_id);
+        }
 
+        NavBar navBar = (NavBar) findViewById(R.id.navBar);
+        navBar.setContext(SPUActivity.this);
+    }
+
+    private void initViews() {
         setupActionBar();
         shareInit();
         favorInit();
@@ -144,7 +169,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         tabHost.setup();
 
         String s = "验证信息";
-        if (productResponse != null) {
+        if (spuResponse != null) {
             s = "产品信息";
         }
         TabHost.TabSpec tabSpec = tabHost.newTabSpec("tab1").setIndicator(s);
@@ -164,16 +189,9 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 
 
         setBottomTabs();
-
         viewPager = (ViewPager) findViewById(R.id.viewPagerBottom);
         viewPager.setAdapter(new MyPageAdapter(getSupportFragmentManager()));
         viewPager.setOnPageChangeListener(this);
-        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.good);
-        mediaPlayer.setLooping(false);
-        mediaPlayer.start();
-
-        NavBar navBar = (NavBar) findViewById(R.id.navBar);
-        navBar.setContext(SPUActivity.this);
     }
 
     private void doAddFavor() {
@@ -225,32 +243,32 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     }
 
     private int getCommentsCnt() {
-        return verificationInfo != null ? verificationInfo.getCommentsCnt() : productResponse.getCommentsCnt();
+        return verificationInfo != null ? verificationInfo.getCommentsCnt() : spuResponse.getCommentsCnt();
     }
 
     private int getNearbyRecommendationsCnt() {
-        return verificationInfo != null ? verificationInfo.getNearbyRecommendationsCnt() : productResponse.getNearbyRecommendationsCnt();
+        return verificationInfo != null ? verificationInfo.getNearbyRecommendationsCnt() : spuResponse.getNearbyRecommendationsCnt();
     }
 
     private List<String> getPicUrlList() {
-        return verificationInfo != null ? verificationInfo.getSku().getSpu().getPicUrlList() : productResponse.getSPU().getPicUrlList();
+        return verificationInfo != null ? verificationInfo.getSku().getSpu().getPicUrlList() : spuResponse.getSPU().getPicUrlList();
     }
 
     private int getProductId() {
-        return verificationInfo != null ? verificationInfo.getSku().getSpu().getId() : productResponse.getSPU().getId();
+        return verificationInfo != null ? verificationInfo.getSku().getSpu().getId() : spuResponse.getSPU().getId();
     }
 
     private float getRating() {
-        return verificationInfo != null ? verificationInfo.getSku().getSpu().getRating() : productResponse.getSPU().getRating();
+        return verificationInfo != null ? verificationInfo.getSku().getSpu().getRating() : spuResponse.getSPU().getRating();
     }
 
     private int getSameVendorRecommendationsCnt() {
-        return verificationInfo != null ? verificationInfo.getSameVendorRecommendationsCnt() : productResponse.getSameVendorRecommendationsCnt();
+        return verificationInfo != null ? verificationInfo.getSameVendorRecommendationsCnt() : spuResponse.getSameVendorRecommendationsCnt();
     }
 
     private int getVendorId() {
         return verificationInfo != null ? verificationInfo.getSku().getSpu().getVendorId() :
-                productResponse.getSPU().getVendorId();
+                spuResponse.getSPU().getVendorId();
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -261,7 +279,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             TextView title = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
             int color = getResources().getColor(android.R.color.darker_gray);
             if (i == 0) {
-                color = getResources().getColor(R.color.highlighted_tab);
+                color = getResources().getColor(R.color.base_color1);
             }
             title.setTextColor(color);
         }
@@ -277,7 +295,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             if (verificationInfo != null) {
                 getActionBar().setTitle(verificationInfo.getSku().getSpu().getName());
             } else {
-                getActionBar().setTitle(productResponse.getSPU().getName());
+                getActionBar().setTitle(spuResponse.getSPU().getName());
             }
         }
     }
@@ -310,6 +328,18 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         });
     }
 
+    @Override
+    public void mask() {
+        mask.setVisibility(View.VISIBLE);
+        main.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void unmask(Boolean b) {
+        mask.setVisibility(View.GONE);
+        main.setVisibility(View.VISIBLE);
+    }
+
     class MyTabFactory implements TabHost.TabContentFactory {
 
         private final Context mContext;
@@ -335,10 +365,9 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             if (verificationInfo != null) {
                 fragments.add(VerificationInfoFragment.getInstance(SPUActivity.this, verificationInfo));
             } else {
-                fragments.add(SPUFragment.getInstance(SPUActivity.this, productResponse.getSPU()));
+                fragments.add(SPUFragment.getInstance(SPUActivity.this, spuResponse.getSPU()));
             }
             fragments.add(RecommendationsFragment.createNearByProductsFragment(SPUActivity.this, getProductId()));
-
             fragments.add(RecommendationsFragment.createSameVendorProductsFragment(SPUActivity.this, getProductId()));
         }
 
@@ -373,6 +402,40 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         @Override
         public Fragment getItem(int i) {
             return fragments.get(i);
+        }
+    }
+
+    private class GetSPUTask extends AsyncTask<Integer, Void, SPUResponse> {
+
+        private final Maskable maskable;
+
+        public GetSPUTask(Maskable maskable) {
+            this.maskable = maskable;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            maskable.mask();
+        }
+
+        @Override
+        protected SPUResponse doInBackground(Integer... params) {
+            try {
+                return WebService.getInstance(SPUActivity.this).getSPUResponse(params[0]);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(SPUResponse spuResponse) {
+            if (spuResponse == null) {
+                maskable.unmask(false);
+            } else {
+                maskable.unmask(true);
+                SPUActivity.this.spuResponse = spuResponse;
+                SPUActivity.this.initViews();
+            }
         }
     }
 }

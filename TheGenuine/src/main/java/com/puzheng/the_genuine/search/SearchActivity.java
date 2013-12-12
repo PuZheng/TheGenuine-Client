@@ -12,9 +12,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SearchView;
-import com.puzheng.the_genuine.SPUActivity;
-import com.puzheng.the_genuine.ProductListActivity;
+
 import com.puzheng.the_genuine.R;
+import com.puzheng.the_genuine.SPUActivity;
+import com.puzheng.the_genuine.SPUListActivity;
 import com.puzheng.the_genuine.views.NavBar;
 
 
@@ -60,7 +61,7 @@ public class SearchActivity extends Activity {
             mSearchView.setQuery(query, false);
             mSearchView.clearFocus();
         }
-        Intent searchIntent = new Intent(SearchActivity.this, ProductListActivity.class);
+        Intent searchIntent = new Intent(SearchActivity.this, SPUListActivity.class);
         searchIntent.putExtra(SearchManager.QUERY, query);
         startActivity(searchIntent);
         this.finish();

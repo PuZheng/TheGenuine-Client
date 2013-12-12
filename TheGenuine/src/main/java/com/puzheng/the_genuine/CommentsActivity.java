@@ -12,7 +12,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.BaseAdapter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
+
 import com.puzheng.the_genuine.data_structure.Comment;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.GetImageTask;
@@ -35,6 +40,7 @@ public class CommentsActivity extends ListActivity implements Maskable {
         setContentView(R.layout.activity_comments);
         // Show the Up button in the action bar.
         spuId = getIntent().getIntExtra(Constants.TAG_SPU_ID, 0);
+
         mask = findViewById(R.id.mask);
         main = findViewById(R.id.main);
         setupActionBar();

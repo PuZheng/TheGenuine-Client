@@ -10,7 +10,12 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-import com.puzheng.the_genuine.*;
+import com.puzheng.the_genuine.AccountSettingsActivity;
+import com.puzheng.the_genuine.CategoriesActivity;
+import com.puzheng.the_genuine.FavorCategoriesActivity;
+import com.puzheng.the_genuine.MainActivity;
+import com.puzheng.the_genuine.NearbyActivity;
+import com.puzheng.the_genuine.R;
 
 /**
  * Created by xc on 13-11-26.
@@ -72,7 +77,7 @@ public class NavBar extends LinearLayout {
             imageButton = (ImageButton) findViewById(R.id.genuines);
             imageButton.setImageResource(R.drawable.the_genuine);
             imageButton = (ImageButton) findViewById(R.id.nearby);
-            imageButton.setImageResource(R.drawable.around);
+            imageButton.setImageResource(R.drawable.nearby);
             imageButton = (ImageButton) findViewById(R.id.favor);
             imageButton.setImageResource(R.drawable.favor);
             imageButton = (ImageButton) findViewById(R.id.account);
@@ -84,7 +89,7 @@ public class NavBar extends LinearLayout {
             case GO_HOME:
                 mCurrentActiveTabId = R.id.go_home;
                 imageButtonActivitated = (ImageButton) rootView.findViewById(R.id.go_home);
-                resId = R.drawable.go_home_activated;
+                resId = R.drawable.home_activated;
                 break;
             case GENUINES:
                 mCurrentActiveTabId = R.id.genuines;
@@ -94,7 +99,7 @@ public class NavBar extends LinearLayout {
             case AROUND:
                 mCurrentActiveTabId = R.id.nearby;
                 imageButtonActivitated = (ImageButton) rootView.findViewById(R.id.nearby);
-                resId = R.drawable.around_activated;
+                resId = R.drawable.nearby_activated;
                 break;
             case FAVOR:
                 mCurrentActiveTabId = R.id.favor;
@@ -111,6 +116,7 @@ public class NavBar extends LinearLayout {
         }
         if (imageButtonActivitated != null) {
             imageButtonActivitated.setImageResource(resId);
+            imageButtonActivitated.setBackgroundResource(R.drawable.nav_bar_btn_activiated_bg);
         }
     }
 }

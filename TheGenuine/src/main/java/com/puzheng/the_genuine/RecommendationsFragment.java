@@ -83,6 +83,9 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
+        Intent intent = new Intent(getActivity(), SPUActivity.class);
+        intent.putExtra(Constants.TAG_SPU_ID, getListAdapter().getItemId(position));
+        startActivity(intent);
     }
 
     @Override
@@ -214,6 +217,15 @@ public class RecommendationsFragment extends ListFragment implements Maskable {
                     getActivity().startActivity(intent);
                 }
             });
+            if (recommendation.getDistance() == -1) {
+                viewHolder.button.setVisibility(View.INVISIBLE);
+            }
+/*            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
+                }
+            });*/
             return convertView;
         }
     }
