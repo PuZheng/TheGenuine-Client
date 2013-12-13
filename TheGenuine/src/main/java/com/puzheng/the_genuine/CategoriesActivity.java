@@ -24,7 +24,7 @@ import com.puzheng.the_genuine.views.NavBar;
 import java.util.List;
 
 public class CategoriesActivity extends ActionBarActivity implements Maskable, BackPressedInterface {
-
+    private View error;
     private View mask;
     private GridView gridView;
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
@@ -67,7 +67,8 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
     @Override
     public void unmask(Boolean b) {
         mask.setVisibility(View.GONE);
-        gridView.setVisibility(View.VISIBLE);
+        gridView.setVisibility(b ? View.VISIBLE : View.GONE);
+        error.setVisibility(b ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -78,6 +79,7 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
         navBar.setContext(this);
         mask = findViewById(R.id.mask);
         gridView = (GridView) findViewById(R.id.gridView);
+        error = findViewById(R.id.error);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setSubtitle("分类列表");
         actionBar.setTitle("360真品");
@@ -144,8 +146,6 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-
-
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.categories_grid_item, null);
             }

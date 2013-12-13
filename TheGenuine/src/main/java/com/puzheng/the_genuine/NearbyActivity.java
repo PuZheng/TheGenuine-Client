@@ -5,12 +5,11 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -137,8 +136,13 @@ public class NearbyActivity extends FragmentActivity implements BackPressedInter
         public NearbyPagerAdapter(FragmentManager fragmentManager, List<StoreResponse> list) {
             super(fragmentManager);
             mFragmentList = new ArrayList<Fragment>();
-            mFragmentList.add(new BaiduMapFragment(list));
-            mFragmentList.add(new NearbyFragment(NearbyActivity.this, list));
+            if (list == null) {
+                mFragmentList.add(new ErrorListSupportFragment());
+                mFragmentList.add(new ErrorListSupportFragment());
+            } else {
+                mFragmentList.add(new BaiduMapFragment(list));
+                mFragmentList.add(new NearbyFragment(NearbyActivity.this, list));
+            }
         }
 
         @Override
@@ -166,12 +170,12 @@ public class NearbyActivity extends FragmentActivity implements BackPressedInter
 
         @Override
         protected void onPostExecute(List<StoreResponse> storeList) {
-            if (storeList != null) {
-                int current = getIntent().getIntExtra("current", 0);
-                mTabHost.setCurrentTab(current);
-                mViewPager.setAdapter(new NearbyPagerAdapter(getSupportFragmentManager(), storeList));
-                mViewPager.setCurrentItem(current);
-            }
+            mViewPager.setAdapter(new NearbyPagerAdapter(getSupportFragmentManager(), storeList));
+
+            int current = getIntent().getIntExtra("current", 0);
+            mTabHost.setCurrentTab(current);
+            mViewPager.setCurrentItem(current);
         }
+
     }
 }
