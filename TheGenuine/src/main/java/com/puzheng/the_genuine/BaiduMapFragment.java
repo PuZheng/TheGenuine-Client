@@ -45,7 +45,7 @@ public class BaiduMapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         viewCache = inflater.inflate(R.layout.map_text_view, null);
-        popupInfo = (View) viewCache.findViewById(R.id.popinfo);
+        popupInfo = viewCache.findViewById(R.id.popinfo);
         popupText = (TextView) viewCache.findViewById(R.id.textcache);
 
         mBMapManager = new BMapManager(this.getActivity());

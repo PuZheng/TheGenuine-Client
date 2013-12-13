@@ -1,6 +1,7 @@
 package com.puzheng.the_genuine;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ListFragment;
 import android.content.Context;
@@ -33,7 +34,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
-    private CharSequence mTitle = "分类";
+    private CharSequence mTitle = "";
     private List<String> mPlanetTitles;
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
     private SparseArray<List<Favor>> mData;
@@ -87,7 +88,8 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
 
     public void setActionBarTitle(CharSequence title) {
         mTitle = title;
-        getActionBar().setTitle(mTitle);
+        getActionBar().setTitle("我的收藏");
+        getActionBar().setSubtitle(mTitle);
     }
 
     @Override
@@ -104,7 +106,6 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favor_categories);
-        setTitle("您的收藏");
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -112,7 +113,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setTitle(mTitle);
+        getActionBar().setTitle("我的收藏");
 
         setNavBar();
 
@@ -126,7 +127,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
                 R.string.drawer_close  /* "close drawer" description for accessibility */
         ) {
             public void onDrawerClosed(View view) {
-                getActionBar().setTitle(mTitle);
+                setActionBarTitle(mTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
@@ -156,12 +157,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
     private void selectItem(int position) {
         // update the main content by replacing fragments
         ListFragment fragment = new FavorListFragment(FavorCategoriesActivity.this);
-        if (mData != null) {
-            fragment.setListAdapter(new FavorListAdapter(mData.get(position), FavorCategoriesActivity.this));
-        } else {
-            fragment.setEmptyText(getString(R.string.search_no_result_found));
-        }
-
+        fragment.setListAdapter(new FavorListAdapter(mData.get(position), FavorCategoriesActivity.this));
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
@@ -199,7 +195,6 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
             startActivity(intent);
         }
     }
-
 
     class GetFavorsTask extends AsyncTask<Void, Void, HashMap<String, List<Favor>>> {
 
@@ -239,7 +234,12 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
                     selectItem(0);
                 }
             } else {
-                setActionBarTitle("加载失败");
+                getActionBar().setTitle(getString(R.string.error_message));
+                getActionBar().setSubtitle(null);
+                mDrawerLayout.setDrawerListener(null);
+                Fragment fragment = new ErrorListFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
             }
         }
     }
@@ -311,7 +311,7 @@ class FavorListAdapter extends BaseAdapter {
         }
 
         viewHolder.button.setText(Misc.humanizeDistance(favor.getDistance()));
-        viewHolder.textViewPrice.setText("￥" + favor.getSPU().getMsrp());
+        viewHolder.textViewPrice.setText(String.valueOf(favor.getSPU().getMsrp()));
         return convertView;
     }
 
