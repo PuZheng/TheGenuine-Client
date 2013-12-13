@@ -1,6 +1,7 @@
 package com.puzheng.the_genuine;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.widget.Toast;
 
@@ -13,6 +14,9 @@ public class BackPressedHandle {
     public void doBackPressed(BackPressedInterface i, Context context) {
         if (doubleBackToExitPressedOnce) {
             i.doBackPressed();
+            Intent intent = new Intent();
+            intent.setClass(context, BaiduMapService.class);
+            context.stopService(intent);
             return;
         }
         this.doubleBackToExitPressedOnce = true;
