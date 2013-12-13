@@ -59,9 +59,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:textColor="@android:color/darker_gray"
-                android:text="A区B街道C号"
                 android:includeFontPadding="false"
-                android:id="@+id/textViewLocation" />
+                android:id="@+id/textViewAddress" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -69,7 +68,6 @@
                 android:id="@+id/textViewDistance"
                 android:layout_alignParentRight="true"
                 android:textColor="@android:color/darker_gray"
-                android:text="100米"
                 android:includeFontPadding="false"
                 android:layout_gravity="right" />
 

@@ -1,5 +1,6 @@
 package com.puzheng.the_genuine;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ListFragment;
 import android.content.Context;
@@ -20,9 +21,7 @@ import com.puzheng.the_genuine.search.SearchActivity;
 import com.puzheng.the_genuine.utils.GetImageTask;
 import com.puzheng.the_genuine.utils.Misc;
 import com.puzheng.the_genuine.views.NavBar;
-import org.json.JSONException;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -156,7 +155,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
 
     private void selectItem(int position) {
         // update the main content by replacing fragments
-        ListFragment fragment = new ListFragment();
+        ListFragment fragment = new FavorListFragment(FavorCategoriesActivity.this);
         if (mData != null) {
             fragment.setListAdapter(new FavorListAdapter(mData.get(position), FavorCategoriesActivity.this));
         } else {
@@ -184,6 +183,23 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
             selectItem(position);
         }
     }
+
+    class FavorListFragment extends ListFragment {
+        private Activity mActivity;
+
+        FavorListFragment(Activity mActivity) {
+            this.mActivity = mActivity;
+        }
+
+        @Override
+        public void onListItemClick(ListView l, View v, int position, long id) {
+            Favor favor = (Favor) getListAdapter().getItem(position);
+            Intent intent = new Intent(mActivity, SPUActivity.class);
+            intent.putExtra(Constants.TAG_SPU_ID, favor.getSPU().getId());
+            startActivity(intent);
+        }
+    }
+
 
     class GetFavorsTask extends AsyncTask<Void, Void, HashMap<String, List<Favor>>> {
 
@@ -232,9 +248,11 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
 class FavorListAdapter extends BaseAdapter {
     private List<Favor> mFavorList;
     private LayoutInflater inflater;
+    private Activity mActivity;
 
-    public FavorListAdapter(List<Favor> list, Context context) {
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public FavorListAdapter(List<Favor> list, Activity activity) {
+        this.mActivity = activity;
+        inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mFavorList = list;
     }
 
@@ -256,47 +274,46 @@ class FavorListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.product_list_item, null);
+            convertView = inflater.inflate(R.layout.recommendation_list_item, null);
         }
-        ViewHolder viewHolder;
+        RecommendationListAdapter.ViewHolder viewHolder;
         if (convertView.getTag() == null) {
-            viewHolder = new ViewHolder((ImageView) convertView.findViewById(R.id.imageView),
+            viewHolder = new RecommendationListAdapter.ViewHolder((ImageView) convertView.findViewById(R.id.imageView),
                     (TextView) convertView.findViewById(R.id.textViewProductName),
-                    (TextView) convertView.findViewById(R.id.textViewDistance),
+                    (TextView) convertView.findViewById(R.id.textViewFavorCnt),
                     (TextView) convertView.findViewById(R.id.textViewPrice),
+                    (Button) convertView.findViewById(R.id.button),
                     (RatingBar) convertView.findViewById(R.id.ratingBar));
             convertView.setTag(viewHolder);
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            viewHolder = (RecommendationListAdapter.ViewHolder) convertView.getTag();
         }
 
-        Favor favor = (Favor) getItem(position);
-        List<String> picList = favor.getSpu().getPicUrlList();
-        try {
-            new GetImageTask(viewHolder.imageView, picList.get(0)).execute();
-        } catch (IndexOutOfBoundsException ignore) {
+        final Favor favor = (Favor) getItem(position);
+        new GetImageTask(viewHolder.imageView, favor.getSPU().getIcon()).execute();
+
+        viewHolder.textViewProductName.setText(favor.getSPU().getName());
+        viewHolder.textViewPrice.setText("￥" + favor.getSPU().getMsrp());
+        viewHolder.textViewFavorCnt.setText("人气" + Misc.humanizeNum(favor.getFavorCnt()));
+        viewHolder.ratingBar.setRating(favor.getSPU().getRating());
+        viewHolder.button.setText("最近" + Misc.humanizeDistance(favor.getDistance()));
+        viewHolder.button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivity, NearbyActivity.class);
+                intent.putExtra("current", NearbyActivity.NEARBY_LIST);
+                intent.putExtra(Constants.TAG_SPU_ID, favor.getSPU().getId());
+                mActivity.startActivity(intent);
+            }
+        });
+        if (favor.getDistance() == -1) {
+            viewHolder.button.setVisibility(View.INVISIBLE);
         }
 
-        viewHolder.textViewProductName.setText(favor.getSpu().getName());
-        viewHolder.textViewDistance.setText(Misc.humanizeDistance(favor.getDistance()));
-        viewHolder.textViewPrice.setText("￥" + favor.getSpu().getMsrp());
-        viewHolder.ratingBar.setRating(favor.getSpu().getRating());
+        viewHolder.button.setText(Misc.humanizeDistance(favor.getDistance()));
+        viewHolder.textViewPrice.setText("￥" + favor.getSPU().getMsrp());
         return convertView;
     }
 
-    private class ViewHolder {
-        ImageView imageView;
-        TextView textViewProductName;
-        TextView textViewPrice;
-        TextView textViewDistance;
-        RatingBar ratingBar;
 
-        ViewHolder(ImageView imageView, TextView textViewProductName, TextView textViewDistance, TextView textViewPrice, RatingBar ratingBar) {
-            this.imageView = imageView;
-            this.textViewProductName = textViewProductName;
-            this.textViewDistance = textViewDistance;
-            this.textViewPrice = textViewPrice;
-            this.ratingBar = ratingBar;
-        }
-    }
 }

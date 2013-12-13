@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Recommendation {
 
-    @SerializedName("spu_id") int productId;
+    @SerializedName("spu_id") int spuId;
     @SerializedName("spu_name") String productName;
     private int distance;
     @SerializedName("favor_cnt") private int favorCnt;
@@ -15,9 +15,9 @@ public class Recommendation {
     @SerializedName("msrp") private int priceInCents;
     private float rating;
 
-    public Recommendation(int productId, String productName, int distance, int favorCnt,
+    public Recommendation(int spuId, String productName, int distance, int favorCnt,
                           String picUrl, float rating, int priceInCents) {
-        this.productId = productId;
+        this.spuId = spuId;
         this.productName = productName;
         this.distance = distance;
         this.favorCnt = favorCnt;
@@ -26,8 +26,8 @@ public class Recommendation {
         this.priceInCents = priceInCents;
     }
 
-    public int getProductId() {
-        return productId;
+    public int getSPUId() {
+        return spuId;
     }
 
     public String getProductName() {

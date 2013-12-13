@@ -38,6 +38,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:visibility="gone"
         android:id="@+id/error">
 
         <TextView
@@ -45,7 +46,6 @@
             android:layout_height="wrap_content"
             android:textColor="@android:color/darker_gray"
             android:text="对不起，出错了"
-            android:visibility="gone"
             android:layout_gravity="center_horizontal"
             android:id="@+id/textView2" />
 

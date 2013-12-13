@@ -1,17 +1,13 @@
 package com.puzheng.the_genuine;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.Toast;
-import com.puzheng.the_genuine.data_structure.Comment;
-import com.puzheng.the_genuine.data_structure.VerificationInfo;
+
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.Misc;
 import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
@@ -20,7 +16,7 @@ import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
  * Created by abc549825@163.com(https://github.com/abc549825) at 11-29.
  */
 public class CommentActivity extends Activity {
-    private int mProductID;
+    private int mSpuId;
     private EditText mEditText;
     private RatingBar mRatingBar;
 
@@ -28,7 +24,7 @@ public class CommentActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
-        mProductID = getIntent().getIntExtra(ProductActivity.TAG_PRODUCT_ID, 0);
+        mSpuId = getIntent().getIntExtra(Constants.TAG_SPU_ID, 0);
         mEditText = (EditText) findViewById(R.id.editText);
         mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
         try {
@@ -55,7 +51,7 @@ public class CommentActivity extends Activity {
                 builder.run(new PoliteBackgroundTask.XRunnable<Void>() {
                     @Override
                     public Void run() throws Exception {
-                        WebService.getInstance(CommentActivity.this).addComment(mProductID, finalComment, mRatingBar.getRating());
+                        WebService.getInstance(CommentActivity.this).addComment(mSpuId, finalComment, mRatingBar.getRating());
                         return null;
                     }
                 });

@@ -2,6 +2,7 @@ package com.puzheng.the_genuine;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,8 @@ import android.view.Window;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.puzheng.the_genuine.data_structure.StoreResponse;
+import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.views.NavBar;
 
 import java.util.ArrayList;
@@ -27,15 +30,20 @@ public class NearbyActivity extends FragmentActivity implements BackPressedInter
     private TabHost mTabHost;
     private ViewPager mViewPager;
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
+    private int mSpuId = Constants.INVALID_ARGUMENT;
 
     @Override
     public void doBackPressed() {
-        super.onBackPressed();
+        this.finish();
     }
 
     @Override
     public void onBackPressed() {
-        backPressedHandle.doBackPressed(this, this);
+        if (mSpuId == Constants.INVALID_ARGUMENT) {
+            backPressedHandle.doBackPressed(this, this);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -43,6 +51,8 @@ public class NearbyActivity extends FragmentActivity implements BackPressedInter
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_nearby);
+        mSpuId = getIntent().getIntExtra(Constants.TAG_SPU_ID, Constants.INVALID_ARGUMENT);
+
         mTabHost = (TabHost) findViewById(R.id.tabHost);
         mTabHost.setup();
         TabHost.TabSpec tabSpec1 = mTabHost.newTabSpec("tabList").setIndicator("地图");
@@ -51,14 +61,10 @@ public class NearbyActivity extends FragmentActivity implements BackPressedInter
         TabHost.TabSpec tabSpec2 = mTabHost.newTabSpec("tabList").setIndicator("列表");
         tabSpec2.setContent(new TabFactory(this));
         mTabHost.addTab(tabSpec2);
-        int current = getIntent().getIntExtra("current", 0);
-        mTabHost.setCurrentTab(current);
+
         initTabHostBackgroud();
         setTextColor();
-
         mViewPager = (ViewPager) findViewById(R.id.viewPagerBottom);
-        mViewPager.setAdapter(new NearbyPagerAdapter(getSupportFragmentManager()));
-        mViewPager.setCurrentItem(current);
 
         mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
@@ -86,6 +92,8 @@ public class NearbyActivity extends FragmentActivity implements BackPressedInter
         });
         NavBar navBar = (NavBar) findViewById(R.id.navBar);
         navBar.setContext(this);
+
+        new GetNearbyListTask().execute();
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -126,11 +134,11 @@ public class NearbyActivity extends FragmentActivity implements BackPressedInter
     class NearbyPagerAdapter extends FragmentPagerAdapter {
         private List<Fragment> mFragmentList;
 
-        public NearbyPagerAdapter(FragmentManager fragmentManager) {
+        public NearbyPagerAdapter(FragmentManager fragmentManager, List<StoreResponse> list) {
             super(fragmentManager);
             mFragmentList = new ArrayList<Fragment>();
-            mFragmentList.add(new BaiduMapFragment());
-            mFragmentList.add(new NearbyFragment());
+            mFragmentList.add(new BaiduMapFragment(list));
+            mFragmentList.add(new NearbyFragment(NearbyActivity.this, list));
         }
 
         @Override
@@ -142,6 +150,28 @@ public class NearbyActivity extends FragmentActivity implements BackPressedInter
         public Fragment getItem(int position) {
             return mFragmentList.get(position);
         }
+    }
 
+    class GetNearbyListTask extends AsyncTask<Void, Void, List<StoreResponse>> {
+
+        @Override
+        protected List<StoreResponse> doInBackground(Void... params) {
+            try {
+                return WebService.getInstance(NearbyActivity.this).getNearbyStoreList(mSpuId);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<StoreResponse> storeList) {
+            if (storeList != null) {
+                int current = getIntent().getIntExtra("current", 0);
+                mTabHost.setCurrentTab(current);
+                mViewPager.setAdapter(new NearbyPagerAdapter(getSupportFragmentManager(), storeList));
+                mViewPager.setCurrentItem(current);
+            }
+        }
     }
 }

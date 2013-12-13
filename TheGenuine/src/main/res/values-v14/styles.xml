@@ -19,4 +19,9 @@
     <style name="ActionBarTabTextStyle.Example" parent="@android:style/Widget.Holo.Light.ActionBar.TabText">
         <item name="android:textColor">@drawable/apptheme_text_holo</item>
     </style>
+
+    <style name="MyActionBar">
+        <item name="android:background">@drawable/action_bar_bg</item>
+    </style>
+
 </resources>

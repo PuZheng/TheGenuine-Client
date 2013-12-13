@@ -1,0 +1,155 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ProductActivity">
+
+    <com.puzheng.the_genuine.views.NavBar
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/nav_bar_height"
+        android:background="#3c3c3c"
+        android:weightSum="6"
+        android:id="@+id/navBar"
+        android:layout_alignParentBottom="true"
+        app:enabledTab="go_home" />
+
+
+    <LinearLayout
+        android:id="@+id/mask"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/navBar"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:layout_gravity="center" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/navBar"
+        android:id="@id/main"
+        android:weightSum="2">
+
+        <FrameLayout
+            android:id="@+id/cover"
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1">
+
+            <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <android.support.v4.view.ViewPager
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/viewPagerCover"/>
+
+                <ImageView
+                    android:layout_width="128dp"
+                    android:layout_height="97dp"
+                    android:src="@drawable/real"
+                    android:id="@+id/imageView"
+                    android:layout_gravity="center" />
+
+                <com.viewpagerindicator.CirclePageIndicator
+                    android:id="@+id/titles"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_gravity="bottom"
+                    app:radius="5dp"
+                    app:fillColor="#FFb2b2b2"
+                    app:pageColor="#FFFF7418" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="25dp"
+                android:layout_marginRight="2dp"
+                android:layout_gravity="right"
+                android:gravity="right">
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:isIndicator="true"
+                    android:numStars="5"
+                    style="@style/RatingBarSmallAppTheme"
+                    android:stepSize="0.5"
+                    android:id="@+id/productRatingBar" />
+
+                <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/imageButtonShare"
+                    android:background="@drawable/product_small_button"
+                    android:src="@drawable/social_share_light"
+                    android:layout_marginTop="17dp"/>
+
+                <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/imageButtonFavor"
+                    android:src="@drawable/favor_light"
+                    android:background="@drawable/product_small_button"
+                    android:layout_marginTop="17dp"/>
+
+                <Button
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/buttonComment"
+                    android:textSize="8dp"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/product_small_button"
+                    android:layout_marginTop="17dp"/>
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <TabHost
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:id="@+id/tabHost"
+            android:layout_weight="1"
+            android:layout_gravity="center">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical">
+
+                <TabWidget
+                    android:id="@android:id/tabs"
+                    android:layout_width="fill_parent"
+                    android:background="@drawable/tab_indicator_holo"
+                    android:layout_height="wrap_content"/>
+
+                <FrameLayout
+                    android:id="@android:id/tabcontent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+                <android.support.v4.view.ViewPager
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/viewPagerBottom"/>
+                </FrameLayout>
+
+            </LinearLayout>
+        </TabHost>
+    </LinearLayout>
+
+</RelativeLayout>

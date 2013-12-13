@@ -7,15 +7,15 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
-import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SearchView;
-import com.puzheng.the_genuine.ProductActivity;
-import com.puzheng.the_genuine.ProductListActivity;
+
 import com.puzheng.the_genuine.R;
+import com.puzheng.the_genuine.SPUActivity;
+import com.puzheng.the_genuine.SPUListActivity;
 import com.puzheng.the_genuine.views.NavBar;
 
 
@@ -61,7 +61,7 @@ public class SearchActivity extends Activity {
             mSearchView.setQuery(query, false);
             mSearchView.clearFocus();
         }
-        Intent searchIntent = new Intent(SearchActivity.this, ProductListActivity.class);
+        Intent searchIntent = new Intent(SearchActivity.this, SPUListActivity.class);
         searchIntent.putExtra(SearchManager.QUERY, query);
         startActivity(searchIntent);
         this.finish();
@@ -69,7 +69,7 @@ public class SearchActivity extends Activity {
 
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-            Intent productIntent = new Intent(SearchActivity.this, ProductActivity.class);
+            Intent productIntent = new Intent(SearchActivity.this, SPUActivity.class);
             productIntent.setData(intent.getData());
             startActivity(productIntent);
         } else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {

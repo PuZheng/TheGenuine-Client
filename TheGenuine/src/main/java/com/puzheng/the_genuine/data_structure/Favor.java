@@ -12,15 +12,8 @@ public class Favor {
     private Date date;
     private int id;
     private SPU spu;
-
-    public int getDistance() {
-        return distance;
-    }
-
-    public void setDistance(int distance) {
-        this.distance = distance;
-    }
-
+    @SerializedName("favor_cnt")
+    private int favorCnt;
     private int distance;
 
     public Date getDate() {
@@ -31,6 +24,22 @@ public class Favor {
         this.date = date;
     }
 
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
+
+    public int getFavorCnt() {
+        return favorCnt;
+    }
+
+    public void setFavorCnt(int favorCnt) {
+        this.favorCnt = favorCnt;
+    }
+
     public int getId() {
         return id;
     }
@@ -39,7 +48,7 @@ public class Favor {
         this.id = id;
     }
 
-    public SPU getSpu() {
+    public SPU getSPU() {
         return spu;
     }
 
