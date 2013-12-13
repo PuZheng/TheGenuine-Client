@@ -14,6 +14,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import android.view.View;
+import android.widget.ListView;
+import com.puzheng.the_genuine.data_structure.Recommendation;
 import com.puzheng.the_genuine.search.SearchActivity;
 import com.puzheng.the_genuine.views.NavBar;
 
@@ -140,6 +143,13 @@ abstract class ProductListFragment extends ListFragment {
         return orderBy;
     }
 
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        Recommendation recommendation = (Recommendation) getListAdapter().getItem(position);
+        Intent intent = new Intent(getActivity(), SPUActivity.class);
+        intent.putExtra(Constants.TAG_SPU_ID, recommendation.getSPUId());
+        getActivity().startActivity(intent);
+    }
 }
 
 class ProductListFragmentByName extends ProductListFragment {

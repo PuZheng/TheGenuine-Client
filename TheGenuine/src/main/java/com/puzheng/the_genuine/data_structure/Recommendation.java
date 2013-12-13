@@ -26,7 +26,7 @@ public class Recommendation {
         this.priceInCents = priceInCents;
     }
 
-    public int getSpuId() {
+    public int getSPUId() {
         return spuId;
     }
 

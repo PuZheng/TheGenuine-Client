@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
+
+    <ImageView
+        android:layout_width="@dimen/image_view_list_item_width"
+        android:layout_height="@dimen/image_view_list_item_height"
+        android:id="@+id/imageView"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/content_picture"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:contentDescription="商品图片" />
+
+
+    <LinearLayout
+        android:id="@+id/mid"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imageView"
+        android:layout_toLeftOf="@id/imageView2"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_centerVertical="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="商品名称"
+            android:textSize="18dp"
+            android:id="@+id/textViewProductName" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <RatingBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:isIndicator="true"
+                android:numStars="5"
+                style="@style/RatingBarSmallAppTheme"
+                android:stepSize="0.5"
+                android:layout_centerVertical="true"
+                android:id="@+id/ratingBar" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:id="@+id/button"
+                android:text="最近100米"
+                android:textSize="10dp"
+                style="@style/ButtonAppTheme"
+                android:layout_alignParentRight="true"
+                android:focusable="false"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewPriceHint"
+                android:text="建议价: ￥"
+                android:includeFontPadding="false"
+                android:textColor="#fc8c43"
+                android:textSize="14dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="16"
+                android:includeFontPadding="false"
+                android:textColor="#fc8c43"
+                android:textSize="14dp"
+                android:layout_toRightOf="@id/textViewPriceHint"
+                android:id="@+id/textViewPrice" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_alignParentRight="true"
+        android:id="@+id/imageView2"
+        android:src="@drawable/navigation_next_item"
+        android:layout_centerVertical="true" />
+
+</RelativeLayout>

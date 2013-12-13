@@ -7,8 +7,8 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Store {
     private int id;
-    @SerializedName("logo")
-    private String picUrl;
+    private String icon;
+    private String logo;
     private String name;
     private float rating;
     private String address;
@@ -16,10 +16,11 @@ public class Store {
     private float latitude;
     private String desc;
 
-    public Store(int id, String name, String picUrl, float rating, String address, float longitude, float latitude, String desc) {
+    public Store(int id, String name, String icon, String logo, float rating, String address, float longitude, float latitude, String desc) {
         this.id = id;
         this.name = name;
-        this.picUrl = picUrl;
+        this.icon = icon;
+        this.logo = logo;
         this.rating = rating;
         this.address = address;
         this.longitude = longitude;
@@ -51,6 +52,14 @@ public class Store {
         this.latitude = latitude;
     }
 
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
     public float getLongitude() {
         return longitude;
     }
@@ -63,12 +72,12 @@ public class Store {
         return name;
     }
 
-    public String getPicUrl() {
-        return picUrl;
+    public String getIcon() {
+        return icon;
     }
 
-    public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl;
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public float getRating() {

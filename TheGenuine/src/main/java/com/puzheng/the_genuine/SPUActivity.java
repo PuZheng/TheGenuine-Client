@@ -111,7 +111,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spu);
         verificationInfo = getIntent().getParcelableExtra(MainActivity.TAG_VERIFICATION_INFO);
-        spu_id = (int) getIntent().getLongExtra(Constants.TAG_SPU_ID, -1L);
+        spu_id = getIntent().getIntExtra(Constants.TAG_SPU_ID, -1);
 
         mask = findViewById(R.id.mask);
         main = findViewById(R.id.main);
@@ -153,7 +153,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SPUActivity.this, CommentsActivity.class);
-                intent.putExtra(Constants.TAG_SPU_ID, verificationInfo.getSku().getSpu().getId());
+                intent.putExtra(Constants.TAG_SPU_ID, getSPUId());
                 startActivity(intent);
             }
         });
@@ -206,7 +206,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
                     @Override
                     public Boolean run() throws Exception {
                         try {
-                            return WebService.getInstance(SPUActivity.this).addFavor(getProductId());
+                            return WebService.getInstance(SPUActivity.this).addFavor(getSPUId());
                         } catch (IOException e) {
                             e.printStackTrace();
                             return null;
@@ -251,15 +251,15 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     }
 
     private List<String> getPicUrlList() {
-        return verificationInfo != null ? verificationInfo.getSku().getSpu().getPicUrlList() : spuResponse.getSPU().getPicUrlList();
+        return verificationInfo != null ? verificationInfo.getSKU().getSPU().getPicUrlList() : spuResponse.getSPU().getPicUrlList();
     }
 
-    private int getProductId() {
-        return verificationInfo != null ? verificationInfo.getSku().getSpu().getId() : spuResponse.getSPU().getId();
+    private int getSPUId() {
+        return verificationInfo != null ? verificationInfo.getSKU().getSPU().getId() : spuResponse.getSPU().getId();
     }
 
     private float getRating() {
-        return verificationInfo != null ? verificationInfo.getSku().getSpu().getRating() : spuResponse.getSPU().getRating();
+        return verificationInfo != null ? verificationInfo.getSKU().getSPU().getRating() : spuResponse.getSPU().getRating();
     }
 
     private int getSameVendorRecommendationsCnt() {
@@ -267,7 +267,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     }
 
     private int getVendorId() {
-        return verificationInfo != null ? verificationInfo.getSku().getSpu().getVendorId() :
+        return verificationInfo != null ? verificationInfo.getSKU().getSPU().getVendorId() :
                 spuResponse.getSPU().getVendorId();
     }
 
@@ -293,7 +293,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             getActionBar().setDisplayHomeAsUpEnabled(true);
             if (verificationInfo != null) {
-                getActionBar().setTitle(verificationInfo.getSku().getSpu().getName());
+                getActionBar().setTitle(verificationInfo.getSKU().getSPU().getName());
             } else {
                 getActionBar().setTitle(spuResponse.getSPU().getName());
             }
@@ -367,8 +367,8 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             } else {
                 fragments.add(SPUFragment.getInstance(SPUActivity.this, spuResponse.getSPU()));
             }
-            fragments.add(RecommendationsFragment.createNearByProductsFragment(SPUActivity.this, getProductId()));
-            fragments.add(RecommendationsFragment.createSameVendorProductsFragment(SPUActivity.this, getProductId()));
+            fragments.add(RecommendationsFragment.createNearByProductsFragment(SPUActivity.this, getSPUId()));
+            fragments.add(RecommendationsFragment.createSameVendorProductsFragment(SPUActivity.this, getSPUId()));
         }
 
         @Override

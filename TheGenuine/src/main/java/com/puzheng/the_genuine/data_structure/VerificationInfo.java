@@ -69,7 +69,7 @@ public class VerificationInfo implements Parcelable {
         dest.writeInt(commentsCnt);
     }
 
-    public SKU getSku() {
+    public SKU getSKU() {
         return sku;
     }
 }

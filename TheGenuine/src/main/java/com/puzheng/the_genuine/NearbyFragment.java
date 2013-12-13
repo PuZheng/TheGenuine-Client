@@ -86,7 +86,7 @@ public class NearbyFragment extends ListFragment {
             }
 
             StoreResponse response = (StoreResponse) getItem(position);
-            new GetImageTask(viewHolder.mImageView, response.getStore().getPicUrl()).execute();
+            new GetImageTask(viewHolder.mImageView, response.getStore().getIcon()).execute();
 
             viewHolder.mStoreName.setText(response.getStore().getName());
             viewHolder.mDistance.setText(Misc.humanizeDistance(response.getDistance()));

@@ -60,7 +60,7 @@ public class SKU implements Parcelable {
         }
     };
 
-    public SPU getSpu() {
+    public SPU getSPU() {
         return spu;
     }
 
