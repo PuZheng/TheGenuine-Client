@@ -7,9 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -137,8 +135,8 @@ public class NearbyActivity extends FragmentActivity implements BackPressedInter
             super(fragmentManager);
             mFragmentList = new ArrayList<Fragment>();
             if (list == null) {
-                mFragmentList.add(new ErrorListSupportFragment());
-                mFragmentList.add(new ErrorListSupportFragment());
+                mFragmentList.add(new ErrorSupportFragment());
+                mFragmentList.add(new ErrorSupportFragment());
             } else {
                 mFragmentList.add(new BaiduMapFragment(list));
                 mFragmentList.add(new NearbyFragment(NearbyActivity.this, list));
