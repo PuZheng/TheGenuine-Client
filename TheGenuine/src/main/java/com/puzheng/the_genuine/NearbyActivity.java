@@ -13,19 +13,23 @@ import android.view.Window;
 
 import com.puzheng.the_genuine.data_structure.StoreResponse;
 import com.puzheng.the_genuine.netutils.WebService;
+import com.puzheng.the_genuine.utils.BadResponseException;
 import com.puzheng.the_genuine.views.NavBar;
+import org.json.JSONException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by abc549825@163.com(https://github.com/abc549825) at 11-26.
  */
-public class NearbyActivity extends ActionBarActivity implements BackPressedInterface {
+public class NearbyActivity extends ActionBarActivity implements BackPressedInterface, RefreshInterface {
     public static final int NEARBY_LIST = 1;
     private ViewPager mViewPager;
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
     private int mSpuId = Constants.INVALID_ARGUMENT;
+            private MaskableManager maskableManager;
 
     @Override
     public void doBackPressed() {
@@ -42,9 +46,16 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
     }
 
     @Override
+    public void refresh() {
+        new GetNearbyListTask().execute();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby);
+
+        maskableManager = new MaskableManager(findViewById(R.id.pager), NearbyActivity.this);
         mSpuId = getIntent().getIntExtra(Constants.TAG_SPU_ID, Constants.INVALID_ARGUMENT);
         mViewPager = (ViewPager) findViewById(R.id.pager);
         ActionBar actionBar = getActionBar();
@@ -114,22 +125,31 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
 
     class GetNearbyListTask extends AsyncTask<Void, Void, List<StoreResponse>> {
 
+        private Exception exception;
+
         @Override
         protected List<StoreResponse> doInBackground(Void... params) {
             try {
                 return WebService.getInstance(NearbyActivity.this).getNearbyStoreList(mSpuId);
             } catch (Exception e) {
-                e.printStackTrace();
+                exception = e;
                 return null;
             }
         }
 
         @Override
         protected void onPostExecute(List<StoreResponse> storeList) {
-            mViewPager.setAdapter(new NearbyPagerAdapter(getSupportFragmentManager(), storeList));
-            int current = getIntent().getIntExtra("current", 0);
-            getActionBar().setSelectedNavigationItem(current);
-            mViewPager.setCurrentItem(current);
+            if (maskableManager.unmask(exception)) {
+                mViewPager.setAdapter(new NearbyPagerAdapter(getSupportFragmentManager(), storeList));
+                int current = getIntent().getIntExtra("current", 0);
+                getActionBar().setSelectedNavigationItem(current);
+                mViewPager.setCurrentItem(current);
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            maskableManager.mask();
         }
 
     }

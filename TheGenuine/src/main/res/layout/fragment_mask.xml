@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
+
+
+    <ProgressBar
+        android:gravity="center"
+        style="?android:progressBarStyleLarge"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar" />
+
+    <TextView
+        android:id="@+id/error_message"
+        android:visibility="gone"
+        android:layout_width="fill_parent"
+        android:gravity="center"
+        android:layout_height="fill_parent"
+        android:text="@string/error_message"
+        android:textSize="18sp"
+        android:textColor="#ff1709" />
+
+    <ImageButton
+        android:visibility="gone"
+        android:id="@+id/disconnected"
+        android:background="@null"
+        android:gravity="center"
+        android:src="@drawable/wifi_not_connected"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
