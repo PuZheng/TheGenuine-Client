@@ -130,11 +130,7 @@ public class MainActivity extends Activity implements BackPressedInterface {
             builder.run(new PoliteBackgroundTask.XRunnable<VerificationInfo>() {
                 @Override
                 public VerificationInfo run() throws Exception {
-                    try {
-                        return WebService.getInstance(MainActivity.this).verify(code);
-                    } catch (Exception e) {
-                        return null;
-                    }
+                    return WebService.getInstance(MainActivity.this).verify(code);
                 }
             });
             builder.after(new PoliteBackgroundTask.OnAfter<VerificationInfo>() {
