@@ -237,7 +237,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
                 getActionBar().setTitle(getString(R.string.error_message));
                 getActionBar().setSubtitle(null);
                 mDrawerLayout.setDrawerListener(null);
-                Fragment fragment = new ErrorListFragment();
+                Fragment fragment = new ErrorFragment();
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
             }
