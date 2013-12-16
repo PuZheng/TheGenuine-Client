@@ -1,43 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
     android:layout_height="match_parent">
 
-    <TabHost
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:id="@+id/tabHost"
-        android:layout_weight="1"
-        android:layout_gravity="center">
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical">
-
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="fill_parent"
-                android:background="@drawable/tab_indicator_holo"
-                android:layout_height="wrap_content" />
-
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
-                <android.support.v4.view.ViewPager
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/viewPagerBottom" />
-            </FrameLayout>
-
-        </LinearLayout>
-    </TabHost>
+        android:layout_height="match_parent" />
 
     <com.puzheng.the_genuine.views.NavBar
         android:layout_width="fill_parent"
@@ -45,5 +17,6 @@
         android:background="#3c3c3c"
         android:weightSum="6"
         android:id="@+id/navBar"
+        android:layout_alignParentBottom="true"
         app:enabledTab="nearby" />
-</LinearLayout>
+</RelativeLayout>

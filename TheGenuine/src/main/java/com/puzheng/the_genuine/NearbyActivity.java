@@ -1,16 +1,15 @@
 package com.puzheng.the_genuine;
 
-import android.annotation.TargetApi;
-import android.content.Context;
+import android.app.*;
+import android.app.FragmentTransaction;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.*;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.view.View;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Window;
-import android.widget.TabHost;
-import android.widget.TextView;
 
 import com.puzheng.the_genuine.data_structure.StoreResponse;
 import com.puzheng.the_genuine.netutils.WebService;
@@ -22,9 +21,8 @@ import java.util.List;
 /**
  * Created by abc549825@163.com(https://github.com/abc549825) at 11-26.
  */
-public class NearbyActivity extends FragmentActivity implements BackPressedInterface {
+public class NearbyActivity extends ActionBarActivity implements BackPressedInterface {
     public static final int NEARBY_LIST = 1;
-    private TabHost mTabHost;
     private ViewPager mViewPager;
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
     private int mSpuId = Constants.INVALID_ARGUMENT;
@@ -46,86 +44,46 @@ public class NearbyActivity extends FragmentActivity implements BackPressedInter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_nearby);
         mSpuId = getIntent().getIntExtra(Constants.TAG_SPU_ID, Constants.INVALID_ARGUMENT);
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        mTabHost = (TabHost) findViewById(R.id.tabHost);
-        mTabHost.setup();
-        TabHost.TabSpec tabSpec1 = mTabHost.newTabSpec("tabList").setIndicator("地图");
-        tabSpec1.setContent(new TabFactory(this));
-        mTabHost.addTab(tabSpec1);
-        TabHost.TabSpec tabSpec2 = mTabHost.newTabSpec("tabList").setIndicator("列表");
-        tabSpec2.setContent(new TabFactory(this));
-        mTabHost.addTab(tabSpec2);
-
-        initTabHostBackgroud();
-        setTextColor();
-        mViewPager = (ViewPager) findViewById(R.id.viewPagerBottom);
-
-        mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+        ActionBar.TabListener listener = new ActionBar.TabListener() {
             @Override
-            public void onTabChanged(String tabId) {
-                setTextColor();
-                mViewPager.setCurrentItem(mTabHost.getCurrentTab());
-            }
-        });
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
 
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                mTabHost.setCurrentTab(mViewPager.getCurrentItem());
             }
 
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                mViewPager.setCurrentItem(tab.getPosition());
             }
 
+            @Override
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+            }
+        };
+
+        actionBar.addTab(actionBar.newTab().setText("地图").setTabListener(listener));
+
+        actionBar.addTab(actionBar.newTab().setText("列表").setTabListener(listener));
+
+        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-
+                getActionBar().setSelectedNavigationItem(position);
             }
         });
+
         NavBar navBar = (NavBar) findViewById(R.id.navBar);
         navBar.setContext(this);
 
         new GetNearbyListTask().execute();
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void initTabHostBackgroud() {
-        for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); ++i) {
-            View v = mTabHost.getTabWidget().getChildTabViewAt(i);
-            v.setBackground(getResources().getDrawable(R.drawable.tab_indicator_holo));
-        }
-    }
-
-    private void setTextColor() {
-        for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); ++i) {
-            int color = getResources().getColor(android.R.color.darker_gray);
-            if (i == mTabHost.getCurrentTab()) {
-                color = getResources().getColor(R.color.highlighted_tab);
-            }
-            TextView title = (TextView) mTabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-            title.setTextColor(color);
-        }
-    }
-
-    class TabFactory implements TabHost.TabContentFactory {
-        private Context mContext;
-
-        TabFactory(Context content) {
-            this.mContext = content;
-        }
-
-        @Override
-        public View createTabContent(String tag) {
-            View v = new View(mContext);
-            v.setMinimumWidth(0);
-            v.setMinimumHeight(0);
-            return v;
-        }
     }
 
     class NearbyPagerAdapter extends FragmentPagerAdapter {
@@ -169,9 +127,8 @@ public class NearbyActivity extends FragmentActivity implements BackPressedInter
         @Override
         protected void onPostExecute(List<StoreResponse> storeList) {
             mViewPager.setAdapter(new NearbyPagerAdapter(getSupportFragmentManager(), storeList));
-
             int current = getIntent().getIntExtra("current", 0);
-            mTabHost.setCurrentTab(current);
+            getActionBar().setSelectedNavigationItem(current);
             mViewPager.setCurrentItem(current);
         }
 
