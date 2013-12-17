@@ -15,13 +15,12 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.Window;
 import android.widget.Toast;
-
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.netutils.WebService;
-import com.puzheng.the_genuine.utils.Misc;
 import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
 
 import java.io.UnsupportedEncodingException;
@@ -159,7 +158,7 @@ public class MainActivity extends Activity implements BackPressedInterface {
 
     private void handleIntent(Intent intent) {
         final String code = extractNFCMessage(intent);
-        if (!Misc.isEmptyString(code)) {
+        if (!TextUtils.isEmpty(code)) {
             PoliteBackgroundTask.Builder<VerificationInfo> builder = new PoliteBackgroundTask.Builder<VerificationInfo>(this);
             builder.msg("已读取NFC信息，正在验证真伪");
             builder.run(new PoliteBackgroundTask.XRunnable<VerificationInfo>() {

@@ -11,14 +11,10 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.view.LayoutInflater;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.View;
-import android.view.ViewGroup;
+import android.text.TextUtils;
+import android.view.*;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.puzheng.the_genuine.camera.AmbientLightManager;
@@ -27,7 +23,6 @@ import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.decoding.CaptureActivityHandler;
 import com.puzheng.the_genuine.decoding.InactivityTimer;
 import com.puzheng.the_genuine.netutils.WebService;
-import com.puzheng.the_genuine.utils.Misc;
 import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
 import com.puzheng.the_genuine.views.NavBar;
 import com.puzheng.the_genuine.views.ViewfinderView;
@@ -79,7 +74,7 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
         inactivityTimer.onActivity();
         playBeepSoundAndVibrate();
         final String resultString = result.getText();
-        if (Misc.isEmptyString(resultString)) {
+        if (TextUtils.isEmpty(resultString)) {
             Toast.makeText(this.getActivity(), "Scan failed!", Toast.LENGTH_SHORT).show();
         } else {
             //显示

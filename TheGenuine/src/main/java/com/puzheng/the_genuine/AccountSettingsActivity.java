@@ -6,19 +6,25 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-
+import android.widget.TextView;
+import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.views.NavBar;
 
 import java.io.Serializable;
 import java.util.HashMap;
 
-public class AccountSettingsActivity extends Activity implements  BackPressedInterface{
+public class AccountSettingsActivity extends Activity implements BackPressedInterface {
 
     private BackPressedHandle mBackPressedHandle = new BackPressedHandle();
 
     @Override
     public void doBackPressed() {
         super.onBackPressed();
+    }
+
+    @Override
+    public void onBackPressed() {
+        mBackPressedHandle.doBackPressed(this, this);
     }
 
     @Override
@@ -29,14 +35,27 @@ public class AccountSettingsActivity extends Activity implements  BackPressedInt
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_CANCELED) {
+            this.finish();
+        }
+        if (resultCode == RESULT_OK) {
+            if (requestCode == MyApp.LOGIN_ACTION) {
+                setUsername();
+            }
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (MyApp.getCurrentUser() == null) {
             login();
         }
 
         setContentView(R.layout.activity_account_settings);
+
+        setUsername();
 
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -56,19 +75,13 @@ public class AccountSettingsActivity extends Activity implements  BackPressedInt
         MyApp.doLoginIn(AccountSettingsActivity.this, map);
     }
 
-    @Override
-    public void onBackPressed() {
-        mBackPressedHandle.doBackPressed(this, this);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_CANCELED) {
-            this.finish();
-        }
-        if (resultCode == RESULT_OK) {
-            if (requestCode == MyApp.LOGIN_ACTION) {
-            }
+    private void setUsername() {
+        User user = MyApp.getCurrentUser();
+        TextView textView = (TextView) findViewById(R.id.textViewEmail);
+        if (user != null) {
+            textView.setText(user.getName());
+        } else {
+            textView.setText("");
         }
     }
 }

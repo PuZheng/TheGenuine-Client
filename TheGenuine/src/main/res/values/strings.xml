@@ -43,4 +43,8 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="error_message">对不起，出错了</string>
+    <string name="action_enter_password_again">请再次输入密码</string>
+    <string name="text_register">免费注册</string>
+    <string name="error_incorrect_confirm_password">两次输入的密码不一致</string>
+    <string name="action_register_fail">注册失败</string>
 </resources>

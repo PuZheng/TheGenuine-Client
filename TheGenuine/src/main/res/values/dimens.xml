@@ -11,4 +11,5 @@
     <dimen name="counterfeits_stamp_height">157dp</dimen>
     <dimen name="image_view_list_item_width">64dp</dimen>
     <dimen name="image_view_list_item_height">64dp</dimen>
+    <dimen name="padding_top">24dp</dimen>
 </resources>

@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.SearchView;
 
@@ -92,6 +94,8 @@ public class SearchActivity extends Activity {
     private void setSearchView(MenuItem menuItem) {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         mSearchView = (SearchView) menuItem.getActionView();
+        mSearchView.setInputType(InputType.TYPE_CLASS_TEXT);
+        mSearchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         // Assumes current activity is the searchable activity
         mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         mSearchView.setIconifiedByDefault(false);
