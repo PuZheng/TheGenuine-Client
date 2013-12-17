@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.netutils.WebService;
@@ -71,6 +73,8 @@ public class RegisterFragment extends Fragment {
     }
 
     private void attemptRegister() {
+        hideKeyboard();
+
         if (mRegisterTask != null) {
             return;
         }
@@ -139,6 +143,12 @@ public class RegisterFragment extends Fragment {
         }
     }
 
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+    }
+
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private void initSwitch(Switch switch_) {
         switch_.setChecked(true);
@@ -190,6 +200,7 @@ public class RegisterFragment extends Fragment {
 
     public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
         private BadResponseException exception;
+
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
@@ -224,7 +235,7 @@ public class RegisterFragment extends Fragment {
             } else {
                 if (exception != null) {
                     mEmailView.setError(exception.getMessage());
-                }else{
+                } else {
                     mEmailView.setError(getString(R.string.action_register_fail));
                 }
                 mPasswordView.setText("");

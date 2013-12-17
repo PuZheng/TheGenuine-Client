@@ -70,7 +70,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), RegisterActivity.class);
-                startActivityForResult(intent, RegisterActivity.TAG_REGISTER);
+                getActivity().startActivityForResult(intent, RegisterActivity.TAG_REGISTER);
             }
         });
 

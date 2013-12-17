@@ -74,6 +74,7 @@ public class LoginActivity extends Activity implements BackPressedInterface {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == RegisterActivity.TAG_REGISTER) {
+                setResult(RESULT_OK);
                 this.finish();
             }
         }
