@@ -1,8 +1,14 @@
 package com.puzheng.the_genuine;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -15,11 +21,9 @@ import android.widget.Toast;
 
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.netutils.WebService;
-import com.puzheng.the_genuine.utils.BadResponseException;
 import com.puzheng.the_genuine.utils.Misc;
 import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
@@ -54,6 +58,7 @@ public class MainActivity extends Activity implements BackPressedInterface {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+
         isNfcEnabled = NfcAdapter.getDefaultAdapter(this) != null;
         if (isNfcEnabled) {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -65,12 +70,42 @@ public class MainActivity extends Activity implements BackPressedInterface {
             ft.replace(R.id.container, new BarCodeFragment());
             ft.commit();
         }
+
+        if (!isNetworkAvailable()) {
+            setNetwork();
+        }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         setIntent(intent);
         handleIntent(intent);
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = manager.getActiveNetworkInfo();
+        return info != null && info.isAvailable();
+    }
+
+    private void setNetwork() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("网络设置").setMessage("网络连接不可用, 是否进行设置?").setPositiveButton("设置", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent;
+                if (android.os.Build.VERSION.SDK_INT > 10) {
+                    intent = new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS);
+                } else {
+                    intent = new Intent();
+                    ComponentName component = new ComponentName("com.android.settings", "com.android.settings.WirelessSettings");
+                    intent.setComponent(component);
+                    intent.setAction("android.intent.action.VIEW");
+                }
+                startActivity(intent);
+            }
+        }).setNegativeButton("取消", null).show();
     }
 
     private String extractNFCMessage(Intent intent) {
