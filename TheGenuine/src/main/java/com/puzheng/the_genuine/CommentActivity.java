@@ -2,14 +2,13 @@ package com.puzheng.the_genuine;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.Toast;
-
 import com.puzheng.the_genuine.netutils.WebService;
-import com.puzheng.the_genuine.utils.Misc;
 import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
 
 /**
@@ -41,7 +40,7 @@ public class CommentActivity extends Activity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (Misc.isEmptyString(comment)) {
+                if (TextUtils.isEmpty(comment)) {
                     Toast.makeText(CommentActivity.this, R.string.add_comment_empty, Toast.LENGTH_SHORT).show();
                     return;
                 }

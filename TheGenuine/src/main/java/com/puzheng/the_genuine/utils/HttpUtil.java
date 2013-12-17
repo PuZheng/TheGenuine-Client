@@ -1,9 +1,7 @@
 package com.puzheng.the_genuine.utils;
 
 import android.util.Pair;
-
 import com.puzheng.the_genuine.MyApp;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
@@ -27,7 +25,6 @@ public class HttpUtil {
     public static final String HTTPS = "https://";
     private static final int DEAFULT_CONNECTION_TIME_OUT_MILLSECONDS = 1000;
     private static final int DEAFULT_SO_TIME_OUT_MILLSECONDS = 500;
-
 
     public static String composeUrl(String blueprint, String path) {
         return composeUrl(blueprint, path, null);
@@ -64,9 +61,17 @@ public class HttpUtil {
 
     public static String getStringResult(String url) throws IOException, BadResponseException {
         HttpResponse response = get(url);
+        return parseResult(response);
+    }
+
+    private static boolean isSucceed(int statusCode) {
+        return statusCode == HttpStatus.SC_OK || statusCode == HttpStatus.SC_CREATED;
+    }
+
+    private static String parseResult(HttpResponse response) throws IOException, BadResponseException {
         int statusCode = response.getStatusLine().getStatusCode();
         String result = EntityUtils.toString(response.getEntity(), "UTF-8");
-        if (statusCode == HttpStatus.SC_OK) {
+        if (isSucceed(statusCode)) {
             return result;
         } else {
             throw new BadResponseException(statusCode, result);
@@ -79,13 +84,7 @@ public class HttpUtil {
 
     public static String postStringResult(String url) throws IOException, BadResponseException {
         HttpResponse response = post(url);
-        int statusCode = response.getStatusLine().getStatusCode();
-        String result = EntityUtils.toString(response.getEntity(), "UTF-8");
-        if (statusCode == HttpStatus.SC_OK) {
-            return result;
-        } else {
-            throw new BadResponseException(statusCode, result);
-        }
+        return parseResult(response);
     }
 
     public static HttpResponse sendRequest(String url, String method, String data)

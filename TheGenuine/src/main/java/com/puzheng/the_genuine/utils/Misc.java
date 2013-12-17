@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 
@@ -50,7 +51,7 @@ public class Misc {
     }
 
     public static String getMd5Hash(String input) {
-        if (isEmptyString(input)) {
+        if (TextUtils.isEmpty(input)) {
             return null;
         }
         try {
@@ -98,10 +99,6 @@ public class Misc {
             return String.valueOf(favorCnt / 1000) + "千+";
         }
         return String.valueOf(favorCnt / 10000) + "万+";
-    }
-
-    public static boolean isEmptyString(String s) {
-        return s == null || s.length() == 0;
     }
 
     public static boolean isExternalStorageRemovable() {

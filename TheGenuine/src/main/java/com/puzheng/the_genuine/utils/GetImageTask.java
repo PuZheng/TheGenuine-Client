@@ -2,6 +2,7 @@ package com.puzheng.the_genuine.utils;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.puzheng.the_genuine.netutils.WebService;
@@ -27,7 +28,7 @@ public class GetImageTask extends AsyncTask<Integer, Void, Bitmap> {
     @Override
     protected Bitmap doInBackground(Integer... params) {
         mImageView.setTag(mUrl);
-        if (Misc.isEmptyString(mUrl)) {
+        if (TextUtils.isEmpty(mUrl)) {
             return null;
         }
         int sampleSize;

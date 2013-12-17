@@ -123,9 +123,15 @@
             android:label="@string/title_activity_account_settings"
             android:screenOrientation="portrait" />
         <activity
-            android:windowSoftInputMode="adjustResize|stateVisible"
+            android:windowSoftInputMode="adjustPan|adjustResize|stateVisible"
             android:name="com.puzheng.the_genuine.LoginActivity"
             android:label="@string/title_activity_login"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:windowSoftInputMode="adjustPan|adjustResize|stateVisible"
+            android:name="com.puzheng.the_genuine.RegisterActivity"
+            android:label="@string/title_activity_register"
             android:screenOrientation="portrait" />
 
         <activity

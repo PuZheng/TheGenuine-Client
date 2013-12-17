@@ -2,23 +2,14 @@ package com.puzheng.the_genuine.netutils;
 
 import android.content.Context;
 import android.util.Pair;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.puzheng.the_genuine.Constants;
 import com.puzheng.the_genuine.MyApp;
-import com.puzheng.the_genuine.data_structure.Category;
-import com.puzheng.the_genuine.data_structure.Comment;
-import com.puzheng.the_genuine.data_structure.Favor;
-import com.puzheng.the_genuine.data_structure.Recommendation;
-import com.puzheng.the_genuine.data_structure.SPUResponse;
-import com.puzheng.the_genuine.data_structure.StoreResponse;
-import com.puzheng.the_genuine.data_structure.User;
-import com.puzheng.the_genuine.data_structure.VerificationInfo;
+import com.puzheng.the_genuine.data_structure.*;
 import com.puzheng.the_genuine.utils.BadResponseException;
 import com.puzheng.the_genuine.utils.HttpUtil;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -173,17 +164,18 @@ public class WebService {
         return gson.fromJson(result, User.class);
     }
 
-    public Pair<User, Boolean> register_or_login(String mEmail, String mPassword) {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return Pair.create(new User(1, "张三", "asdflkjlkjasdf"), false);
+    public User register(String email, String password) throws IOException, BadResponseException {
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("name", email);
+        params.put("password", password);
+        String url = HttpUtil.composeUrl("user-ws", "register", params);
+        String result = HttpUtil.postStringResult(url);
+        Gson gson = new Gson();
+        return gson.fromJson(result, User.class);
     }
 
     public VerificationInfo verify(String code) throws IOException, BadResponseException {
-        String url = HttpUtil.composeUrl("tag-ws", "tag/" + code, getCurrentLocation());
+        String url = HttpUtil.composeUrl("tag-ws", "tag/" + code.trim(), getCurrentLocation());
         String result = HttpUtil.getStringResult(url);
         Gson gson = new GsonBuilder().setDateFormat(Constants.DATE_FORMAT).create();
         return gson.fromJson(result, VerificationInfo.class);

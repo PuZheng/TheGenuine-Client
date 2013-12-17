@@ -219,9 +219,6 @@ public class CommentsActivity extends ListActivity implements RefreshInterface {
             viewHolder.textViewContent.setText(comment.getContent());
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.DATE_FORMAT);
             viewHolder.textViewDate.setText(simpleDateFormat.format(comment.getDate()));
-            if (Misc.isEmptyString(comment.getUserSmallAvatar())) {
-                new GetImageTask(viewHolder.avatar, comment.getUserSmallAvatar()).execute();
-            }
             return convertView;
         }
     }
