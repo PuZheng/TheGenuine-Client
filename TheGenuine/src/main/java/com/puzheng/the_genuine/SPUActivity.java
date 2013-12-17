@@ -42,7 +42,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SPUActivity extends FragmentActivity implements ViewPager.OnPageChangeListener, TabHost.OnTabChangeListener, Maskable {
+public class SPUActivity extends FragmentActivity implements ViewPager.OnPageChangeListener, TabHost.OnTabChangeListener, RefreshInterface {
 
     private static final String TAG = "SPUActivity";
     private ViewPager viewPager;
@@ -51,8 +51,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     private ViewPager viewPagerCover;
     private TabHost tabHost;
     private int spu_id;
-    private View mask;
-    private View main;
+    private MaskableManager maskableManager;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -98,6 +97,11 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     }
 
     @Override
+    public void refresh() {
+        new GetSPUTask().execute(spu_id);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == MyApp.LOGIN_ACTION) {
@@ -113,8 +117,6 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         verificationInfo = getIntent().getParcelableExtra(MainActivity.TAG_VERIFICATION_INFO);
         spu_id = getIntent().getIntExtra(Constants.TAG_SPU_ID, -1);
 
-        mask = findViewById(R.id.mask);
-        main = findViewById(R.id.main);
         if (verificationInfo == null && spu_id == -1) {
             throw new IllegalArgumentException("必须传入产品信息或者验证信息");
         }
@@ -124,7 +126,8 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             mediaPlayer.setLooping(false);
             mediaPlayer.start();
         } else {
-            new GetSPUTask(this).execute(spu_id);
+            maskableManager = new MaskableManager(findViewById(R.id.main), this);
+            new GetSPUTask().execute(spu_id);
         }
 
         NavBar navBar = (NavBar) findViewById(R.id.navBar);
@@ -328,18 +331,6 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         });
     }
 
-    @Override
-    public void mask() {
-        mask.setVisibility(View.VISIBLE);
-        main.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void unmask(Boolean b) {
-        mask.setVisibility(View.GONE);
-        main.setVisibility(View.VISIBLE);
-    }
-
     class MyTabFactory implements TabHost.TabContentFactory {
 
         private final Context mContext;
@@ -367,8 +358,8 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             } else {
                 fragments.add(SPUFragment.getInstance(SPUActivity.this, spuResponse.getSPU()));
             }
-            fragments.add(RecommendationsFragment.createNearByProductsFragment(SPUActivity.this, getSPUId()));
-            fragments.add(RecommendationsFragment.createSameVendorProductsFragment(SPUActivity.this, getSPUId()));
+            fragments.add(RecommendationsFragment.createNearByProductsFragment(getSPUId()));
+            fragments.add(RecommendationsFragment.createSameVendorProductsFragment( getSPUId()));
         }
 
         @Override
@@ -407,15 +398,10 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 
     private class GetSPUTask extends AsyncTask<Integer, Void, SPUResponse> {
 
-        private final Maskable maskable;
-
-        public GetSPUTask(Maskable maskable) {
-            this.maskable = maskable;
-        }
-
+        private Exception exception;
         @Override
         protected void onPreExecute() {
-            maskable.mask();
+            maskableManager.mask();
         }
 
         @Override
@@ -423,16 +409,14 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             try {
                 return WebService.getInstance(SPUActivity.this).getSPUResponse(params[0]);
             } catch (Exception e) {
+                exception = e;
                 return null;
             }
         }
 
         @Override
         protected void onPostExecute(SPUResponse spuResponse) {
-            if (spuResponse == null) {
-                maskable.unmask(false);
-            } else {
-                maskable.unmask(true);
+            if (maskableManager.unmask(exception)) {
                 SPUActivity.this.spuResponse = spuResponse;
                 SPUActivity.this.initViews();
             }

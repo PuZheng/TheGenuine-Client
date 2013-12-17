@@ -26,23 +26,27 @@ import com.puzheng.the_genuine.utils.Misc;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class CommentsActivity extends ListActivity implements Maskable {
-
+public class CommentsActivity extends ListActivity implements RefreshInterface {
+    private MaskableManager maskableManager;
     private int spuId;
     private TextView mCountTextView;
+    private GetCommentsTask task;
 
-    private View mask;
-    private View main;
+    @Override
+    public void refresh() {
+        if (task == null) {
+            task = new GetCommentsTask(this);
+            task.execute(spuId);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments);
+        maskableManager = new MaskableManager(getListView(), this);
         // Show the Up button in the action bar.
         spuId = getIntent().getIntExtra(Constants.TAG_SPU_ID, 0);
-
-        mask = findViewById(R.id.mask);
-        main = findViewById(R.id.main);
         setupActionBar();
     }
 
@@ -101,38 +105,29 @@ public class CommentsActivity extends ListActivity implements Maskable {
     }
 
     @Override
-    public void mask() {
-        main.setVisibility(View.GONE);
-        mask.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void unmask(Boolean b) {
-        main.setVisibility(View.VISIBLE);
-        mask.setVisibility(View.GONE);
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
-        new GetCommentsTask(this).execute(spuId);
+        if (task == null) {
+            task = new GetCommentsTask(this);
+            task.execute(spuId);
+        }
     }
 
     private class GetCommentsTask extends AsyncTask<Integer, Void, List<Comment>> {
         private final ListActivity listActivity;
-        private final Maskable maskable;
+        private Exception exception;
 
         public GetCommentsTask(ListActivity listActivity) {
             this.listActivity = listActivity;
-            this.maskable = (Maskable) listActivity;
         }
 
         @Override
         protected List<Comment> doInBackground(Integer... params) {
-            int productId = params[0];
             try {
+                int productId = params[0];
                 return WebService.getInstance(this.listActivity).getComments(productId);
             } catch (Exception e) {
+                exception = e;
                 return null;
             }
 
@@ -140,21 +135,20 @@ public class CommentsActivity extends ListActivity implements Maskable {
 
         @Override
         protected void onPreExecute() {
-            maskable.mask();
+            maskableManager.mask();
         }
 
         @Override
         protected void onPostExecute(List<Comment> commentList) {
-            boolean b = commentList != null;
             String text = "加载评论失败";
-            if (b) {
+            if (maskableManager.unmask(exception)) {
                 listActivity.setListAdapter(new MyCommentsAdapter(commentList));
                 text = "评论(" + Misc.humanizeNum(commentList.size()) + ")";
             }
             if (mCountTextView != null) {
                 mCountTextView.setText(text);
             }
-            this.maskable.unmask(b);
+            task = null;
         }
     }
 

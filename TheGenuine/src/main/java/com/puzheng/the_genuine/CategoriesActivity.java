@@ -23,22 +23,16 @@ import com.puzheng.the_genuine.views.NavBar;
 
 import java.util.List;
 
-public class CategoriesActivity extends ActionBarActivity implements Maskable, BackPressedInterface {
-    private View error;
-    private View mask;
+public class CategoriesActivity extends ActionBarActivity implements BackPressedInterface, RefreshInterface {
     private GridView gridView;
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
+    private MaskableManager maskableManager;
 
     @Override
     public void doBackPressed() {
         super.onBackPressed();
     }
 
-    @Override
-    public void mask() {
-        mask.setVisibility(View.VISIBLE);
-        gridView.setVisibility(View.GONE);
-    }
 
     @Override
     public void onBackPressed() {
@@ -65,11 +59,10 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
     }
 
     @Override
-    public void unmask(Boolean b) {
-        mask.setVisibility(View.GONE);
-        gridView.setVisibility(b ? View.VISIBLE : View.GONE);
-        error.setVisibility(b ? View.GONE : View.VISIBLE);
+    public void refresh() {
+        new GetCategoriesTask(gridView).execute();
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,22 +70,21 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
         setContentView(R.layout.activity_categories);
         NavBar navBar = (NavBar) findViewById(R.id.navBar);
         navBar.setContext(this);
-        mask = findViewById(R.id.mask);
         gridView = (GridView) findViewById(R.id.gridView);
-        error = findViewById(R.id.error);
+
+        maskableManager = new MaskableManager(gridView, this);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setSubtitle("分类列表");
         actionBar.setTitle("360真品");
-        new GetCategoriesTask(gridView, this).execute();
+        new GetCategoriesTask(gridView).execute();
     }
 
     private class GetCategoriesTask extends AsyncTask<Void, Void, List<Category>> {
         private final GridView gridView;
-        private final Maskable maskable;
+        private Exception exception;
 
-        public GetCategoriesTask(GridView gridView, Maskable maskable) {
+        public GetCategoriesTask(GridView gridView) {
             this.gridView = gridView;
-            this.maskable = maskable;
         }
 
         @Override
@@ -100,22 +92,21 @@ public class CategoriesActivity extends ActionBarActivity implements Maskable, B
             try {
                 return WebService.getInstance(gridView.getContext()).getCategories();
             } catch (Exception e) {
+                exception = e;
                 return null;
             }
         }
 
         @Override
         protected void onPostExecute(List<Category> list) {
-            boolean b = list != null;
-            if (b) {
+            if (maskableManager.unmask(exception)) {
                 gridView.setAdapter(new MyCategoriesAdapter(list));
             }
-            this.maskable.unmask(b);
         }
 
         @Override
         protected void onPreExecute() {
-            maskable.mask();
+            maskableManager.mask();
         }
     }
 

@@ -15,20 +15,6 @@
 
     </FrameLayout>
 
-    <LinearLayout
-        android:id="@+id/mask"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center">
-
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBar"
-            android:layout_gravity="center" />
-    </LinearLayout>
-
     <com.puzheng.the_genuine.views.NavBar
         android:id="@+id/navBar"
         android:layout_width="fill_parent"

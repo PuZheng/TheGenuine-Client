@@ -17,7 +17,8 @@
         <FrameLayout
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_above="@id/navBar" />
 
 
         <com.puzheng.the_genuine.views.NavBar
@@ -42,6 +43,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
-        android:background="#FFF"/>
+        android:background="#FFF" />
 
 </android.support.v4.widget.DrawerLayout>

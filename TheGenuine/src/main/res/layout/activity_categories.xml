@@ -5,15 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".CategoriesActivity">
 
-    <com.puzheng.the_genuine.views.NavBar
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/nav_bar_height"
-        android:background="#3c3c3c"
-        android:weightSum="6"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/navBar"
-        app:enabledTab="genuines" />
-
     <FrameLayout
         android:layout_above="@id/navBar"
         android:layout_width="fill_parent"
@@ -30,38 +21,17 @@
             android:padding="10dp"
             android:gravity="center" />
 
-        <LinearLayout
-            android:id="@+id/mask"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:gravity="center">
 
-            <ProgressBar
-                style="?android:attr/progressBarStyleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/progressBar"
-                android:layout_gravity="center" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            android:id="@+id/error">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/darker_gray"
-                android:text="@string/error_message"
-                android:layout_gravity="center_horizontal"
-                android:id="@+id/textView2" />
-
-        </LinearLayout>
     </FrameLayout>
+
+    <com.puzheng.the_genuine.views.NavBar
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/nav_bar_height"
+        android:background="#3c3c3c"
+        android:weightSum="6"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/navBar"
+        app:enabledTab="genuines" />
 
 
 </RelativeLayout>

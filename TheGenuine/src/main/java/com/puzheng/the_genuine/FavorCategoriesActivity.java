@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FavorCategoriesActivity extends ActionBarActivity implements BackPressedInterface {
+public class FavorCategoriesActivity extends ActionBarActivity implements BackPressedInterface, RefreshInterface {
     private final String mDrawerTitle = "选择分类";
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -38,6 +38,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
     private List<String> mPlanetTitles;
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
     private SparseArray<List<Favor>> mData;
+    private MaskableManager maskableManager;
 
     @Override
     public void doBackPressed() {
@@ -86,6 +87,11 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
         return super.onPrepareOptionsMenu(menu);
     }
 
+    @Override
+    public void refresh() {
+        new GetFavorsTask().execute();
+    }
+
     public void setActionBarTitle(CharSequence title) {
         mTitle = title;
         getActionBar().setTitle("我的收藏");
@@ -106,6 +112,9 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favor_categories);
+
+        maskableManager = new MaskableManager(findViewById(R.id.content_frame), FavorCategoriesActivity.this);
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -198,19 +207,26 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
 
     class GetFavorsTask extends AsyncTask<Void, Void, HashMap<String, List<Favor>>> {
 
+        private Exception exception;
+
+        @Override
+        protected void onPreExecute() {
+            maskableManager.mask();
+        }
+
         @Override
         protected HashMap<String, List<Favor>> doInBackground(Void... params) {
             try {
                 return WebService.getInstance(FavorCategoriesActivity.this).getFavorCategories();
             } catch (Exception e) {
-                e.printStackTrace();
+                exception = e;
                 return null;
             }
         }
 
         @Override
         protected void onPostExecute(HashMap<String, List<Favor>> map) {
-            if (map != null) {
+            if (maskableManager.unmask(exception)) {
                 String format = "%s(%d)";
                 mPlanetTitles = new ArrayList<String>();
                 mData = new SparseArray<List<Favor>>();
@@ -237,9 +253,6 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
                 getActionBar().setTitle(getString(R.string.error_message));
                 getActionBar().setSubtitle(null);
                 mDrawerLayout.setDrawerListener(null);
-                Fragment fragment = new ErrorFragment();
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
             }
         }
     }
