@@ -55,9 +55,9 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby);
 
-        maskableManager = new MaskableManager(findViewById(R.id.pager), NearbyActivity.this);
         mSpuId = getIntent().getIntExtra(Constants.TAG_SPU_ID, Constants.INVALID_ARGUMENT);
         mViewPager = (ViewPager) findViewById(R.id.pager);
+        maskableManager = new MaskableManager(mViewPager, NearbyActivity.this);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayShowHomeEnabled(false);

@@ -25,7 +25,9 @@ import java.util.Map;
 public class HttpUtil {
     public static final String HTTP = "http://";
     public static final String HTTPS = "https://";
-    private static final int DEAFULT_TIME_OUT_MILLSECONDS = 10000;
+    private static final int DEAFULT_CONNECTION_TIME_OUT_MILLSECONDS = 1000;
+    private static final int DEAFULT_SO_TIME_OUT_MILLSECONDS = 500;
+
 
     public static String composeUrl(String blueprint, String path) {
         return composeUrl(blueprint, path, null);
@@ -91,8 +93,8 @@ public class HttpUtil {
 
         HttpResponse response = null;
         HttpParams params = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(params, DEAFULT_TIME_OUT_MILLSECONDS);
-        HttpConnectionParams.setSoTimeout(params, DEAFULT_TIME_OUT_MILLSECONDS);
+        HttpConnectionParams.setConnectionTimeout(params, DEAFULT_CONNECTION_TIME_OUT_MILLSECONDS);
+        HttpConnectionParams.setSoTimeout(params, DEAFULT_SO_TIME_OUT_MILLSECONDS);
         if (method.equals("GET")) {
             HttpGet hg = new HttpGet(url);
             response = new DefaultHttpClient(params).execute(hg);
