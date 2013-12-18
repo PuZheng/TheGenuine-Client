@@ -2,19 +2,13 @@ package com.puzheng.the_genuine.utils;
 
 import android.util.Pair;
 import com.puzheng.the_genuine.MyApp;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.util.EntityUtils;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Map;
 
 /**
@@ -23,6 +17,7 @@ import java.util.Map;
 public class HttpUtil {
     public static final String HTTP = "http://";
     public static final String HTTPS = "https://";
+    private static final String CHARSET = "UTF-8";
     private static final int DEAFULT_CONNECTION_TIME_OUT_MILLSECONDS = 1000;
     private static final int DEAFULT_SO_TIME_OUT_MILLSECONDS = 500;
 
@@ -55,63 +50,57 @@ public class HttpUtil {
         return ret.toString();
     }
 
-    public static HttpResponse get(String url) throws IOException {
-        return sendRequest(url, "GET", null);
+    public static String getStringResult(String urlString) throws IOException, BadResponseException {
+        URL url = new URL(urlString);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestProperty("Accept-Charset", CHARSET);
+        connection.setConnectTimeout(DEAFULT_CONNECTION_TIME_OUT_MILLSECONDS);
+        connection.setReadTimeout(DEAFULT_SO_TIME_OUT_MILLSECONDS);
+        try {
+            return getResultFromConnection(connection);
+        } finally {
+            connection.disconnect();
+        }
     }
 
-    public static String getStringResult(String url) throws IOException, BadResponseException {
-        HttpResponse response = get(url);
-        return parseResult(response);
+    public static String postStringResult(String urlString) throws IOException, BadResponseException {
+        URL url = new URL(urlString);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestProperty("Accept-Charset", CHARSET);
+        connection.setConnectTimeout(DEAFULT_CONNECTION_TIME_OUT_MILLSECONDS);
+        connection.setReadTimeout(DEAFULT_SO_TIME_OUT_MILLSECONDS);
+        connection.setRequestMethod("POST");
+        connection.setUseCaches(false);
+        connection.setChunkedStreamingMode(0);
+        try {
+            return getResultFromConnection(connection);
+        } finally {
+            connection.disconnect();
+        }
+    }
+
+    private static String getResultFromConnection(HttpURLConnection connection) throws IOException, BadResponseException {
+        int statusCode = connection.getResponseCode();
+        if (isSucceed(statusCode)) {
+            return readStream(connection.getInputStream());
+        } else {
+            throw new BadResponseException(statusCode, connection.getURL().getFile(), readStream(connection.getErrorStream()));
+        }
+    }
+
+    private static String readStream(InputStream in) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        InputStreamReader inr = new InputStreamReader(in, CHARSET);
+        BufferedReader reader = new BufferedReader(inr);
+        String line;
+        while ((line = reader.readLine()) != null) {
+            stringBuilder.append(line);
+        }
+        return stringBuilder.toString();
     }
 
     private static boolean isSucceed(int statusCode) {
-        return statusCode == HttpStatus.SC_OK || statusCode == HttpStatus.SC_CREATED;
-    }
-
-    private static String parseResult(HttpResponse response) throws IOException, BadResponseException {
-        int statusCode = response.getStatusLine().getStatusCode();
-        String result = EntityUtils.toString(response.getEntity(), "UTF-8");
-        if (isSucceed(statusCode)) {
-            return result;
-        } else {
-            throw new BadResponseException(statusCode, result);
-        }
-    }
-
-    public static HttpResponse post(String url) throws IOException {
-        return sendRequest(url, "POST", null);
-    }
-
-    public static String postStringResult(String url) throws IOException, BadResponseException {
-        HttpResponse response = post(url);
-        return parseResult(response);
-    }
-
-    public static HttpResponse sendRequest(String url, String method, String data)
-            throws IOException {
-
-        HttpResponse response = null;
-        HttpParams params = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(params, DEAFULT_CONNECTION_TIME_OUT_MILLSECONDS);
-        HttpConnectionParams.setSoTimeout(params, DEAFULT_SO_TIME_OUT_MILLSECONDS);
-        if (method.equals("GET")) {
-            HttpGet hg = new HttpGet(url);
-            response = new DefaultHttpClient(params).execute(hg);
-        } else if (method.equals("POST")) {
-            HttpPost hp = new HttpPost(url);
-            if (data != null) {
-                hp.setHeader("Content-type", "application/json");
-                hp.setEntity(new StringEntity(data, "utf-8"));
-            }
-            response = new DefaultHttpClient(params).execute(hp);
-        } else if (method.equals("PUT")) {
-            HttpPut hp = new HttpPut(url);
-            if (data != null) {
-                hp.setHeader("Content-type", "application/json");
-                hp.setEntity(new StringEntity(data, "utf-8"));
-            }
-            response = new DefaultHttpClient(params).execute(hp);
-        }
-        return response;
+        return statusCode == HttpURLConnection.HTTP_OK || statusCode == HttpURLConnection.HTTP_CREATED;
     }
 }

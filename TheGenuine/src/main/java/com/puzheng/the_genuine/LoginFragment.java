@@ -20,6 +20,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.netutils.WebService;
+import com.puzheng.the_genuine.utils.BadResponseException;
 
 /**
  * Created by abc549825@163.com(https://github.com/abc549825) at 12-17.
@@ -180,6 +181,7 @@ public class LoginFragment extends Fragment {
     }
 
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+        private Exception exception;
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
@@ -189,7 +191,7 @@ public class LoginFragment extends Fragment {
                     return true;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                exception = e;
             }
             return false;
         }
@@ -210,7 +212,12 @@ public class LoginFragment extends Fragment {
                 activity.setResult(Activity.RESULT_OK);
                 activity.finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                if (exception instanceof BadResponseException) {
+                    mPasswordView.setError(getString(R.string.error_incorrect_password));
+                }else{
+                    mPasswordView.setError(getString(R.string.httpError));
+                }
+
                 mPasswordView.requestFocus();
             }
         }

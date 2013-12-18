@@ -1,10 +1,11 @@
 package com.puzheng.the_genuine;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import org.apache.http.HttpException;
+import com.puzheng.the_genuine.utils.BadResponseException;
 
 import java.io.IOException;
 
@@ -49,13 +50,18 @@ public class MaskableManager {
             parent.addView(targetView);
             return true;
         } else {
-            exception.printStackTrace();
+            if (exception instanceof BadResponseException) {
+                Log.e(MaskableManager.class.getSimpleName(),((BadResponseException) exception).getUrl(), exception);
+            } else {
+                Log.e(MaskableManager.class.getSimpleName(), exception.getMessage());
+            }
+
             if (isNetworkException(exception)) {
                 mImageButton.setImageResource(R.drawable.wifi_not_connected);
-                mTextView.setText("请检查网络连接，点击重试");
+                mTextView.setText(R.string.httpError);
             } else {
                 mImageButton.setImageResource(R.drawable.ic_action_refresh);
-                mTextView.setText("系统异常，点击重试");
+                mTextView.setText(R.string.systemError);
             }
             mProgressBar.setVisibility(View.GONE);
             mTextView.setVisibility(View.VISIBLE);
@@ -95,7 +101,7 @@ public class MaskableManager {
     }
 
     private boolean isNetworkException(Exception e) {
-        return e instanceof HttpException || e instanceof IOException;
+        return e instanceof IOException;
     }
 
 
