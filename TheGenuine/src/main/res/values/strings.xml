@@ -47,4 +47,7 @@
     <string name="text_register">免费注册</string>
     <string name="error_incorrect_confirm_password">两次输入的密码不一致</string>
     <string name="action_register_fail">注册失败</string>
+    <string name="httpError">无法连接到服务器</string>
+    <string name="httpErrorConnect">无法连接到服务器，点击重试</string>
+    <string name="systemError">系统异常，点击重试</string>
 </resources>
