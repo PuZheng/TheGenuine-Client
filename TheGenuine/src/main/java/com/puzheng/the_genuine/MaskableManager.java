@@ -58,7 +58,7 @@ public class MaskableManager {
 
             if (isNetworkException(exception)) {
                 mImageButton.setImageResource(R.drawable.wifi_not_connected);
-                mTextView.setText(R.string.httpError);
+                mTextView.setText(R.string.httpErrorConnect);
             } else {
                 mImageButton.setImageResource(R.drawable.ic_action_refresh);
                 mTextView.setText(R.string.systemError);
