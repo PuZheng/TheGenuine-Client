@@ -1,5 +1,6 @@
 package com.puzheng.the_genuine.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -9,26 +10,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import com.puzheng.the_genuine.*;
 
-import com.puzheng.the_genuine.AccountSettingsActivity;
-import com.puzheng.the_genuine.CategoriesActivity;
-import com.puzheng.the_genuine.FavorCategoriesActivity;
-import com.puzheng.the_genuine.MainActivity;
-import com.puzheng.the_genuine.NearbyActivity;
-import com.puzheng.the_genuine.R;
+import java.util.ArrayList;
 
 /**
  * Created by xc on 13-11-26.
  */
 public class NavBar extends LinearLayout {
+    public static final int FAVOR = 3;
     private static final int GO_HOME = 0;
     private static final int GENUINES = 1;
     private static final int AROUND = 2;
-    public static final int FAVOR = 3;
     private static final int ACCOUNT = 4;
     private final View rootView;
     private Context context;
     private int mCurrentActiveTabId;
+    private ArrayList<Integer> mAllResId = new ArrayList<Integer>();
 
     public NavBar(final Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -48,26 +46,6 @@ public class NavBar extends LinearLayout {
         initTab(R.id.nearby, NearbyActivity.class);
         initTab(R.id.favor, FavorCategoriesActivity.class);
         initTab(R.id.account, AccountSettingsActivity.class);
-    }
-
-    private void initTab(final int resId, final Class<?> activityClass) {
-        ImageButton imageButton = (ImageButton) findViewById(resId);
-        imageButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mCurrentActiveTabId == resId) {
-                    return;
-                }
-                Intent intent = new Intent(context, activityClass);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                context.startActivity(intent);
-            }
-        });
-
-    }
-
-    public void setContext(Context context) {
-        this.context = context;
     }
 
     public void enableTab(int tab, boolean disableOthers) {
@@ -118,5 +96,43 @@ public class NavBar extends LinearLayout {
             imageButtonActivitated.setImageResource(resId);
             imageButtonActivitated.setBackgroundResource(R.drawable.nav_bar_btn_activiated_bg);
         }
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    private void initTab(final int resId, final Class<?> activityClass) {
+        if (!mAllResId.contains(resId)) {
+            mAllResId.add(resId);
+        }
+        ImageButton imageButton = (ImageButton) findViewById(resId);
+        imageButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mCurrentActiveTabId == resId) {
+                    return;
+                }
+                Intent intent = new Intent(context, activityClass);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                context.startActivity(intent);
+                if (context instanceof Activity) {
+                    if (isLeft(resId)) {
+                        ((Activity) context).overridePendingTransition(R.anim.slide_in_form_left, R.anim.slide_out_from_right);
+
+                    } else {
+                        ((Activity) context).overridePendingTransition(R.anim.slide_in_form_right, R.anim.slide_out_from_left);
+
+                    }
+                }
+
+            }
+        });
+    }
+
+    private boolean isLeft(int targetResId) {
+        int currentIdx = mAllResId.indexOf(mCurrentActiveTabId);
+        int targetIdx = mAllResId.indexOf(targetResId);
+        return currentIdx > targetIdx;
     }
 }
