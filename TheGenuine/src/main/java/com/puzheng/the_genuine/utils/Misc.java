@@ -70,9 +70,8 @@ public class Misc {
 
     public static Pair<String, Integer> getServerAddress(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String ip = sharedPreferences.getString("server_ip", "192.168.1.7");
-        int port = sharedPreferences.getInt("server_port", 5000
-        );
+        String ip = sharedPreferences.getString("server_ip", "42.121.6.193");
+        int port = sharedPreferences.getInt("server_port", 8000);
         return new Pair<String, Integer>(ip, port);
     }
 
