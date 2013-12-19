@@ -1,5 +1,7 @@
 package com.puzheng.the_genuine.utils;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.text.TextUtils;
@@ -55,6 +57,12 @@ public class GetImageTask extends AsyncTask<Integer, Void, Bitmap> {
         if (mImageView.getTag() != mUrl) {
             return;
         }
+        Context context = mImageView.getContext();
+        //如果activity已经关闭，不需要再设置
+        if (context instanceof Activity && ((Activity) context).isFinishing()) {
+            return;
+        }
+
         if (ex == null && bitmap != null) {
             mImageView.setImageBitmap(bitmap);
         } else {

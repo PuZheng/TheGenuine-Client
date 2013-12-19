@@ -354,9 +354,9 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             super(fm);
             fragments = new ArrayList<Fragment>();
             if (verificationInfo != null) {
-                fragments.add(VerificationInfoFragment.getInstance(SPUActivity.this, verificationInfo));
+                fragments.add(new VerificationInfoFragment(verificationInfo));
             } else {
-                fragments.add(SPUFragment.getInstance(SPUActivity.this, spuResponse.getSPU()));
+                fragments.add(new SPUFragment(spuResponse.getSPU()));
             }
             fragments.add(RecommendationsFragment.createNearByProductsFragment(getSPUId()));
             fragments.add(RecommendationsFragment.createSameVendorProductsFragment( getSPUId()));
