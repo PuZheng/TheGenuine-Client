@@ -8,7 +8,6 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
-
 import com.puzheng.the_genuine.data_structure.User;
 
 import java.io.File;
@@ -71,8 +70,9 @@ public class Misc {
 
     public static Pair<String, Integer> getServerAddress(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String ip = sharedPreferences.getString("server_ip", "42.121.6.193");
-        int port = sharedPreferences.getInt("server_port", 8000);
+        String ip = sharedPreferences.getString("server_ip", "192.168.1.7");
+        int port = sharedPreferences.getInt("server_port", 5000
+        );
         return new Pair<String, Integer>(ip, port);
     }
 
@@ -82,6 +82,32 @@ public class Misc {
 
     public static boolean hasExternalCacheDir() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
+    }
+
+    public static boolean hasFroyo() {
+        // Can use static final constants like FROYO, declared in later versions
+        // of the OS since they are inlined at compile time. This is guaranteed behavior.
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
+    }
+
+    public static boolean hasGingerbread() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD;
+    }
+
+    public static boolean hasHoneycomb() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
+    }
+
+    public static boolean hasHoneycombMR1() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1;
+    }
+
+    public static boolean hasJellyBean() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
+    }
+
+    public static boolean hasKitKat() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     }
 
     public static String humanizeDistance(int distance) {
@@ -132,5 +158,4 @@ public class Misc {
             return s.substring(0, maxSize - 2) + "..";
         }
     }
-
 }

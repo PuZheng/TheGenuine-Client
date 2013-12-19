@@ -7,24 +7,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
-import com.puzheng.the_genuine.utils.GetImageTask;
+import com.puzheng.the_genuine.image_utils.ImageFetcher;
 
 /**
  * Created by xc on 13-11-23.
  */
 public class CoverFragment extends Fragment {
     private final String url;
+    private ImageFetcher mImageFetcher;
+
 
     public CoverFragment(Context context, String url) {
         this.url = url;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mImageFetcher = ImageFetcher.getImageFetcher(this.getActivity(), Integer.MAX_VALUE, 0.25f);
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ImageView imageView = (ImageView) inflater.inflate(R.layout.fragment_cover, container, false);
-        new GetImageTask(imageView, url).execute();
+        mImageFetcher.loadImage(url, imageView);
         return imageView;
     }
-
 }

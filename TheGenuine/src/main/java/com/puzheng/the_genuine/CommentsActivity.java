@@ -12,15 +12,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.TextView;
-
+import android.widget.*;
 import com.puzheng.the_genuine.data_structure.Comment;
+import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.netutils.WebService;
-import com.puzheng.the_genuine.utils.GetImageTask;
 import com.puzheng.the_genuine.utils.Misc;
 
 import java.text.SimpleDateFormat;
@@ -31,6 +26,7 @@ public class CommentsActivity extends ListActivity implements RefreshInterface {
     private int spuId;
     private TextView mCountTextView;
     private GetCommentsTask task;
+    private ImageFetcher mImageFetcher;
 
     @Override
     public void refresh() {
@@ -48,7 +44,10 @@ public class CommentsActivity extends ListActivity implements RefreshInterface {
         // Show the Up button in the action bar.
         spuId = getIntent().getIntExtra(Constants.TAG_SPU_ID, 0);
         setupActionBar();
+        int imageThumbSize = getResources().getDimensionPixelSize(R.dimen.image_view_list_item_width);
+        mImageFetcher = ImageFetcher.getImageFetcher(this, imageThumbSize, 0.25f); // Set memory cache to 25% of app memory
     }
+
 
     /**
      * Set up the {@link android.app.ActionBar}, if the API is available.
@@ -213,7 +212,7 @@ public class CommentsActivity extends ListActivity implements RefreshInterface {
             }
 
             Comment comment = (Comment) getItem(position);
-            new GetImageTask(viewHolder.avatar, comment.getUserSmallAvatar()).execute();
+            mImageFetcher.loadImage(comment.getUserSmallAvatar(), viewHolder.avatar);
             viewHolder.textViewUserName.setText(comment.getUserName());
             viewHolder.ratingBar.setRating(comment.getRating());
             viewHolder.textViewContent.setText(comment.getContent());
