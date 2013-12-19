@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -176,9 +177,17 @@ public class WebService {
 
     public VerificationInfo verify(String code) throws IOException, BadResponseException {
         String url = HttpUtil.composeUrl("tag-ws", "tag/" + code.trim(), getCurrentLocation());
-        String result = HttpUtil.getStringResult(url);
-        Gson gson = new GsonBuilder().setDateFormat(Constants.DATE_FORMAT).create();
-        return gson.fromJson(result, VerificationInfo.class);
+        try {
+            String result = HttpUtil.getStringResult(url);
+            Gson gson = new GsonBuilder().setDateFormat(Constants.DATE_FORMAT).create();
+            return gson.fromJson(result, VerificationInfo.class);
+        } catch (BadResponseException e) {
+            if (e.getStatusCode() == HttpURLConnection.HTTP_NOT_FOUND) {
+                return null;
+            } else {
+                throw e;
+            }
+        }
     }
 
 
