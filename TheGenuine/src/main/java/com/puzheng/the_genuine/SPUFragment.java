@@ -1,25 +1,20 @@
 package com.puzheng.the_genuine;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.puzheng.the_genuine.data_structure.SPU;
 
 /**
  * Created by xc on 13-12-4.
  */
 public class SPUFragment extends Fragment {
-    private static SPUFragment instance;
-    private final Context context;
     private final SPU spu;
 
-    public SPUFragment(Context context, SPU spu) {
-        this.context = context;
+    public SPUFragment(SPU spu) {
         this.spu = spu;
     }
 
@@ -34,12 +29,5 @@ public class SPUFragment extends Fragment {
         textView = (TextView) rootView.findViewById(R.id.textViewVendorName);
         textView.setText(spu.getVendorName());
         return rootView;
-    }
-
-    public static Fragment getInstance(Context context, SPU SPU) {
-        if (instance == null) {
-            instance = new SPUFragment(context, SPU);
-        }
-        return instance;
     }
 }

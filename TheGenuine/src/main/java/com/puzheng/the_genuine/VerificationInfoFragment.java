@@ -1,13 +1,11 @@
 package com.puzheng.the_genuine;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 
 import java.text.SimpleDateFormat;
@@ -17,13 +15,10 @@ import java.util.Date;
  * Created by xc on 13-11-21.
  */
 public class VerificationInfoFragment extends Fragment {
-    private static VerificationInfoFragment instance;
-    private final Context context;
     private final VerificationInfo verificationInfo;
     private View rootView;
 
-    public VerificationInfoFragment(Context context, VerificationInfo verificationInfo) {
-        this.context = context;
+    public VerificationInfoFragment(VerificationInfo verificationInfo) {
         this.verificationInfo = verificationInfo;
     }
 
@@ -49,12 +44,5 @@ public class VerificationInfoFragment extends Fragment {
             textView.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
         }
         return rootView;
-    }
-
-    public static Fragment getInstance(Context context, VerificationInfo verificationInfo) {
-        if (instance == null) {
-            instance = new VerificationInfoFragment(context, verificationInfo);
-        }
-        return instance;
     }
 }
