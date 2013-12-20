@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
@@ -18,8 +19,8 @@ public class HttpUtil {
     public static final String HTTP = "http://";
     public static final String HTTPS = "https://";
     private static final String CHARSET = "UTF-8";
-    private static final int DEAFULT_CONNECTION_TIME_OUT_MILLSECONDS = 1000;
-    private static final int DEAFULT_SO_TIME_OUT_MILLSECONDS = 500;
+    private static final int DEAFULT_CONNECTION_TIME_OUT_MILLSECONDS = 1500;
+    private static final int DEAFULT_SO_TIME_OUT_MILLSECONDS = 1000;
 
     public static String composeUrl(String blueprint, String path) {
         return composeUrl(blueprint, path, null);
@@ -63,6 +64,23 @@ public class HttpUtil {
         }
     }
 
+    public static URL getURL(String sUrl) throws MalformedURLException {
+        if (sUrl.toLowerCase().startsWith(HTTP) || sUrl.toLowerCase().startsWith(HTTPS)) {
+            return new URL(sUrl);
+        } else {
+            Pair<String, Integer> serverAddress = MyApp.getServerAddress();
+            StringBuilder target = new StringBuilder(HTTP);
+            target.append(serverAddress.first).append(":").append(serverAddress.second);
+            if (sUrl.startsWith("/")) {
+                target.append(sUrl);
+            } else {
+                target.append("/").append(sUrl);
+            }
+
+            return new URL(target.toString());
+        }
+    }
+
     public static String postStringResult(String urlString) throws IOException, BadResponseException {
         URL url = new URL(urlString);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -88,6 +106,10 @@ public class HttpUtil {
         }
     }
 
+    private static boolean isSucceed(int statusCode) {
+        return statusCode == HttpURLConnection.HTTP_OK || statusCode == HttpURLConnection.HTTP_CREATED;
+    }
+
     private static String readStream(InputStream in) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -98,9 +120,5 @@ public class HttpUtil {
             stringBuilder.append(line);
         }
         return stringBuilder.toString();
-    }
-
-    private static boolean isSucceed(int statusCode) {
-        return statusCode == HttpURLConnection.HTTP_OK || statusCode == HttpURLConnection.HTTP_CREATED;
     }
 }

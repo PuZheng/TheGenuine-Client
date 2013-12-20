@@ -1,7 +1,6 @@
 package com.puzheng.the_genuine;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ListFragment;
 import android.content.Context;
@@ -17,9 +16,9 @@ import android.util.SparseArray;
 import android.view.*;
 import android.widget.*;
 import com.puzheng.the_genuine.data_structure.Favor;
+import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.search.SearchActivity;
-import com.puzheng.the_genuine.utils.GetImageTask;
 import com.puzheng.the_genuine.utils.Misc;
 import com.puzheng.the_genuine.views.NavBar;
 
@@ -39,6 +38,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
     private SparseArray<List<Favor>> mData;
     private MaskableManager maskableManager;
+    private ImageFetcher mImageFetcher;
 
     @Override
     public void doBackPressed() {
@@ -112,6 +112,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favor_categories);
+        mImageFetcher = ImageFetcher.getImageFetcher(this, getResources().getDimensionPixelSize(R.dimen.image_view_list_item_width), 0.25f);
 
         maskableManager = new MaskableManager(findViewById(R.id.content_frame), FavorCategoriesActivity.this);
 
@@ -256,77 +257,77 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
             }
         }
     }
-}
 
-class FavorListAdapter extends BaseAdapter {
-    private List<Favor> mFavorList;
-    private LayoutInflater inflater;
-    private Activity mActivity;
+    class FavorListAdapter extends BaseAdapter {
+        private List<Favor> mFavorList;
+        private LayoutInflater inflater;
+        private Activity mActivity;
 
-    public FavorListAdapter(List<Favor> list, Activity activity) {
-        this.mActivity = activity;
-        inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.mFavorList = list;
-    }
-
-    @Override
-    public int getCount() {
-        return mFavorList.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mFavorList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return mFavorList.get(position).getId();
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.recommendation_list_item, null);
-        }
-        RecommendationListAdapter.ViewHolder viewHolder;
-        if (convertView.getTag() == null) {
-            viewHolder = new RecommendationListAdapter.ViewHolder((ImageView) convertView.findViewById(R.id.imageView),
-                    (TextView) convertView.findViewById(R.id.textViewProductName),
-                    (TextView) convertView.findViewById(R.id.textViewFavorCnt),
-                    (TextView) convertView.findViewById(R.id.textViewPrice),
-                    (Button) convertView.findViewById(R.id.button),
-                    (RatingBar) convertView.findViewById(R.id.ratingBar));
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (RecommendationListAdapter.ViewHolder) convertView.getTag();
+        public FavorListAdapter(List<Favor> list, Activity activity) {
+            this.mActivity = activity;
+            inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            this.mFavorList = list;
         }
 
-        final Favor favor = (Favor) getItem(position);
-        new GetImageTask(viewHolder.imageView, favor.getSPU().getIcon()).execute();
+        @Override
+        public int getCount() {
+            return mFavorList.size();
+        }
 
-        viewHolder.textViewProductName.setText(favor.getSPU().getName());
-        viewHolder.textViewPrice.setText("￥" + favor.getSPU().getMsrp());
-        viewHolder.textViewFavorCnt.setText("人气" + Misc.humanizeNum(favor.getFavorCnt()));
-        viewHolder.ratingBar.setRating(favor.getSPU().getRating());
-        viewHolder.button.setText("最近" + Misc.humanizeDistance(favor.getDistance()));
-        viewHolder.button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mActivity, NearbyActivity.class);
-                intent.putExtra("current", NearbyActivity.NEARBY_LIST);
-                intent.putExtra(Constants.TAG_SPU_ID, favor.getSPU().getId());
-                mActivity.startActivity(intent);
+        @Override
+        public Object getItem(int position) {
+            return mFavorList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return mFavorList.get(position).getId();
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.recommendation_list_item, null);
             }
-        });
-        if (favor.getDistance() == -1) {
-            viewHolder.button.setVisibility(View.INVISIBLE);
+            RecommendationListAdapter.ViewHolder viewHolder;
+            if (convertView.getTag() == null) {
+                viewHolder = new RecommendationListAdapter.ViewHolder((ImageView) convertView.findViewById(R.id.imageView),
+                        (TextView) convertView.findViewById(R.id.textViewProductName),
+                        (TextView) convertView.findViewById(R.id.textViewFavorCnt),
+                        (TextView) convertView.findViewById(R.id.textViewPrice),
+                        (Button) convertView.findViewById(R.id.button),
+                        (RatingBar) convertView.findViewById(R.id.ratingBar));
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (RecommendationListAdapter.ViewHolder) convertView.getTag();
+            }
+
+            final Favor favor = (Favor) getItem(position);
+            mImageFetcher.loadImage(favor.getSPU().getIcon(), viewHolder.imageView);
+
+            viewHolder.textViewProductName.setText(favor.getSPU().getName());
+            viewHolder.textViewPrice.setText("￥" + favor.getSPU().getMsrp());
+            viewHolder.textViewFavorCnt.setText("人气" + Misc.humanizeNum(favor.getFavorCnt()));
+            viewHolder.ratingBar.setRating(favor.getSPU().getRating());
+            viewHolder.button.setText("最近" + Misc.humanizeDistance(favor.getDistance()));
+            viewHolder.button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mActivity, NearbyActivity.class);
+                    intent.putExtra("current", NearbyActivity.NEARBY_LIST);
+                    intent.putExtra(Constants.TAG_SPU_ID, favor.getSPU().getId());
+                    mActivity.startActivity(intent);
+                }
+            });
+            if (favor.getDistance() == -1) {
+                viewHolder.button.setVisibility(View.INVISIBLE);
+            }
+
+            viewHolder.button.setText(Misc.humanizeDistance(favor.getDistance()));
+            viewHolder.textViewPrice.setText(String.valueOf(favor.getSPU().getMsrp()));
+            return convertView;
         }
 
-        viewHolder.button.setText(Misc.humanizeDistance(favor.getDistance()));
-        viewHolder.textViewPrice.setText(String.valueOf(favor.getSPU().getMsrp()));
-        return convertView;
     }
-
-
 }
+

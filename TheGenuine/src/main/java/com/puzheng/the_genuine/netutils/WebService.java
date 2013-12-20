@@ -14,10 +14,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -134,25 +132,6 @@ public class WebService {
         }.getType();
         Gson gson = new Gson();
         return gson.fromJson(object.getString("data"), type);
-    }
-
-    public InputStream getStreamFromUrl(String sUrl) throws IOException {
-        URL url;
-        if (sUrl.toLowerCase().startsWith(HttpUtil.HTTP) || sUrl.toLowerCase().startsWith(HttpUtil.HTTPS)) {
-            url = new URL(sUrl);
-        } else {
-            Pair<String, Integer> serverAddress = MyApp.getServerAddress();
-            StringBuilder target = new StringBuilder(HttpUtil.HTTP);
-            target.append(serverAddress.first).append(":").append(serverAddress.second);
-            if (sUrl.startsWith("/")) {
-                target.append(sUrl);
-            } else {
-                target.append("/").append(sUrl);
-            }
-
-            url = new URL(target.toString());
-        }
-        return url.openStream();
     }
 
     public User login(String email, String password) throws IOException, BadResponseException {

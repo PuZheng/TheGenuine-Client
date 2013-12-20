@@ -1,6 +1,7 @@
 package com.puzheng.the_genuine;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +10,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
 import com.puzheng.the_genuine.data_structure.StoreResponse;
-import com.puzheng.the_genuine.utils.GetImageTask;
+import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.utils.Misc;
 
 import java.util.List;
@@ -21,10 +21,17 @@ import java.util.List;
  */
 public class NearbyFragment extends ListFragment {
     private Context mContext;
+    private ImageFetcher mImageFetcher;
 
     public NearbyFragment(Context context, List<StoreResponse> storeList) {
         this.mContext = context;
         setListAdapter(new NearbyListAdapter(storeList));
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mImageFetcher = ImageFetcher.getImageFetcher(this.getActivity(), getResources().getDimensionPixelSize(R.dimen.image_view_list_item_width), 0.25f);
     }
 
     class ViewHolder {
@@ -86,7 +93,7 @@ public class NearbyFragment extends ListFragment {
             }
 
             StoreResponse response = (StoreResponse) getItem(position);
-            new GetImageTask(viewHolder.mImageView, response.getStore().getIcon()).execute();
+            mImageFetcher.loadImage(response.getStore().getIcon(), viewHolder.mImageView);
 
             viewHolder.mStoreName.setText(response.getStore().getName());
             viewHolder.mDistance.setText(Misc.humanizeDistance(response.getDistance()));

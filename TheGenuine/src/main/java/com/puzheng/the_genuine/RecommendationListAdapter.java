@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.puzheng.the_genuine.data_structure.Recommendation;
-import com.puzheng.the_genuine.utils.GetImageTask;
+import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.utils.Misc;
 
 import java.util.List;
@@ -21,11 +21,14 @@ public class RecommendationListAdapter extends BaseAdapter {
     private final List<Recommendation> recommendations;
     private final LayoutInflater inflater;
     private final Activity mActivity;
+    private final ImageFetcher mImageFetcher;
 
     public RecommendationListAdapter(List<Recommendation> recommendations, Activity activity) {
         this.recommendations = recommendations;
         this.mActivity = activity;
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mImageFetcher = ImageFetcher.getImageFetcher(activity, activity.getResources().getDimensionPixelSize(R.dimen.image_view_list_item_width), 0.25f);
+
     }
 
     @Override
@@ -62,7 +65,7 @@ public class RecommendationListAdapter extends BaseAdapter {
         }
 
         final Recommendation recommendation = (Recommendation) getItem(position);
-        new GetImageTask(viewHolder.imageView, recommendation.getPicUrl()).execute();
+        mImageFetcher.loadImage(recommendation.getPicUrl(), viewHolder.imageView);
 
         viewHolder.textViewProductName.setText(recommendation.getProductName());
         viewHolder.textViewFavorCnt.setText("人气" + Misc.humanizeNum(recommendation.getFavorCnt()));

@@ -6,19 +6,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageButton;
-
+import android.view.*;
+import android.widget.*;
 import com.puzheng.the_genuine.data_structure.Category;
+import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.search.SearchActivity;
-import com.puzheng.the_genuine.utils.GetImageTask;
+import com.puzheng.the_genuine.utils.Misc;
 import com.puzheng.the_genuine.views.NavBar;
 
 import java.util.List;
@@ -27,6 +21,8 @@ public class CategoriesActivity extends ActionBarActivity implements BackPressed
     private GridView gridView;
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
     private MaskableManager maskableManager;
+
+    private ImageFetcher mImageFetcher;
 
     @Override
     public void doBackPressed() {
@@ -68,9 +64,45 @@ public class CategoriesActivity extends ActionBarActivity implements BackPressed
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categories);
+
+        int imageThumbSize = getResources().getDimensionPixelSize(R.dimen.categories_grid_item_width);
+
+        mImageFetcher = ImageFetcher.getImageFetcher(this, imageThumbSize, 0.25f);
+
         NavBar navBar = (NavBar) findViewById(R.id.navBar);
         navBar.setContext(this);
         gridView = (GridView) findViewById(R.id.gridView);
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Category category = (Category) gridView.getAdapter().getItem(position);
+                Intent intent = new Intent(CategoriesActivity.this, SPUListActivity.class);
+                intent.putExtra("category_id", category.getId());
+                intent.putExtra("categoryName", category.getName());
+                startActivity(intent);
+            }
+        });
+
+        gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+                // Pause fetcher to ensure smoother scrolling when flinging
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
+                    // Before Honeycomb pause image loading on scroll to help with performance
+                    if (!Misc.hasHoneycomb()) {
+                        mImageFetcher.setPauseWork(true);
+                    }
+                } else {
+                    mImageFetcher.setPauseWork(false);
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int firstVisibleItem,
+                    int visibleItemCount, int totalItemCount) {
+            }
+        });
 
         maskableManager = new MaskableManager(gridView, this);
         ActionBar actionBar = getSupportActionBar();
@@ -100,7 +132,7 @@ public class CategoriesActivity extends ActionBarActivity implements BackPressed
         @Override
         protected void onPostExecute(List<Category> list) {
             if (maskableManager.unmask(exception)) {
-                gridView.setAdapter(new MyCategoriesAdapter(list));
+                gridView.setAdapter( new MyCategoriesAdapter(list));
             }
         }
 
@@ -142,29 +174,21 @@ public class CategoriesActivity extends ActionBarActivity implements BackPressed
             }
             ViewHolder viewHolder;
             if (convertView.getTag() == null) {
-                viewHolder = new ViewHolder((ImageButton) convertView.findViewById(R.id.imageButton));
+                viewHolder = new ViewHolder((ImageView) convertView.findViewById(R.id.imageView));
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
             final Category category = (Category) getItem(position);
-            viewHolder.imageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(CategoriesActivity.this, SPUListActivity.class);
-                    intent.putExtra("category_id", category.getId());
-                    intent.putExtra("categoryName", category.getName());
-                    startActivity(intent);
-                }
-            });
-            new GetImageTask(viewHolder.imageButton, category.getPicUrl()).execute();
+
+            mImageFetcher.loadImage(category.getPicUrl(), viewHolder.imageButton);
             return convertView;
         }
 
         private class ViewHolder {
-            ImageButton imageButton;
+            ImageView imageButton;
 
-            ViewHolder(ImageButton imageButton) {
+            ViewHolder(ImageView imageButton) {
                 this.imageButton = imageButton;
             }
 
