@@ -50,10 +50,12 @@ public class MaskableManager {
             parent.addView(targetView);
             return true;
         } else {
-            if (exception instanceof BadResponseException) {
-                Log.e(MaskableManager.class.getSimpleName(),((BadResponseException) exception).getUrl(), exception);
-            } else {
-                Log.e(MaskableManager.class.getSimpleName(), exception.getMessage());
+            if (BuildConfig.DEBUG) {
+                if (exception instanceof BadResponseException) {
+                    Log.e(MaskableManager.class.getSimpleName(),((BadResponseException) exception).getUrl(), exception);
+                } else {
+                    Log.e(MaskableManager.class.getSimpleName(), String.valueOf(exception.getMessage()), exception);
+                }
             }
 
             if (isNetworkException(exception)) {
