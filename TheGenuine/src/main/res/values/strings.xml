@@ -54,4 +54,5 @@
     <string name="switch_to_barcode">转换二维码验证</string>
     <string name="switch_to_nfc">转换NFC验证</string>
     <string name="price_prefix">零售价: ￥</string>
+    <string name="app_message">拒绝伪品，鉴真于\"芯\"</string>
 </resources>
