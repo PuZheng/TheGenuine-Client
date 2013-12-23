@@ -111,7 +111,6 @@ public class MainActivity extends Activity implements BackPressedInterface {
         String action = intent.getAction();
         Tag tag = null;
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
-
             String type = intent.getType();
             if (MIME_TEXT_PLAIN.equals(type)) {
                 tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -143,15 +142,19 @@ public class MainActivity extends Activity implements BackPressedInterface {
             return null;
         }
         NdefMessage ndefMessage = ndef.getCachedNdefMessage();
-        NdefRecord[] records = ndefMessage.getRecords();
-        for (NdefRecord ndefRecord : records) {
-            if (ndefRecord.getTnf() == NdefRecord.TNF_WELL_KNOWN && Arrays.equals(ndefRecord.getType(), NdefRecord.RTD_TEXT)) {
-                try {
-                    return readText(ndefRecord);
-                } catch (UnsupportedEncodingException e) {
-                    Toast.makeText(MainActivity.this, "Unsupported Encoding" + e, Toast.LENGTH_SHORT).show();
+        if (ndefMessage != null) {
+            NdefRecord[] records = ndefMessage.getRecords();
+            for (NdefRecord ndefRecord : records) {
+                if (ndefRecord.getTnf() == NdefRecord.TNF_WELL_KNOWN && Arrays.equals(ndefRecord.getType(), NdefRecord.RTD_TEXT)) {
+                    try {
+                        return readText(ndefRecord);
+                    } catch (UnsupportedEncodingException e) {
+                        Toast.makeText(MainActivity.this, "Unsupported Encoding" + e, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
+        } else {
+            Toast.makeText(MainActivity.this, "无法识别的NFC标签", Toast.LENGTH_SHORT).show();
         }
         return null;
     }

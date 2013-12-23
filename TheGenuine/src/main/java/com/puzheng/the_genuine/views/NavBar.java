@@ -110,22 +110,23 @@ public class NavBar extends LinearLayout {
         imageButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mCurrentActiveTabId == resId) {
+                if (NavBar.this.context.getClass().isAssignableFrom(activityClass)) {
                     return;
                 }
                 Intent intent = new Intent(context, activityClass);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 context.startActivity(intent);
                 if (context instanceof Activity) {
+                    if (mCurrentActiveTabId == resId) {
+                        ((Activity) context).finish();
+                        return;
+                    }
                     if (isLeft(resId)) {
                         ((Activity) context).overridePendingTransition(R.anim.slide_in_form_left, R.anim.slide_out_from_right);
-
                     } else {
                         ((Activity) context).overridePendingTransition(R.anim.slide_in_form_right, R.anim.slide_out_from_left);
-
                     }
                 }
-
             }
         });
     }
