@@ -181,15 +181,15 @@ public class CategoriesActivity extends ActionBarActivity implements BackPressed
             }
             final Category category = (Category) getItem(position);
 
-            mImageFetcher.loadImage(category.getPicUrl(), viewHolder.imageButton);
+            mImageFetcher.loadImage(category.getPicUrl(), viewHolder.imageView);
             return convertView;
         }
 
         private class ViewHolder {
-            ImageView imageButton;
+            ImageView imageView;
 
-            ViewHolder(ImageView imageButton) {
-                this.imageButton = imageButton;
+            ViewHolder(ImageView imageView) {
+                this.imageView = imageView;
             }
 
         }

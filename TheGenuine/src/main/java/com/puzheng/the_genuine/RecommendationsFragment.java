@@ -1,15 +1,11 @@
 package com.puzheng.the_genuine;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
-
 import com.puzheng.the_genuine.data_structure.Recommendation;
 import com.puzheng.the_genuine.netutils.WebService;
 
@@ -85,7 +81,12 @@ public class RecommendationsFragment extends ListFragment implements RefreshInte
         @Override
         protected void onPostExecute(List<Recommendation> recommendations) {
             if (maskableManager.unmask(exception)) {
-                listFragment.setListAdapter(new RecommendationListAdapter(recommendations, getActivity()));
+                if (recommendations != null && !recommendations.isEmpty()) {
+                    listFragment.setListAdapter(new RecommendationListAdapter(recommendations, getActivity()));
+                }else {
+                    listFragment.setListAdapter(null);
+                    listFragment.setEmptyText(listFragment.getString(R.string.search_no_result_found));
+                }
             }
         }
 

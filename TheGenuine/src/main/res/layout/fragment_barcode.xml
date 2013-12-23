@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/surface_view"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent">
 
         <SurfaceView
             android:id="@+id/preview_view"
@@ -22,17 +22,32 @@
 
     </RelativeLayout>
 
-    <ImageButton
-        android:layout_marginTop="4dp"
-        android:layout_marginRight="4dp"
+    <LinearLayout
+        android:id="@+id/imageButtonLayout"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/margin2top"
+        android:layout_marginRight="@dimen/margin2right"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:scaleType="centerCrop"
-        android:id="@+id/imageButton"
-        android:src="@drawable/ic_launcher"
-        android:layout_gravity="center" />
+        android:layout_width="@dimen/image_view_list_item_width"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:layout_width="@dimen/image_view_list_item_width"
+            android:layout_height="@dimen/image_view_list_item_height"
+            android:scaleType="centerCrop"
+            android:id="@+id/imageButton"
+            android:src="@drawable/ic_launcher"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:gravity="center"
+            android:textSize="8sp"
+            android:text="@string/switch_to_nfc"
+            android:layout_width="@dimen/image_view_list_item_width"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
 
     <com.puzheng.the_genuine.views.NavBar
         android:id="@+id/navBar"
