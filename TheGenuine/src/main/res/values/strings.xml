@@ -50,4 +50,5 @@
     <string name="httpError">无法连接到服务器</string>
     <string name="httpErrorConnect">无法连接到服务器，点击重试</string>
     <string name="systemError">系统异常，点击重试</string>
+    <string name="title_activity_favor">我的收藏</string>
 </resources>
