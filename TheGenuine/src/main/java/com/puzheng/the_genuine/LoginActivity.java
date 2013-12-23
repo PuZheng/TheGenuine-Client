@@ -17,7 +17,7 @@ public class LoginActivity extends Activity implements BackPressedInterface {
 
     @Override
     public void doBackPressed() {
-        this.finish();
+        super.onBackPressed();
     }
 
     /**
