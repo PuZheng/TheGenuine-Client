@@ -110,7 +110,7 @@ public class NavBar extends LinearLayout {
         imageButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (NavBar.this.context.getClass().isAssignableFrom(activityClass)) {
+                if (NavBar.this.context.getClass().equals(activityClass)) {
                     return;
                 }
                 Intent intent = new Intent(context, activityClass);
