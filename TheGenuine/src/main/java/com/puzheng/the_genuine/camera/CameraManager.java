@@ -16,8 +16,6 @@
 
 package com.puzheng.the_genuine.camera;
 
-import java.io.IOException;
-
 import android.content.Context;
 import android.graphics.ImageFormat;
 import android.graphics.Point;
@@ -27,6 +25,9 @@ import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 import android.view.SurfaceHolder;
+import com.puzheng.the_genuine.R;
+
+import java.io.IOException;
 
 /**
  * This object wraps the Camera service object and expects to be the only one talking to it. The
@@ -39,7 +40,7 @@ public final class CameraManager {
 
     private static final int MIN_FRAME_WIDTH = 240;
     private static final int MIN_FRAME_HEIGHT = 240;
-    private static final int MAX_FRAME_WIDTH = 480;
+    private static final int MAX_FRAME_WIDTH = 720;
     private static final int MAX_FRAME_HEIGHT = 360;
 
     private static CameraManager cameraManager;
@@ -213,15 +214,10 @@ public final class CameraManager {
             } else if (width > MAX_FRAME_WIDTH) {
                 width = MAX_FRAME_WIDTH;
             }
-            int height = screenResolution.y * 3 / 4;
-            if (height < MIN_FRAME_HEIGHT) {
-                height = MIN_FRAME_HEIGHT;
-            } else if (height > MAX_FRAME_HEIGHT) {
-                height = MAX_FRAME_HEIGHT;
-            }
             int leftOffset = (screenResolution.x - width) / 2;
-            int topOffset = (screenResolution.y - height) / 2;
-            framingRect = new Rect(leftOffset, topOffset, leftOffset + width, topOffset + height);
+            int navBarHeight = getContext().getResources().getDimensionPixelOffset(R.dimen.nav_bar_height);
+            int topOffset = (screenResolution.y - width - navBarHeight) / 2;
+            framingRect = new Rect(leftOffset, topOffset, leftOffset + width, topOffset + width);
             Log.d(TAG, "Calculated framing rect: " + framingRect);
         }
         return framingRect;

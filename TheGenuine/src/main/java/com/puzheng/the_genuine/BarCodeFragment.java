@@ -123,9 +123,9 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
 
         ImageButton imageButton = (ImageButton) mRootView.findViewById(R.id.imageButton);
         if (!MainActivity.isNfcEnabled) {
-            imageButton.setVisibility(View.GONE);
+            mRootView.findViewById(R.id.imageButtonLayout).setVisibility(View.GONE);
         } else {
-            imageButton.setVisibility(View.VISIBLE);
+            mRootView.findViewById(R.id.imageButtonLayout).setVisibility(View.VISIBLE);
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

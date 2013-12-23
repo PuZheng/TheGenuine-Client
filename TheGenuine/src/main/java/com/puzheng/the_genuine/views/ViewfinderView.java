@@ -16,23 +16,17 @@
 
 package com.puzheng.the_genuine.views;
 
-import java.util.Collection;
-import java.util.HashSet;
-
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.Typeface;
+import android.graphics.*;
 import android.util.AttributeSet;
 import android.view.View;
-
 import com.google.zxing.ResultPoint;
 import com.puzheng.the_genuine.R;
 import com.puzheng.the_genuine.camera.CameraManager;
+
+import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * This view is overlaid on top of the camera preview. It adds the viewfinder
@@ -197,7 +191,7 @@ public final class ViewfinderView extends View {
             paint.setTextSize(TEXT_SIZE * density);
             paint.setAlpha(0x40);
             paint.setTypeface(Typeface.create("System", Typeface.BOLD));
-            canvas.drawText(getResources().getString(R.string.scan_text), frame.left, (float) (frame.bottom + (float) TEXT_PADDING_TOP * density), paint);
+            canvas.drawText(getResources().getString(R.string.scan_text), frame.left, frame.bottom + (float) TEXT_PADDING_TOP * density, paint);
 
 
             Collection<ResultPoint> currentPossible = possibleResultPoints;

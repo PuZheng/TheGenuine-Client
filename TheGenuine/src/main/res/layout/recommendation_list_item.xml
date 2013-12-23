@@ -84,7 +84,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="建议价: ￥"
+                android:text="@string/price_prefix"
                 android:includeFontPadding="false"
                 android:textColor="#fc8c43"
                 android:textSize="14dp"
