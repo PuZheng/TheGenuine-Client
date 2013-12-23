@@ -179,7 +179,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         tabSpec.setContent(new MyTabFactory(this));
         tabHost.addTab(tabSpec);
 
-        s = "周边推荐(" + Misc.humanizeNum(getNearbyRecommendationsCnt()) + ")";
+        s = "同类推荐(" + Misc.humanizeNum(getNearbyRecommendationsCnt()) + ")";
         tabSpec = tabHost.newTabSpec("tab2").setIndicator(s);
         tabSpec.setContent(new MyTabFactory(this));
         tabHost.addTab(tabSpec);
