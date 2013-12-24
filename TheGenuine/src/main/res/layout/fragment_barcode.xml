@@ -22,14 +22,16 @@
 
     </RelativeLayout>
 
-    <TextView
+    <ImageView
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin2top"
         android:layout_marginLeft="@dimen/margin2right"
-        android:text="@string/app_message" />
+        android:contentDescription="@string/app_message"
+        android:background="@null"
+        android:src="@drawable/app_message" />
 
 
     <LinearLayout
