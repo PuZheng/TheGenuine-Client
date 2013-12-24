@@ -18,6 +18,7 @@ import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.puzheng.the_genuine.data_structure.MyLocationData;
 import com.puzheng.the_genuine.data_structure.StoreResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,6 +38,7 @@ public class BaiduMapFragment extends Fragment {
     private TextView popupText = null;
     private MyOverlay mOverlay = null;
     private BaiduMapBroadcastReceiver receiver;
+    private ArrayList<Integer> marks;
 
     public BaiduMapFragment(List<StoreResponse> storeList) {
         this.mStoreList = storeList;
@@ -110,21 +112,40 @@ public class BaiduMapFragment extends Fragment {
         super.onResume();
     }
 
+    private ArrayList<Integer> getMarks() {
+        if (marks == null) {
+            marks = new ArrayList<Integer>();
+            marks.add(R.drawable.icon_marka);
+            marks.add(R.drawable.icon_markb);
+            marks.add(R.drawable.icon_markc);
+            marks.add(R.drawable.icon_markd);
+            marks.add(R.drawable.icon_marke);
+            marks.add(R.drawable.icon_markf);
+            marks.add(R.drawable.icon_markg);
+            marks.add(R.drawable.icon_markh);
+            marks.add(R.drawable.icon_marki);
+            marks.add(R.drawable.icon_markj);
+        }
+        return marks;
+    }
+
     private void addItemOverlay(MapView mapView) {
         if (myLocationOverlay != null) {
-            //准备overlay图像数据，根据实情情况修复
-            Drawable mark = getResources().getDrawable(R.drawable.icon_marka);
-            Drawable mark2 = getResources().getDrawable(R.drawable.icon_markb);
+            Drawable mark = getResources().getDrawable(R.drawable.red_mark);
 
             //创建IteminizedOverlay
             mOverlay = new MyOverlay(mark, mapView);
             //将IteminizedOverlay添加到MapView中
             mapView.getOverlays().add(mOverlay);
+            ArrayList<Integer> markIcons = getMarks();
 
-            for (StoreResponse storeResponse : mStoreList) {
+            for (int i = 0, size = mStoreList.size(); i < size; i++) {
+                StoreResponse storeResponse = mStoreList.get(i);
                 GeoPoint p = new GeoPoint((int) (storeResponse.getStore().getLatitude() * 1E6), ((int) (storeResponse.getStore().getLongitude() * 1E6)));
                 OverlayItem item = new OverlayItem(p, storeResponse.getStore().getName(), storeResponse.getStore().getDesc());
-//                item.setMarker(mark2);
+                if (i < markIcons.size()) {
+                    item.setMarker(getResources().getDrawable(markIcons.get(i)));
+                }
                 mOverlay.addItem(item);
             }
 
