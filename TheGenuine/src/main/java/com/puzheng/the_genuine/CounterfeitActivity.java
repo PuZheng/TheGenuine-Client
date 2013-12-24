@@ -23,11 +23,13 @@ import com.puzheng.the_genuine.views.NavBar;
 
 public class CounterfeitActivity extends Activity {
     private ProgressDialog progressDialog;
+    private String mTag ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initActionBar();
         setContentView(R.layout.activity_counterfeit);
+        mTag = getIntent().getStringExtra(MainActivity.TAG_TAG_ID);
 
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -85,8 +87,11 @@ public class CounterfeitActivity extends Activity {
         private Exception exception;
         @Override
         protected Boolean doInBackground(String... params) {
+            if (TextUtils.isEmpty(mTag)) {
+                return false;
+            }
             try {
-                return WebService.getInstance(CounterfeitActivity.this).denounce(params[0]);
+                return WebService.getInstance(CounterfeitActivity.this).denounce(mTag, params[0]);
             } catch (Exception e) {
                 exception = e;
             }

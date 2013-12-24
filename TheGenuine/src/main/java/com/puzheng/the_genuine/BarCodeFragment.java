@@ -34,7 +34,6 @@ import java.util.Vector;
  * Created by abc549825@163.com(https://github.com/abc549825) at 12-05.
  */
 public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback {
-    public static final String TAG_VERIFICATION_INFO = "VERIFICATION_INFO";
     private static final float BEEP_VOLUME = 0.10f;
     private static final long VIBRATE_DURATION = 200L;
     /**
@@ -95,9 +94,10 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
                     Intent intent;
                     if (verificationInfo != null) {
                         intent = new Intent(BarCodeFragment.this.getActivity(), SPUActivity.class);
-                        intent.putExtra(TAG_VERIFICATION_INFO, verificationInfo);
+                        intent.putExtra(MainActivity.TAG_VERIFICATION_INFO, verificationInfo);
                     } else {
                         intent = new Intent(BarCodeFragment.this.getActivity(), CounterfeitActivity.class);
+                        intent.putExtra(MainActivity.TAG_TAG_ID, resultString);
                     }
                     startActivity(intent);
                 }
