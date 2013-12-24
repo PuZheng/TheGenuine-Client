@@ -27,8 +27,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 public class MainActivity extends Activity implements BackPressedInterface {
-
     public static final String TAG_VERIFICATION_INFO = "VERIFICATION_INFO";
+    public static final String TAG_TAG_ID = "TOKEN_ID";
     public static final String TAG_PRODUCT_RESPONSE = "PRODUCT_RESPONSE";
     private static final String MIME_TEXT_PLAIN = "text/plain";
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
@@ -180,6 +180,7 @@ public class MainActivity extends Activity implements BackPressedInterface {
                         intent.putExtra(TAG_VERIFICATION_INFO, verificationInfo);
                     } else {
                         intent = new Intent(MainActivity.this, CounterfeitActivity.class);
+                        intent.putExtra(TAG_TAG_ID, code);
                     }
                     startActivity(intent);
                 }

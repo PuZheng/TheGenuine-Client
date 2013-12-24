@@ -55,4 +55,8 @@
     <string name="switch_to_nfc">转换NFC验证</string>
     <string name="price_prefix">零售价: ￥</string>
     <string name="app_message">拒绝伪品，鉴真于\"芯\"</string>
+    <string name="denounce_success">举报成功</string>
+    <string name="denounce_fail">举报失败</string>
+    <string name="denounce_empty">理由不能为空</string>
+
 </resources>

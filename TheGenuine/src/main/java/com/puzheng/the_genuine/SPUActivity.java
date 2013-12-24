@@ -212,7 +212,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
                             return WebService.getInstance(SPUActivity.this).addFavor(getSPUId());
                         } catch (IOException e) {
                             e.printStackTrace();
-                            return null;
+                            return false;
                         }
                     }
                 }).after(new PoliteBackgroundTask.OnAfter<Boolean>() {

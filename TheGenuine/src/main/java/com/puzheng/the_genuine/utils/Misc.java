@@ -11,6 +11,7 @@ import android.util.Pair;
 import com.puzheng.the_genuine.data_structure.User;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -156,5 +157,8 @@ public class Misc {
         } else {
             return s.substring(0, maxSize - 2) + "..";
         }
+    }
+    public static boolean isNetworkException(Exception e) {
+        return e instanceof IOException;
     }
 }

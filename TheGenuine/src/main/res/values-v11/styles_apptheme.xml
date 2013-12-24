@@ -31,6 +31,12 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="ButtonWarningAppTheme" parent="android:Widget.Button">
+        <item name="android:background">@drawable/warning_btn_default_holo_light</item>
+        <item name="android:minHeight">48dip</item>
+        <item name="android:minWidth">64dip</item>
+    </style>
+
     <style name="ImageButtonAppTheme" parent="android:Widget.ImageButton">
         <item name="android:background">@drawable/apptheme_btn_default_holo_light</item>
     </style>
