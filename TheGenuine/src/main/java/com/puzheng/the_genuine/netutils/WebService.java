@@ -31,6 +31,14 @@ public class WebService {
         this.context = c;
     }
 
+    public boolean denounce(String reason) throws IOException, BadResponseException {
+        HashMap<String, String> params = getCurrentLocation();
+        params.put("reason", reason);
+        String url = HttpUtil.composeUrl("tag-ws", "tag-denounce", params);
+        HttpUtil.postStringResult(url);
+        return true;
+    }
+
     public static WebService getInstance(Context c) {
         if (instance == null) {
             instance = new WebService(c);

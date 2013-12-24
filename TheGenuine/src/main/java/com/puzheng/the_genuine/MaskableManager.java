@@ -6,8 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.puzheng.the_genuine.utils.BadResponseException;
-
-import java.io.IOException;
+import com.puzheng.the_genuine.utils.Misc;
 
 /**
  * Created by abc549825@163.com(https://github.com/abc549825) at 12-16.
@@ -58,7 +57,7 @@ public class MaskableManager {
                 }
             }
 
-            if (isNetworkException(exception)) {
+            if (Misc.isNetworkException(exception)) {
                 mImageButton.setImageResource(R.drawable.wifi_not_connected);
                 mTextView.setText(R.string.httpErrorConnect);
             } else {
@@ -101,10 +100,5 @@ public class MaskableManager {
 
         return maskView;
     }
-
-    private boolean isNetworkException(Exception e) {
-        return e instanceof IOException;
-    }
-
 
 }

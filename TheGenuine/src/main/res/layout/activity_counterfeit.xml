@@ -15,22 +15,12 @@
         android:id="@+id/navBar"
         app:enabledTab="go_home" />
 
-    <RelativeLayout
+    <LinearLayout
+        android:gravity="center"
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_above="@id/navBar">
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="去看看附近真品"
-            android:id="@+id/button"
-            style="@style/ButtonAppTheme"
-            android:layout_below="@+id/relativeLayout"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_centerHorizontal="true" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -54,7 +44,24 @@
         </RelativeLayout>
 
 
-    </RelativeLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="举报"
+            android:id="@+id/denounce"
+            style="@style/ButtonWarningAppTheme"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="去看看附近真品"
+            android:id="@+id/button"
+            style="@style/ButtonAppTheme"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
+    </LinearLayout>
 
 
 </RelativeLayout>
