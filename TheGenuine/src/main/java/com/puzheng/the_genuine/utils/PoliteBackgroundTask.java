@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.text.TextUtils;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -81,7 +82,7 @@ public class PoliteBackgroundTask<Result> {
                     });
                 } else {
                     String errMsg = mException.getMessage();
-                    if (errMsg.isEmpty()) {
+                    if (TextUtils.isEmpty(errMsg)) {
                         errMsg = UNKNOWN_ERROR;
                     }
                     ad.setMessage(errMsg);

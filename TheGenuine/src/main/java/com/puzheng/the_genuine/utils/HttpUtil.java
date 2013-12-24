@@ -3,13 +3,11 @@ package com.puzheng.the_genuine.utils;
 import android.util.Pair;
 import com.puzheng.the_genuine.MyApp;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Map;
 
 /**
@@ -40,7 +38,12 @@ public class HttpUtil {
             }
             boolean first = true;
             for (Map.Entry<String, String> entry : params.entrySet()) {
-                ret.append(first ? "?" : "&").append(entry.getKey()).append("=").append(entry.getValue());
+                try {
+                    ret.append(first ? "?" : "&").append(URLEncoder.encode(entry.getKey(), CHARSET)
+                    ).append("=").append(URLEncoder.encode(entry.getValue(), CHARSET));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
                 first = false;
             }
         } else {
@@ -89,7 +92,6 @@ public class HttpUtil {
         connection.setReadTimeout(DEAFULT_SO_TIME_OUT_MILLSECONDS);
         connection.setRequestMethod("POST");
         connection.setUseCaches(false);
-        connection.setChunkedStreamingMode(0);
         try {
             return getResultFromConnection(connection);
         } finally {
