@@ -18,19 +18,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.TabHost;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import com.puzheng.the_genuine.data_structure.SPUResponse;
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.Misc;
 import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
+import com.puzheng.the_genuine.views.CustomActionBar;
 import com.puzheng.the_genuine.views.NavBar;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.controller.RequestType;
@@ -52,6 +46,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     private TabHost tabHost;
     private int spu_id;
     private MaskableManager maskableManager;
+    private CustomActionBar customActionBar;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -113,6 +108,8 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        customActionBar = CustomActionBar.setCustomerActionBar(getActionBar(), SPUActivity.this);
+        customActionBar.setUpButtonEnable(true);
         setContentView(R.layout.activity_spu);
         verificationInfo = getIntent().getParcelableExtra(MainActivity.TAG_VERIFICATION_INFO);
         spu_id = getIntent().getIntExtra(Constants.TAG_SPU_ID, -1);
@@ -121,6 +118,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             throw new IllegalArgumentException("必须传入产品信息或者验证信息");
         }
         if (verificationInfo != null) {
+            customActionBar.setTitle(verificationInfo.getSKU().getSPU().getName());
             initViews();
             MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.good);
             mediaPlayer.setLooping(false);
@@ -135,7 +133,6 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     }
 
     private void initViews() {
-        setupActionBar();
         shareInit();
         favorInit();
 
@@ -288,21 +285,6 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         }
     }
 
-    /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void setupActionBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-            if (verificationInfo != null) {
-                getActionBar().setTitle(verificationInfo.getSKU().getSPU().getName());
-            } else {
-                getActionBar().setTitle(spuResponse.getSPU().getName());
-            }
-        }
-    }
-
     private void shareInit() {
         final UMSocialService mController = UMServiceFactory.getUMSocialService("com.umeng.share",
                 RequestType.SOCIAL);
@@ -419,6 +401,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             if (maskableManager.unmask(exception)) {
                 SPUActivity.this.spuResponse = spuResponse;
                 SPUActivity.this.initViews();
+                SPUActivity.this.customActionBar.setTitle(spuResponse.getSPU().getName());
             }
         }
     }
