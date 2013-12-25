@@ -40,13 +40,15 @@ public class NearbyFragment extends ListFragment {
         TextView mDistance;
         TextView mAddress;
         RatingBar mRating;
+        TextView mMarkView;
 
-        ViewHolder(ImageView imageView, TextView nameView, TextView distanceView, TextView addressView, RatingBar ratingBar) {
+        ViewHolder(ImageView imageView, TextView nameView, TextView distanceView, TextView addressView, RatingBar ratingBar, TextView markView) {
             this.mImageView = imageView;
             this.mStoreName = nameView;
             this.mDistance = distanceView;
             this.mAddress = addressView;
             this.mRating = ratingBar;
+            this.mMarkView = markView;
         }
     }
 
@@ -86,7 +88,8 @@ public class NearbyFragment extends ListFragment {
                         (TextView) convertView.findViewById(R.id.textViewStore),
                         (TextView) convertView.findViewById(R.id.textViewDistance),
                         (TextView) convertView.findViewById(R.id.textViewAddress),
-                        (RatingBar) convertView.findViewById(R.id.ratingBar));
+                        (RatingBar) convertView.findViewById(R.id.ratingBar),
+                        (TextView) convertView.findViewById(R.id.markView));
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -99,6 +102,7 @@ public class NearbyFragment extends ListFragment {
             viewHolder.mDistance.setText(Misc.humanizeDistance(response.getDistance()));
             viewHolder.mAddress.setText(response.getStore().getAddress());
             viewHolder.mRating.setRating(response.getStore().getRating());
+            viewHolder.mMarkView.setText(String.valueOf(position));
             return convertView;
         }
     }
