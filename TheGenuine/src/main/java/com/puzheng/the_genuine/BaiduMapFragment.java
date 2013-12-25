@@ -115,16 +115,16 @@ public class BaiduMapFragment extends Fragment {
     private ArrayList<Integer> getMarks() {
         if (marks == null) {
             marks = new ArrayList<Integer>();
-            marks.add(R.drawable.icon_marka);
-            marks.add(R.drawable.icon_markb);
-            marks.add(R.drawable.icon_markc);
-            marks.add(R.drawable.icon_markd);
-            marks.add(R.drawable.icon_marke);
-            marks.add(R.drawable.icon_markf);
-            marks.add(R.drawable.icon_markg);
-            marks.add(R.drawable.icon_markh);
-            marks.add(R.drawable.icon_marki);
-            marks.add(R.drawable.icon_markj);
+            marks.add(R.drawable.icon_mark1);
+            marks.add(R.drawable.icon_mark2);
+            marks.add(R.drawable.icon_mark3);
+            marks.add(R.drawable.icon_mark4);
+            marks.add(R.drawable.icon_mark5);
+            marks.add(R.drawable.icon_mark6);
+            marks.add(R.drawable.icon_mark7);
+            marks.add(R.drawable.icon_mark8);
+            marks.add(R.drawable.icon_mark9);
+            marks.add(R.drawable.icon_mark10);
         }
         return marks;
     }
