@@ -102,7 +102,7 @@ public class NearbyFragment extends ListFragment {
             viewHolder.mDistance.setText(Misc.humanizeDistance(response.getDistance()));
             viewHolder.mAddress.setText(response.getStore().getAddress());
             viewHolder.mRating.setRating(response.getStore().getRating());
-            viewHolder.mMarkView.setText(String.valueOf(position));
+            viewHolder.mMarkView.setText(String.valueOf(position + 1));
             return convertView;
         }
     }
