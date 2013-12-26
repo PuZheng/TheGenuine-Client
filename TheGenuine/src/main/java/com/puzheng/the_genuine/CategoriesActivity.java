@@ -1,10 +1,10 @@
 package com.puzheng.the_genuine;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.*;
 import android.widget.*;
@@ -111,7 +111,7 @@ public class CategoriesActivity extends ActionBarActivity implements BackPressed
     }
 
     private void setActionBar() {
-        final ActionBar actionBar = getSupportActionBar();
+        final ActionBar actionBar = getActionBar();
         CustomActionBar customActionBar = CustomActionBar.setCustomerActionBar(actionBar, CategoriesActivity.this);
         customActionBar.setTitle("360真品");
         customActionBar.setSubtitle("分类列表");

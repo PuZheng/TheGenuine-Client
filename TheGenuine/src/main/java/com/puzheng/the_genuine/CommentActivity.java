@@ -10,6 +10,7 @@ import android.widget.RatingBar;
 import android.widget.Toast;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
+import com.puzheng.the_genuine.views.CustomActionBar;
 
 /**
  * Created by abc549825@163.com(https://github.com/abc549825) at 11-29.
@@ -23,13 +24,13 @@ public class CommentActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
+        CustomActionBar customActionBar = CustomActionBar.setCustomerActionBar(getActionBar(), CommentActivity.this);
+        customActionBar.setUpButtonEnable(true);
+        customActionBar.setTitle("新建评论");
         mSpuId = getIntent().getIntExtra(Constants.TAG_SPU_ID, 0);
         mEditText = (EditText) findViewById(R.id.editText);
         mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
-        try {
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-        } catch (NullPointerException ignore) {
-        }
+
         Button confirmButton = (Button) findViewById(R.id.ok);
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override

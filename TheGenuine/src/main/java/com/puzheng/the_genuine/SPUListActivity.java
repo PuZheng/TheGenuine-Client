@@ -71,7 +71,7 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-         customActionBar = CustomActionBar.setCustomerActionBar(getSupportActionBar(),
+        customActionBar = CustomActionBar.setCustomerActionBar(getActionBar(),
                 SPUListActivity.this);
         customActionBar.setUpButtonEnable(true);
         mCategoryId = getIntent().getIntExtra("category_id", Constants.INVALID_ARGUMENT);

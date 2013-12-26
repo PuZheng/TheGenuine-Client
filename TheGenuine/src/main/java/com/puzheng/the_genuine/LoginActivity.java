@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import com.puzheng.the_genuine.views.CustomActionBar;
 import com.puzheng.the_genuine.views.NavBar;
 
 /**
@@ -57,6 +58,8 @@ public class LoginActivity extends Activity implements BackPressedInterface {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CustomActionBar customActionBar = CustomActionBar.setCustomerActionBar(getActionBar(), LoginActivity.this);
+        customActionBar.setTitle("登录");
 
         setContentView(R.layout.activity_login);
 
