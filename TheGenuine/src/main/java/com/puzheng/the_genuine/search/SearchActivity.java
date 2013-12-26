@@ -36,6 +36,18 @@ public class SearchActivity extends Activity {
         menuItem.expandActionView();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
             setSearchView(menuItem);
+            menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+                @Override
+                public boolean onMenuItemActionExpand(MenuItem item) {
+                    return false;
+                }
+
+                @Override
+                public boolean onMenuItemActionCollapse(MenuItem item) {
+                    SearchActivity.this.finish();
+                    return false;
+                }
+            });
         }
         return true;
     }
