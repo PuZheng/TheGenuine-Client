@@ -23,13 +23,21 @@
 
     <LinearLayout
         android:id="@+id/mid"
+        android:gravity="center_vertical"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/imageView"
         android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:layout_centerVertical="true">
+        android:paddingRight="15dp">
+
+        <TextView
+            android:id="@+id/markView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="A"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="14sp"/>
 
         <TextView
             android:layout_width="match_parent"

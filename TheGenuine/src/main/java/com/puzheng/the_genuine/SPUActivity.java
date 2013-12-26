@@ -88,7 +88,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         for (int i = 0; i < tabHost.getTabWidget().getChildCount(); ++i) {
             int color = getResources().getColor(android.R.color.darker_gray);
             if (i == pos) {
-                color = getResources().getColor(R.color.highlighted_tab);
+                color = getResources().getColor(R.color.base_color1);
             }
             TextView title = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
             title.setTextColor(color);
