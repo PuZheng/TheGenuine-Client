@@ -18,6 +18,7 @@ import android.widget.SearchView;
 import com.puzheng.the_genuine.R;
 import com.puzheng.the_genuine.SPUActivity;
 import com.puzheng.the_genuine.SPUListActivity;
+import com.puzheng.the_genuine.views.CustomActionBar;
 import com.puzheng.the_genuine.views.NavBar;
 
 
@@ -43,6 +44,9 @@ public class SearchActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CustomActionBar customActionBar = CustomActionBar.setCustomerActionBar(getActionBar(), SearchActivity.this);
+        customActionBar.setUpButtonEnable(true);
+        customActionBar.setTitle("搜索产品");
         setContentView(R.layout.activity_search);
         mClearButton = (Button) findViewById(R.id.clear_recent_search);
         setClearButton(mClearButton);

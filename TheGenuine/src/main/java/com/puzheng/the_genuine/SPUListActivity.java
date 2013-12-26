@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.ListView;
 import com.puzheng.the_genuine.data_structure.Recommendation;
 import com.puzheng.the_genuine.search.SearchActivity;
+import com.puzheng.the_genuine.views.CustomActionBar;
 import com.puzheng.the_genuine.views.NavBar;
 
 /**
@@ -31,7 +32,7 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
     private ViewPager mViewPager;
     private boolean inSearchMode;
     private String mQuery;
-
+    private CustomActionBar customActionBar;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.product_list, menu);
@@ -70,6 +71,9 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        customActionBar = CustomActionBar.setCustomerActionBar(getActionBar(),
+                SPUListActivity.this);
+        customActionBar.setUpButtonEnable(true);
         mCategoryId = getIntent().getIntExtra("category_id", Constants.INVALID_ARGUMENT);
         mQuery = getIntent().getStringExtra(SearchManager.QUERY);
         inSearchMode = mCategoryId == Constants.INVALID_ARGUMENT;
@@ -98,11 +102,11 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
             actionBar.addTab(actionBar.newTab().setText(mPageAdapter.getPageTitle(i)).setTabListener(this));
         }
         if (inSearchMode) {
-            actionBar.setTitle(mQuery);
-            actionBar.setSubtitle(R.string.search_result);
+            customActionBar.setTitle(mQuery);
+            customActionBar.setSubtitle(getString(R.string.search_result));
         } else {
-            actionBar.setTitle("360真品");
-            actionBar.setSubtitle(getIntent().getStringExtra("categoryName"));
+            customActionBar.setTitle("360真品");
+            customActionBar.setSubtitle(getIntent().getStringExtra("categoryName"));
         }
     }
 

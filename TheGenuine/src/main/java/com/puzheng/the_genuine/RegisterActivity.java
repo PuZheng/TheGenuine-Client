@@ -1,11 +1,11 @@
 package com.puzheng.the_genuine;
 
-import android.app.ActionBar;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
+import com.puzheng.the_genuine.views.CustomActionBar;
 import com.puzheng.the_genuine.views.NavBar;
 
 /**
@@ -31,11 +31,11 @@ public class RegisterActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        CustomActionBar customActionBar = CustomActionBar.setCustomerActionBar(getActionBar(), RegisterActivity.this);
+        customActionBar.setUpButtonEnable(true);
+        customActionBar.setTitle("注册");
+
         setContentView(R.layout.activity_login);
-
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
         showRegisterFragment();
 
         NavBar navBar = (NavBar) findViewById(R.id.navBar);

@@ -58,5 +58,6 @@
     <string name="denounce_success">举报成功</string>
     <string name="denounce_fail">举报失败</string>
     <string name="denounce_empty">理由不能为空</string>
+    <string name="new_comment">评论</string>
 
 </resources>

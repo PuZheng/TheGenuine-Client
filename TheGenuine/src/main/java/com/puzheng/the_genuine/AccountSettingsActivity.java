@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import com.puzheng.the_genuine.data_structure.User;
+import com.puzheng.the_genuine.views.CustomActionBar;
 import com.puzheng.the_genuine.views.NavBar;
 
 import java.io.Serializable;
@@ -49,14 +50,13 @@ public class AccountSettingsActivity extends Activity implements BackPressedInte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CustomActionBar customActionBar = CustomActionBar.setCustomerActionBar(getActionBar(), AccountSettingsActivity.this);
+        customActionBar.setTitle("帐号管理");
         if (MyApp.getCurrentUser() == null) {
             login();
         }
-
         setContentView(R.layout.activity_account_settings);
-
         setUsername();
-
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override

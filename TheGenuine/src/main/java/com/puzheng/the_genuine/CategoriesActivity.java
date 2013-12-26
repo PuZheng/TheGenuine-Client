@@ -1,10 +1,10 @@
 package com.puzheng.the_genuine;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.*;
 import android.widget.*;
@@ -13,6 +13,7 @@ import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.search.SearchActivity;
 import com.puzheng.the_genuine.utils.Misc;
+import com.puzheng.the_genuine.views.CustomActionBar;
 import com.puzheng.the_genuine.views.NavBar;
 
 import java.util.List;
@@ -105,11 +106,17 @@ public class CategoriesActivity extends ActionBarActivity implements BackPressed
         });
 
         maskableManager = new MaskableManager(gridView, this);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setSubtitle("分类列表");
-        actionBar.setTitle("360真品");
+        setActionBar();
         new GetCategoriesTask(gridView).execute();
     }
+
+    private void setActionBar() {
+        final ActionBar actionBar = getActionBar();
+        CustomActionBar customActionBar = CustomActionBar.setCustomerActionBar(actionBar, CategoriesActivity.this);
+        customActionBar.setTitle("360真品");
+        customActionBar.setSubtitle("分类列表");
+    }
+
 
     private class GetCategoriesTask extends AsyncTask<Void, Void, List<Category>> {
         private final GridView gridView;
