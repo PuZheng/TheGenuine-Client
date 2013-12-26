@@ -10,6 +10,7 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Example</item>
         <item name="android:actionBarTabTextStyle">@style/ActionBarTabTextStyle.Example</item>
+        <item name="android:actionBarStyle">@style/MyActionBarStyle</item>
     </style>
 
     <style name="ActionBarTabStyle.Example" parent="@android:style/Widget.Holo.Light.ActionBar.TabView">
@@ -20,8 +21,9 @@
         <item name="android:textColor">@drawable/apptheme_text_holo</item>
     </style>
 
-    <style name="MyActionBar">
-        <item name="android:background">@drawable/action_bar_bg</item>
+    <style name="MyActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
+        <item name="android:homeAsUpIndicator">@drawable/ic_action_previous_item</item>
+        <item name="android:icon">@android:color/transparent</item>
     </style>
 
 </resources>
