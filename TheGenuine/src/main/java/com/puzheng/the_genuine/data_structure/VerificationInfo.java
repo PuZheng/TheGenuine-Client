@@ -2,7 +2,6 @@ package com.puzheng.the_genuine.data_structure;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -21,7 +20,6 @@ public class VerificationInfo implements Parcelable {
             return new VerificationInfo[0];
         }
     };
-
     private SKU sku;
     @SerializedName("nearby_recommendations_cnt")
     private int nearbyRecommendationsCnt;
@@ -29,12 +27,14 @@ public class VerificationInfo implements Parcelable {
     private int sameVendorRecommendationsCnt;
     @SerializedName("comments_cnt")
     private int commentsCnt;
+    private boolean favored;
 
-    public VerificationInfo(SKU sku, int nearbyRecommendationsCnt, int sameVendorRecommendationsCnt, int commentsCnt) {
+    public VerificationInfo(SKU sku, int nearbyRecommendationsCnt, int sameVendorRecommendationsCnt, int commentsCnt, boolean favored) {
         this.sku = sku;
         this.nearbyRecommendationsCnt = nearbyRecommendationsCnt;
         this.sameVendorRecommendationsCnt = sameVendorRecommendationsCnt;
         this.commentsCnt = commentsCnt;
+        this.favored = favored;
     }
 
     public VerificationInfo(Parcel source) {
@@ -42,6 +42,7 @@ public class VerificationInfo implements Parcelable {
         nearbyRecommendationsCnt = source.readInt();
         sameVendorRecommendationsCnt = source.readInt();
         commentsCnt = source.readInt();
+        favored = Boolean.parseBoolean(source.readString());
     }
 
     @Override
@@ -57,8 +58,20 @@ public class VerificationInfo implements Parcelable {
         return nearbyRecommendationsCnt;
     }
 
+    public SKU getSKU() {
+        return sku;
+    }
+
     public int getSameVendorRecommendationsCnt() {
         return sameVendorRecommendationsCnt;
+    }
+
+    public boolean isFavored() {
+        return favored;
+    }
+
+    public void setFavored(boolean favored) {
+        this.favored = favored;
     }
 
     @Override
@@ -67,9 +80,6 @@ public class VerificationInfo implements Parcelable {
         dest.writeInt(nearbyRecommendationsCnt);
         dest.writeInt(sameVendorRecommendationsCnt);
         dest.writeInt(commentsCnt);
-    }
-
-    public SKU getSKU() {
-        return sku;
+        dest.writeString(String.valueOf(favored));
     }
 }

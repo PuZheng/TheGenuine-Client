@@ -49,7 +49,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     private TabHost tabHost;
     private int spu_id;
     private MaskableManager maskableManager;
-    private AddFavorTask mTask;
+    private FavorTask mTask;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -134,24 +134,9 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 
     private void doAddFavor() {
         if (mTask == null) {
-            mTask = new AddFavorTask();
+            mTask = new FavorTask();
             mTask.execute();
         }
-    }
-
-    private void favorInit() {
-        ImageButton button = (ImageButton) findViewById(R.id.imageButtonFavor);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (MyApp.getCurrentUser() == null) {
-                    MyApp.doLoginIn(SPUActivity.this);
-                } else {
-                    doAddFavor();
-                }
-
-            }
-        });
     }
 
     private int getCommentsCnt() {
@@ -186,7 +171,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     private void initViews() {
         setupActionBar();
         shareInit();
-        favorInit();
+        updateFavorView(isFavored());
 
         if (verificationInfo == null) {
             ImageView imageView = (ImageView) findViewById(R.id.imageView);
@@ -246,6 +231,18 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         viewPager.setOnPageChangeListener(this);
     }
 
+    private boolean isFavored() {
+        return verificationInfo != null ? verificationInfo.isFavored() : spuResponse.isFavored();
+    }
+
+    private void setFavored(boolean isFavord) {
+        if (verificationInfo != null) {
+            verificationInfo.setFavored(isFavord);
+        } else {
+            spuResponse.setFavored(isFavord);
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void setBottomTabs() {
         for (int i = 0; i < tabHost.getTabWidget().getChildCount(); ++i) {
@@ -303,7 +300,34 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         });
     }
 
-    private class AddFavorTask extends AsyncTask<Void, Void, Void> {
+    private void updateFavorView(final boolean isFavored) {
+        ImageButton button = (ImageButton) findViewById(R.id.imageButtonFavor);
+        if (isFavored) {
+            button.setImageResource(R.drawable.favored);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(SPUActivity.this, "您已收藏该产品", Toast.LENGTH_SHORT).show();
+                    setFavored(isFavored);
+                }
+            });
+        } else {
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (MyApp.getCurrentUser() == null) {
+                        MyApp.doLoginIn(SPUActivity.this);
+                    } else {
+                        doAddFavor();
+                    }
+
+                }
+            });
+        }
+
+    }
+
+    private class FavorTask extends AsyncTask<Void, Void, Void> {
         private Exception exception;
 
         @Override
@@ -320,6 +344,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         protected void onPostExecute(Void aVoid) {
             if (exception == null) {
                 Toast.makeText(SPUActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
+                updateFavorView(true);
             } else {
                 if (exception instanceof BadResponseException) {
                     Toast.makeText(SPUActivity.this, exception.getMessage(), Toast.LENGTH_SHORT).show();
