@@ -22,7 +22,6 @@
     </style>
 
     <style name="MyActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
-        <item name="android:homeAsUpIndicator">@drawable/ic_action_previous_item</item>
         <item name="android:icon">@android:color/transparent</item>
     </style>
 
