@@ -14,7 +14,7 @@ import com.puzheng.the_genuine.image_utils.ImageFetcher;
  */
 public class CoverFragment extends Fragment {
     private final String url;
-    private ImageFetcher mImageFetcher;
+    private static volatile ImageFetcher mImageFetcher;
 
 
     public CoverFragment(Context context, String url) {
@@ -24,7 +24,9 @@ public class CoverFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mImageFetcher = ImageFetcher.getImageFetcher(this.getActivity(), Integer.MAX_VALUE, 0.25f);
+        if (mImageFetcher == null) {
+            mImageFetcher = ImageFetcher.getImageFetcher(this.getActivity(), Integer.MAX_VALUE, 0.25f);
+        }
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
