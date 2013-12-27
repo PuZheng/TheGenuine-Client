@@ -26,6 +26,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
+import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
@@ -96,7 +97,7 @@ public abstract class ImageWorker {
             // NOTE: This uses a custom version of AsyncTask that has been pulled from the
             // framework and slightly modified. Refer to the docs at the top of the class
             // for more info on what was changed.
-            task.executeOnExecutor(AsyncTask.DUAL_THREAD_EXECUTOR, data);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
         }
     }
 
