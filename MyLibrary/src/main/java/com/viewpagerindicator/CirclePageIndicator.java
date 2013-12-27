@@ -242,40 +242,42 @@ public class CirclePageIndicator extends View implements PageIndicator {
             pageFillRadius -= mPaintStroke.getStrokeWidth() / 2.0f;
         }
 
-        //Draw stroked circles
-        for (int iLoop = 0; iLoop < count; iLoop++) {
-            float drawLong = longOffset + (iLoop * threeRadius);
+        if (count > 1) {
+            //Draw stroked circles
+            for (int iLoop = 0; iLoop < count; iLoop++) {
+                float drawLong = longOffset + (iLoop * threeRadius);
+                if (mOrientation == HORIZONTAL) {
+                    dX = drawLong;
+                    dY = shortOffset;
+                } else {
+                    dX = shortOffset;
+                    dY = drawLong;
+                }
+                // Only paint fill if not completely transparent
+                if (mPaintPageFill.getAlpha() > 0) {
+                    canvas.drawCircle(dX, dY, pageFillRadius, mPaintPageFill);
+                }
+
+                // Only paint stroke if a stroke width was non-zero
+                if (pageFillRadius != mRadius) {
+                    canvas.drawCircle(dX, dY, mRadius, mPaintStroke);
+                }
+            }
+
+            //Draw the filled circle according to the current scroll
+            float cx = (mSnap ? mSnapPage : mCurrentPage) * threeRadius;
+            if (!mSnap) {
+                cx += mPageOffset * threeRadius;
+            }
             if (mOrientation == HORIZONTAL) {
-                dX = drawLong;
+                dX = longOffset + cx;
                 dY = shortOffset;
             } else {
                 dX = shortOffset;
-                dY = drawLong;
+                dY = longOffset + cx;
             }
-            // Only paint fill if not completely transparent
-            if (mPaintPageFill.getAlpha() > 0) {
-                canvas.drawCircle(dX, dY, pageFillRadius, mPaintPageFill);
-            }
-
-            // Only paint stroke if a stroke width was non-zero
-            if (pageFillRadius != mRadius) {
-                canvas.drawCircle(dX, dY, mRadius, mPaintStroke);
-            }
+            canvas.drawCircle(dX, dY, mRadius, mPaintFill);
         }
-
-        //Draw the filled circle according to the current scroll
-        float cx = (mSnap ? mSnapPage : mCurrentPage) * threeRadius;
-        if (!mSnap) {
-            cx += mPageOffset * threeRadius;
-        }
-        if (mOrientation == HORIZONTAL) {
-            dX = longOffset + cx;
-            dY = shortOffset;
-        } else {
-            dX = shortOffset;
-            dY = longOffset + cx;
-        }
-        canvas.drawCircle(dX, dY, mRadius, mPaintFill);
     }
 
     public boolean onTouchEvent(MotionEvent ev) {
