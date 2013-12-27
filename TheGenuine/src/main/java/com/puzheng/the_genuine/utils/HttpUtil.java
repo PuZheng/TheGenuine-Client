@@ -17,8 +17,8 @@ public class HttpUtil {
     public static final String HTTP = "http://";
     public static final String HTTPS = "https://";
     private static final String CHARSET = "UTF-8";
-    private static final int DEAFULT_CONNECTION_TIME_OUT_MILLSECONDS = 1500;
-    private static final int DEAFULT_SO_TIME_OUT_MILLSECONDS = 1000;
+    private static final int DEAFULT_CONNECTION_TIME_OUT_MILLSECONDS = 1000;
+    private static final int DEAFULT_SO_TIME_OUT_MILLSECONDS = 5000;
 
     public static String composeUrl(String blueprint, String path) {
         return composeUrl(blueprint, path, null);
