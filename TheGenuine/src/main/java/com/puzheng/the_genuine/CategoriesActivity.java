@@ -21,8 +21,8 @@ public class CategoriesActivity extends ActionBarActivity implements BackPressed
     private GridView gridView;
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
     private MaskableManager maskableManager;
-
     private ImageFetcher mImageFetcher;
+    private MyCategoriesAdapter mAdapter;
 
     @Override
     public void doBackPressed() {
@@ -111,6 +111,29 @@ public class CategoriesActivity extends ActionBarActivity implements BackPressed
         new GetCategoriesTask(gridView).execute();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mImageFetcher.setPauseWork(false);
+        mImageFetcher.setExitTasksEarly(true);
+        mImageFetcher.flushCache();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mImageFetcher.setExitTasksEarly(false);
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mImageFetcher.closeCache();
+    }
+
     private class GetCategoriesTask extends AsyncTask<Void, Void, List<Category>> {
         private final GridView gridView;
         private Exception exception;
@@ -132,7 +155,8 @@ public class CategoriesActivity extends ActionBarActivity implements BackPressed
         @Override
         protected void onPostExecute(List<Category> list) {
             if (maskableManager.unmask(exception)) {
-                gridView.setAdapter( new MyCategoriesAdapter(list));
+                mAdapter = new MyCategoriesAdapter(list);
+                gridView.setAdapter(mAdapter);
             }
         }
 

@@ -82,7 +82,7 @@ public class RecommendationsFragment extends ListFragment implements RefreshInte
         protected void onPostExecute(List<Recommendation> recommendations) {
             if (maskableManager.unmask(exception)) {
                 if (recommendations != null && !recommendations.isEmpty()) {
-                    listFragment.setListAdapter(new RecommendationListAdapter(recommendations, getActivity()));
+                    listFragment.setListAdapter(new RecommendationListAdapter(recommendations, getActivity(), (ImageFetcherInteface) getActivity()));
                 }else {
                     listFragment.setListAdapter(null);
                     listFragment.setEmptyText(listFragment.getString(R.string.search_no_result_found));

@@ -68,7 +68,8 @@ public class GetSPUListTask extends AsyncTask<Void, Void, List<Recommendation>> 
     @Override
     protected void onPostExecute(List<Recommendation> list) {
         if (list != null && !list.isEmpty()) {
-            RecommendationListAdapter listAdapter = new RecommendationListAdapter(list, mFragment.getActivity());
+            RecommendationListAdapter listAdapter = new RecommendationListAdapter(list, mFragment.getActivity(),
+                    (ImageFetcherInteface) mFragment.getActivity());
             mFragment.setListAdapter(listAdapter);
         } else {
             mFragment.setListAdapter(null);
