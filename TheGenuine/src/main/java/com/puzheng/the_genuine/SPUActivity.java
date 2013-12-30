@@ -46,12 +46,11 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     private MaskableManager maskableManager;
     private FavorTask mTask;
     private MyCoverAdapter mAdapter;
+    private ImageFetcher mImageFetcher;
 
     public ImageFetcher getImageFetcher() {
         return mImageFetcher;
     }
-
-    private ImageFetcher mImageFetcher;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -129,7 +128,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         display.getSize(point);
 
         mImageFetcher = ImageFetcher.getImageFetcher(this, point.x, point.y / 2, 0.25f);
-        
+
         getActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle();
         if (verificationInfo != null) {
@@ -145,6 +144,13 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         NavBar navBar = (NavBar) findViewById(R.id.navBar);
         navBar.setContext(SPUActivity.this);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mImageFetcher.closeCache();
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -162,11 +168,6 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mImageFetcher.closeCache();
-    }
     private void doAddFavor() {
         if (mTask == null) {
             mTask = new FavorTask();
@@ -291,7 +292,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             title.setTextColor(color);
         }
     }
-    
+
     private void setTitle() {
         String spu_name = null;
         if (verificationInfo != null) {
@@ -300,7 +301,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             spu_name = spuResponse.getSPU().getName();
         }
         if (TextUtils.isEmpty(spu_name)) {
-            spu_name =  getIntent().getStringExtra(Constants.TAG_SPU_NAME);
+            spu_name = getIntent().getStringExtra(Constants.TAG_SPU_NAME);
         }
         getActionBar().setTitle(spu_name);
     }
