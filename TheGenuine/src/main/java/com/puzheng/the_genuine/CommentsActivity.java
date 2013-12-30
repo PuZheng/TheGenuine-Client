@@ -41,6 +41,9 @@ public class CommentsActivity extends ListActivity implements RefreshInterface {
                     addComment();
                 }
                 return true;
+            case android.R.id.home:
+                this.finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

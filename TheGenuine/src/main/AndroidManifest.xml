@@ -42,7 +42,7 @@
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote" />
-        <service android:name=".BaiduMapService"/>
+        <service android:name=".BaiduMapService" />
 
         <activity
             android:name="com.puzheng.the_genuine.MainActivity"
