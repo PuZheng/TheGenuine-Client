@@ -61,5 +61,7 @@
     <string name="new_comment">新建评论</string>
     <string name="CommentActivity">新建评论</string>
     <string name="ProductListActivity">产品列表</string>
+    <string name="email_max_length">64</string>
+    <string name="email_max_length_error">用户名长度不能超过64</string>
 
 </resources>
