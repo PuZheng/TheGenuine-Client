@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
@@ -45,12 +46,11 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     private MaskableManager maskableManager;
     private FavorTask mTask;
     private MyCoverAdapter mAdapter;
+    private ImageFetcher mImageFetcher;
 
     public ImageFetcher getImageFetcher() {
         return mImageFetcher;
     }
-
-    private ImageFetcher mImageFetcher;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -129,6 +129,8 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 
         mImageFetcher = ImageFetcher.getImageFetcher(this, point.x, point.y / 2, 0.25f);
 
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle();
         if (verificationInfo != null) {
             initViews();
             MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.good);
@@ -142,6 +144,13 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         NavBar navBar = (NavBar) findViewById(R.id.navBar);
         navBar.setContext(SPUActivity.this);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mImageFetcher.closeCache();
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -159,11 +168,6 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mImageFetcher.closeCache();
-    }
     private void doAddFavor() {
         if (mTask == null) {
             mTask = new FavorTask();
@@ -201,7 +205,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     }
 
     private void initViews() {
-        setupActionBar();
+        setTitle();
         shareInit();
         updateFavorView(isFavored());
 
@@ -289,19 +293,17 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         }
     }
 
-    /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void setupActionBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-            if (verificationInfo != null) {
-                getActionBar().setTitle(verificationInfo.getSKU().getSPU().getName());
-            } else {
-                getActionBar().setTitle(spuResponse.getSPU().getName());
-            }
+    private void setTitle() {
+        String spu_name = null;
+        if (verificationInfo != null) {
+            spu_name = verificationInfo.getSKU().getSPU().getName();
+        } else if (spuResponse != null) {
+            spu_name = spuResponse.getSPU().getName();
         }
+        if (TextUtils.isEmpty(spu_name)) {
+            spu_name = getIntent().getStringExtra(Constants.TAG_SPU_NAME);
+        }
+        getActionBar().setTitle(spu_name);
     }
 
     private void shareInit() {

@@ -123,6 +123,10 @@ public class RegisterFragment extends Fragment {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
+        } else if (mEmail.length() >= Integer.getInteger(getString(R.string.email_max_length))) {
+            mEmailView.setError(getString(R.string.email_max_length_error));
+            focusView = mEmailView;
+            cancel = true;
         }
 
         if (!mPasswordConfirm.equals(mPassword)) {
