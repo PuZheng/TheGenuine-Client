@@ -29,10 +29,26 @@ public class CommentsActivity extends ListActivity implements RefreshInterface {
     private ImageFetcher mImageFetcher;
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.comments, menu);
+        return true;
+    }
+
+    @Override
     public void refresh() {
         if (task == null) {
             task = new GetCommentsTask(this);
             task.execute(spuId);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == MyApp.LOGIN_ACTION) {
+                addComment();
+            }
         }
     }
 
@@ -48,6 +64,35 @@ public class CommentsActivity extends ListActivity implements RefreshInterface {
         mImageFetcher = ImageFetcher.getImageFetcher(this, imageThumbSize, 0.25f); // Set memory cache to 25% of app memory
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mImageFetcher.closeCache();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mImageFetcher.setPauseWork(false);
+        mImageFetcher.setExitTasksEarly(true);
+        mImageFetcher.flushCache();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (task == null) {
+            task = new GetCommentsTask(this);
+            task.execute(spuId);
+        }
+        mImageFetcher.setExitTasksEarly(false);
+    }
+
+    private void addComment() {
+        Intent intent = new Intent(this, CommentActivity.class);
+        intent.putExtra(Constants.TAG_SPU_ID, spuId);
+        startActivity(intent);
+    }
 
     /**
      * Set up the {@link android.app.ActionBar}, if the API is available.
@@ -81,37 +126,6 @@ public class CommentsActivity extends ListActivity implements RefreshInterface {
         }
     }
 
-    private void addComment() {
-        Intent intent = new Intent(this, CommentActivity.class);
-        intent.putExtra(Constants.TAG_SPU_ID, spuId);
-        startActivity(intent);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == MyApp.LOGIN_ACTION) {
-                addComment();
-            }
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.comments, menu);
-        return true;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (task == null) {
-            task = new GetCommentsTask(this);
-            task.execute(spuId);
-        }
-    }
-
     private class GetCommentsTask extends AsyncTask<Integer, Void, List<Comment>> {
         private final ListActivity listActivity;
         private Exception exception;
@@ -133,11 +147,6 @@ public class CommentsActivity extends ListActivity implements RefreshInterface {
         }
 
         @Override
-        protected void onPreExecute() {
-            maskableManager.mask();
-        }
-
-        @Override
         protected void onPostExecute(List<Comment> commentList) {
             String text = "加载评论失败";
             if (maskableManager.unmask(exception)) {
@@ -148,6 +157,11 @@ public class CommentsActivity extends ListActivity implements RefreshInterface {
                 mCountTextView.setText(text);
             }
             task = null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            maskableManager.mask();
         }
     }
 
@@ -176,24 +190,6 @@ public class CommentsActivity extends ListActivity implements RefreshInterface {
             return comments.get(position).getId();
         }
 
-        private class ViewHolder {
-            ImageView avatar;
-            TextView textViewUserName;
-            RatingBar ratingBar;
-            TextView textViewContent;
-            TextView textViewDate;
-
-            ViewHolder(ImageView avatar, TextView textViewUserName, RatingBar ratingBar,
-                       TextView textViewContent, TextView textViewDate) {
-                this.avatar = avatar;
-                this.textViewUserName = textViewUserName;
-                this.ratingBar = ratingBar;
-                this.textViewContent = textViewContent;
-                this.textViewDate = textViewDate;
-            }
-        }
-
-
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
@@ -219,6 +215,23 @@ public class CommentsActivity extends ListActivity implements RefreshInterface {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.DATE_FORMAT);
             viewHolder.textViewDate.setText(simpleDateFormat.format(comment.getDate()));
             return convertView;
+        }
+
+        private class ViewHolder {
+            ImageView avatar;
+            TextView textViewUserName;
+            RatingBar ratingBar;
+            TextView textViewContent;
+            TextView textViewDate;
+
+            ViewHolder(ImageView avatar, TextView textViewUserName, RatingBar ratingBar,
+                       TextView textViewContent, TextView textViewDate) {
+                this.avatar = avatar;
+                this.textViewUserName = textViewUserName;
+                this.ratingBar = ratingBar;
+                this.textViewContent = textViewContent;
+                this.textViewDate = textViewDate;
+            }
         }
     }
 }

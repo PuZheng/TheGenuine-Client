@@ -17,13 +17,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import com.puzheng.the_genuine.data_structure.Recommendation;
+import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.search.SearchActivity;
 import com.puzheng.the_genuine.views.NavBar;
 
 /**
  * Created by abc549825@163.com(https://github.com/abc549825) at 12-03.
  */
-public class SPUListActivity extends ActionBarActivity implements ActionBar.TabListener {
+public class SPUListActivity extends ActionBarActivity implements ActionBar.TabListener, ImageFetcherInteface {
     private int mCategoryId;
     private String[] orderByDescs;
     private String[] orderByStrs;
@@ -31,6 +32,11 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
     private ViewPager mViewPager;
     private boolean inSearchMode;
     private String mQuery;
+    private ImageFetcher mImageFetcher;
+
+    public ImageFetcher getImageFetcher() {
+        return mImageFetcher;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -70,6 +76,9 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mImageFetcher = ImageFetcher.getImageFetcher(this, this.getResources().getDimensionPixelSize(R.dimen
+                .image_view_list_item_width), 0.25f);
+
         mCategoryId = getIntent().getIntExtra("category_id", Constants.INVALID_ARGUMENT);
         mQuery = getIntent().getStringExtra(SearchManager.QUERY);
         inSearchMode = mCategoryId == Constants.INVALID_ARGUMENT;
@@ -80,6 +89,26 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
         navBar.setContext(this);
         mViewPager = (ViewPager) findViewById(R.id.pager);
         addTabs();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mImageFetcher.closeCache();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mImageFetcher.setPauseWork(false);
+        mImageFetcher.setExitTasksEarly(true);
+        mImageFetcher.flushCache();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mImageFetcher.setExitTasksEarly(false);
     }
 
     private void addTabs() {

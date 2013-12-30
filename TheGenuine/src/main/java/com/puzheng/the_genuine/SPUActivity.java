@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.puzheng.the_genuine.data_structure.SPUResponse;
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
+import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.BadResponseException;
 import com.puzheng.the_genuine.utils.Misc;
@@ -39,7 +40,8 @@ import com.viewpagerindicator.CirclePageIndicator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SPUActivity extends FragmentActivity implements ViewPager.OnPageChangeListener, TabHost.OnTabChangeListener, RefreshInterface {
+public class SPUActivity extends FragmentActivity implements ViewPager.OnPageChangeListener,
+        TabHost.OnTabChangeListener, RefreshInterface, ImageFetcherInteface {
 
     private static final String TAG = "SPUActivity";
     private ViewPager viewPager;
@@ -50,6 +52,13 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     private int spu_id;
     private MaskableManager maskableManager;
     private FavorTask mTask;
+    private MyCoverAdapter mAdapter;
+
+    public ImageFetcher getImageFetcher() {
+        return mImageFetcher;
+    }
+
+    private ImageFetcher mImageFetcher;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -111,6 +120,8 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mImageFetcher = ImageFetcher.getImageFetcher(this, Integer.MAX_VALUE, 0.25f);
+
         setContentView(R.layout.activity_spu);
         verificationInfo = getIntent().getParcelableExtra(MainActivity.TAG_VERIFICATION_INFO);
         spu_id = getIntent().getIntExtra(Constants.TAG_SPU_ID, -1);
@@ -131,7 +142,28 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         NavBar navBar = (NavBar) findViewById(R.id.navBar);
         navBar.setContext(SPUActivity.this);
     }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mImageFetcher.setPauseWork(false);
+        mImageFetcher.setExitTasksEarly(true);
+        mImageFetcher.flushCache();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mImageFetcher.setExitTasksEarly(false);
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mImageFetcher.closeCache();
+    }
     private void doAddFavor() {
         if (mTask == null) {
             mTask = new FavorTask();
@@ -197,7 +229,8 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 
 
         viewPagerCover = (ViewPager) findViewById(R.id.viewPagerCover);
-        viewPagerCover.setAdapter(new MyCoverAdapter(getSupportFragmentManager(), getPicUrlList()));
+        mAdapter = new MyCoverAdapter(getSupportFragmentManager(), getPicUrlList());
+        viewPagerCover.setAdapter(mAdapter);
         CirclePageIndicator titleIndicator = (CirclePageIndicator) findViewById(R.id.titles);
         titleIndicator.setViewPager(viewPagerCover);
 
@@ -405,7 +438,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             super(fm);
             fragments = new ArrayList<Fragment>();
             for (String url : picUrlList) {
-                fragments.add(new CoverFragment(SPUActivity.this, url));
+                fragments.add(new CoverFragment(SPUActivity.this, url, SPUActivity.this));
                 Log.d(TAG, url);
             }
         }

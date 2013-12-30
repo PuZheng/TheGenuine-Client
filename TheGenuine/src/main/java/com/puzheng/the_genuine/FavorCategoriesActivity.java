@@ -164,6 +164,26 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
         mDrawerToggle.syncState();
     }
 
+        @Override
+    protected void onPause() {
+        super.onPause();
+        mImageFetcher.setPauseWork(false);
+        mImageFetcher.setExitTasksEarly(true);
+        mImageFetcher.flushCache();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mImageFetcher.setExitTasksEarly(false);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mImageFetcher.closeCache();
+    }
+
     private void selectItem(int position) {
         // update the main content by replacing fragments
         ListFragment fragment = new FavorListFragment(FavorCategoriesActivity.this);
