@@ -60,5 +60,6 @@
     <string name="denounce_empty">理由不能为空</string>
     <string name="new_comment">新建评论</string>
     <string name="CommentActivity">新建评论</string>
+    <string name="ProductListActivity">产品列表</string>
 
 </resources>
