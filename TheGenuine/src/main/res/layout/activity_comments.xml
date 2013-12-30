@@ -21,4 +21,12 @@
         android:id="@android:id/list"
         android:layout_above="@+id/view" />
 
+    <TextView
+        android:id="@android:id/empty"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textSize="14sp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/search_no_result_found" />
 </RelativeLayout>

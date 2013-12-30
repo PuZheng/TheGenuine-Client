@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.SearchView;
-
 import com.puzheng.the_genuine.R;
 import com.puzheng.the_genuine.SPUActivity;
 import com.puzheng.the_genuine.SPUListActivity;
@@ -50,6 +49,17 @@ public class SearchActivity extends Activity {
             });
         }
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

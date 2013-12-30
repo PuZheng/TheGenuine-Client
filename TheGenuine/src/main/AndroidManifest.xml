@@ -42,7 +42,7 @@
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote" />
-        <service android:name=".BaiduMapService"/>
+        <service android:name=".BaiduMapService" />
 
         <activity
             android:name="com.puzheng.the_genuine.MainActivity"
@@ -87,6 +87,7 @@
         </activity>
         <activity
             android:name="com.puzheng.the_genuine.CounterfeitActivity"
+            android:theme="@style/WithUpIndicatorTheme"
             android:windowSoftInputMode="adjustPan"
             android:label="@string/title_activity_counterfeit"
             android:screenOrientation="portrait" />
@@ -115,12 +116,14 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.puzheng.the_genuine.CommentsActivity"
+            android:theme="@style/WithUpIndicatorTheme"
             android:label="@string/title_activity_comments"
             android:screenOrientation="portrait" />
         <activity
             android:name=".CommentActivity"
             android:windowSoftInputMode="adjustResize|stateVisible"
-            android:label="CommentActivity"
+            android:theme="@style/WithUpIndicatorTheme"
+            android:label="@string/CommentActivity"
             android:screenOrientation="portrait" />
 
         <activity
