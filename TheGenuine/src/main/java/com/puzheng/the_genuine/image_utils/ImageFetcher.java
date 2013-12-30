@@ -58,6 +58,16 @@ public class ImageFetcher extends ImageResizer {
         return fetcher;
     }
 
+    public static ImageFetcher getImageFetcher(Activity activity, int width, int height, float memCacheSizePercent) {
+        ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(activity);
+        cacheParams.setMemCacheSizePercent(memCacheSizePercent);
+        // The ImageFetcher takes care of loading images into our ImageView children asynchronously
+        ImageFetcher fetcher = new ImageFetcher(activity, width, height);
+        fetcher.setLoadingImage(R.drawable.empty_photo);
+        fetcher.addImageCache(activity.getFragmentManager(), cacheParams);
+        return fetcher;
+    }
+
     /**
      * Initialize providing a target image width and height for the processing images.
      *
