@@ -52,6 +52,8 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
                 startActivity(intent);
                 SPUListActivity.this.finish();
                 return true;
+            case android.R.id.home:
+                SPUListActivity.this.finish();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -76,6 +78,7 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         mImageFetcher = ImageFetcher.getImageFetcher(this, this.getResources().getDimensionPixelSize(R.dimen
                 .image_view_list_item_width), 0.25f);
 

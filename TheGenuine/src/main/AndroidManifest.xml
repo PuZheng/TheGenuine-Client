@@ -160,7 +160,8 @@
 
         <activity
             android:name=".SPUListActivity"
-            android:label="ProductListActivity"
+            android:theme="@style/WithUpIndicatorTheme"
+            android:label="@string/ProductListActivity"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
         <activity
