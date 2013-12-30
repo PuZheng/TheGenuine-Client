@@ -3,6 +3,7 @@ package com.puzheng.the_genuine;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -14,17 +15,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.TabHost;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.view.*;
+import android.widget.*;
 import com.puzheng.the_genuine.data_structure.SPUResponse;
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.image_utils.ImageFetcher;
@@ -121,7 +113,6 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mImageFetcher = ImageFetcher.getImageFetcher(this, Integer.MAX_VALUE, 0.25f);
 
         setContentView(R.layout.activity_spu);
         verificationInfo = getIntent().getParcelableExtra(MainActivity.TAG_VERIFICATION_INFO);
@@ -130,6 +121,15 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         if (verificationInfo == null && spu_id == -1) {
             throw new IllegalArgumentException("必须传入产品信息或者验证信息");
         }
+
+        viewPagerCover = (ViewPager) findViewById(R.id.viewPagerCover);
+
+        Point point = new Point();
+        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        display.getSize(point);
+
+        mImageFetcher = ImageFetcher.getImageFetcher(this, point.x, point.y / 2, 0.25f);
+        
         getActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle();
         if (verificationInfo != null) {
@@ -231,7 +231,6 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         });
 
 
-        viewPagerCover = (ViewPager) findViewById(R.id.viewPagerCover);
         mAdapter = new MyCoverAdapter(getSupportFragmentManager(), getPicUrlList());
         viewPagerCover.setAdapter(mAdapter);
         CirclePageIndicator titleIndicator = (CirclePageIndicator) findViewById(R.id.titles);
@@ -292,7 +291,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             title.setTextColor(color);
         }
     }
-
+    
     private void setTitle() {
         String spu_name = null;
         if (verificationInfo != null) {
