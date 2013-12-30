@@ -1,18 +1,15 @@
 package com.puzheng.the_genuine;
 
-import android.annotation.TargetApi;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.*;
+import android.view.*;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
 import com.puzheng.the_genuine.data_structure.Comment;
 import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.netutils.WebService;
@@ -24,15 +21,32 @@ import java.util.List;
 public class CommentsActivity extends ListActivity implements RefreshInterface {
     private MaskableManager maskableManager;
     private int spuId;
-    private TextView mCountTextView;
     private GetCommentsTask task;
     private ImageFetcher mImageFetcher;
-
+    private View mEmptyView;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.comments, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.newComment:
+                if (MyApp.getCurrentUser() == null) {
+                    MyApp.doLoginIn(CommentsActivity.this);
+                } else {
+                    addComment();
+                }
+                return true;
+            case android.R.id.home:
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -59,7 +73,9 @@ public class CommentsActivity extends ListActivity implements RefreshInterface {
         maskableManager = new MaskableManager(getListView(), this);
         // Show the Up button in the action bar.
         spuId = getIntent().getIntExtra(Constants.TAG_SPU_ID, 0);
-        setupActionBar();
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        mEmptyView = getListView().getEmptyView();
+        mEmptyView.setVisibility(View.GONE);
         int imageThumbSize = getResources().getDimensionPixelSize(R.dimen.image_view_list_item_width);
         mImageFetcher = ImageFetcher.getImageFetcher(this, imageThumbSize, 0.25f); // Set memory cache to 25% of app memory
     }
@@ -97,34 +113,6 @@ public class CommentsActivity extends ListActivity implements RefreshInterface {
     /**
      * Set up the {@link android.app.ActionBar}, if the API is available.
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void setupActionBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            getActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-            getActionBar().setCustomView(R.layout.comments_title);
-            View view = getActionBar().getCustomView();
-            ImageButton backButton = (ImageButton) view.findViewById(R.id.imageButtonBack);
-            backButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            });
-
-            ImageButton newCommentButton = (ImageButton) view.findViewById(R.id.imageButtonNew);
-            newCommentButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (MyApp.getCurrentUser() == null) {
-                        MyApp.doLoginIn(CommentsActivity.this);
-                    } else {
-                        addComment();
-                    }
-                }
-            });
-            mCountTextView = (TextView) view.findViewById(R.id.textView);
-        }
-    }
 
     private class GetCommentsTask extends AsyncTask<Integer, Void, List<Comment>> {
         private final ListActivity listActivity;
@@ -151,11 +139,12 @@ public class CommentsActivity extends ListActivity implements RefreshInterface {
             String text = "加载评论失败";
             if (maskableManager.unmask(exception)) {
                 listActivity.setListAdapter(new MyCommentsAdapter(commentList));
+                if (commentList.size() == 0) {
+                    mEmptyView.setVisibility(View.VISIBLE);
+                }
                 text = "评论(" + Misc.humanizeNum(commentList.size()) + ")";
             }
-            if (mCountTextView != null) {
-                mCountTextView.setText(text);
-            }
+            getActionBar().setTitle(text);
             task = null;
         }
 
