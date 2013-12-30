@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -129,6 +130,8 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         if (verificationInfo == null && spu_id == -1) {
             throw new IllegalArgumentException("必须传入产品信息或者验证信息");
         }
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle();
         if (verificationInfo != null) {
             initViews();
             MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.good);
@@ -201,7 +204,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     }
 
     private void initViews() {
-        setupActionBar();
+        setTitle();
         shareInit();
         updateFavorView(isFavored());
 
@@ -290,19 +293,17 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         }
     }
 
-    /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void setupActionBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-            if (verificationInfo != null) {
-                getActionBar().setTitle(verificationInfo.getSKU().getSPU().getName());
-            } else {
-                getActionBar().setTitle(spuResponse.getSPU().getName());
-            }
+    private void setTitle() {
+        String spu_name = null;
+        if (verificationInfo != null) {
+            spu_name = verificationInfo.getSKU().getSPU().getName();
+        } else if (spuResponse != null) {
+            spu_name = spuResponse.getSPU().getName();
         }
+        if (TextUtils.isEmpty(spu_name)) {
+            spu_name =  getIntent().getStringExtra(Constants.TAG_SPU_NAME);
+        }
+        getActionBar().setTitle(spu_name);
     }
 
     private void shareInit() {

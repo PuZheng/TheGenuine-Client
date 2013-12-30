@@ -9,4 +9,5 @@ public interface Constants {
     public static final String BAIDU_MAP_KEY = "UTW8RC2pRPD9oGrGn8jXgcnO";
     public static final String TAG_SPU_ID = "SPU_ID";
     public static final String TAG_LOCATION_DATA = "LOCATION_DATA";
+    public static final String TAG_SPU_NAME = "SPU_NAME";
 }

@@ -42,6 +42,7 @@ public class RecommendationsFragment extends ListFragment implements RefreshInte
         Recommendation recommendation = (Recommendation) getListAdapter().getItem(position);
         Intent intent = new Intent(getActivity(), SPUActivity.class);
         intent.putExtra(Constants.TAG_SPU_ID, recommendation.getSPUId());
+        intent.putExtra(Constants.TAG_SPU_NAME, recommendation.getProductName());
         startActivity(intent);
     }
 
