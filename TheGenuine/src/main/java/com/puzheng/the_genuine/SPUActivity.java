@@ -22,6 +22,7 @@ import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.BadResponseException;
+import com.puzheng.the_genuine.utils.HttpUtil;
 import com.puzheng.the_genuine.utils.Misc;
 import com.puzheng.the_genuine.views.NavBar;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -307,10 +308,11 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     }
 
     private void shareInit() {
+        String contentUrl = HttpUtil.composeUrl("share", String.valueOf(getSPUId()));
         final UMSocialService mController = UMServiceFactory.getUMSocialService("com.umeng.share",
                 RequestType.SOCIAL);
 
-        mController.setShareContent("360真品鉴别让您不再上当, http://www.foo.com");
+        mController.setShareContent(String.format("%s让您不再上当, %s", getString(R.string.app_name), contentUrl));
     /*
             mController.setShareMedia(new UMImage(this,
                     "http://www.umeng.com/images/pic/banner_module_social.png"));
@@ -318,7 +320,6 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         mController.getConfig().removePlatform(SHARE_MEDIA.EMAIL, SHARE_MEDIA.DOUBAN, SHARE_MEDIA.RENREN);
         String appID = "wx061490cf3011fbd0";
         // 微信图文分享必须设置一个url
-        String contentUrl = "http://www.umeng.com/social";
         // 添加微信平台，参数1为当前Activity, 参数2为用户申请的AppID, 参数3为点击分享内容跳转到的目标url
         mController.getConfig().supportWXPlatform(this, appID, contentUrl);
         // 支持微信朋友圈
