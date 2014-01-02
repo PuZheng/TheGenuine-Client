@@ -7,7 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Pair;
-import com.puzheng.the_genuine.data_structure.MyLocationData;
+import com.baidu.mapapi.map.LocationData;
+import com.google.gson.Gson;
 import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.Misc;
@@ -21,7 +22,7 @@ public class MyApp extends Application {
     public static final int LOGIN_ACTION = 1;
     private static User user;
     private static Context context;
-    private static MyLocationData mLocationData;
+    private static LocationData mLocationData;
     private BaiduMapBroadcastReceiver receiver;
     private WebService webServieHandler;
 
@@ -53,7 +54,7 @@ public class MyApp extends Application {
 
     public static Pair<Double, Double> getLocation() {
         if (mLocationData != null) {
-            return new Pair<Double, Double>(mLocationData.getLongitude(), mLocationData.getLatitude());
+            return new Pair<Double, Double>(mLocationData.longitude, mLocationData.latitude);
         }
         throw new RuntimeException("定位失败");
     }
@@ -86,7 +87,9 @@ public class MyApp extends Application {
     private class BaiduMapBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            mLocationData = intent.getParcelableExtra(Constants.TAG_LOCATION_DATA);
+            String data = intent.getStringExtra(Constants.TAG_LOCATION_DATA);
+            Gson gson = new Gson();
+            mLocationData = gson.fromJson(data, LocationData.class);
         }
     }
 

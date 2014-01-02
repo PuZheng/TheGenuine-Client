@@ -8,6 +8,8 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
+import com.baidu.mapapi.map.LocationData;
+import com.google.gson.Gson;
 import com.puzheng.the_genuine.data_structure.User;
 
 import java.io.File;
@@ -160,5 +162,19 @@ public class Misc {
     }
     public static boolean isNetworkException(Exception e) {
         return e instanceof IOException;
+    }
+
+    public static LocationData getLastLocation(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("location", Context.MODE_PRIVATE);
+        String location = preferences.getString("location", null);
+        Gson gson = new Gson();
+        return gson.fromJson(location, LocationData.class);
+    }
+
+    public static void storeLastLocation(String locationData, Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("location", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("location", locationData);
+        editor.commit();
     }
 }
