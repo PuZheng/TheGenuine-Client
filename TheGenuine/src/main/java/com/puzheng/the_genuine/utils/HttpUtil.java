@@ -3,11 +3,19 @@ package com.puzheng.the_genuine.utils;
 import android.util.Pair;
 import com.puzheng.the_genuine.MyApp;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -16,7 +24,7 @@ import java.util.Map;
 public class HttpUtil {
     public static final String HTTP = "http://";
     public static final String HTTPS = "https://";
-    private static final String CHARSET = "UTF-8";
+    public static final String CHARSET = "UTF-8";
     private static final int DEAFULT_CONNECTION_TIME_OUT_MILLSECONDS = 1000;
     private static final int DEAFULT_SO_TIME_OUT_MILLSECONDS = 5000;
 
@@ -79,12 +87,11 @@ public class HttpUtil {
             } else {
                 target.append("/").append(sUrl);
             }
-
             return new URL(target.toString());
         }
     }
 
-    public static String postStringResult(String urlString) throws IOException, BadResponseException {
+    public static String postStringResult(String urlString, HashMap<String, String> params) throws IOException, BadResponseException {
         URL url = new URL(urlString);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestProperty("Accept-Charset", CHARSET);
@@ -92,11 +99,19 @@ public class HttpUtil {
         connection.setReadTimeout(DEAFULT_SO_TIME_OUT_MILLSECONDS);
         connection.setRequestMethod("POST");
         connection.setUseCaches(false);
+        if (params != null) {
+            connection.setDoOutput(true);
+            writer(connection.getOutputStream(), params);
+        }
         try {
             return getResultFromConnection(connection);
         } finally {
             connection.disconnect();
         }
+    }
+
+    public static String postStringResult(String urlString) throws IOException, BadResponseException {
+        return postStringResult(urlString, null);
     }
 
     private static String getResultFromConnection(HttpURLConnection connection) throws IOException, BadResponseException {
@@ -122,5 +137,34 @@ public class HttpUtil {
             stringBuilder.append(line);
         }
         return stringBuilder.toString();
+    }
+
+    private static void writer(OutputStream outputStream, HashMap<String, String> params) {
+        OutputStreamWriter osw = new OutputStreamWriter(outputStream);
+        BufferedWriter writer = new BufferedWriter(osw);
+        StringBuilder paramsStr = new StringBuilder();
+        boolean first = true;
+        for (String s : params.keySet()) {
+            if (!first) {
+                paramsStr.append("&");
+            }
+            paramsStr.append(s);
+            paramsStr.append("=");
+            paramsStr.append(params.get(s));
+            first = false;
+        }
+        try {
+            writer.write(paramsStr.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                writer.flush();
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 }
