@@ -1,10 +1,15 @@
 package com.puzheng.the_genuine;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import com.puzheng.the_genuine.utils.BadResponseException;
 import com.puzheng.the_genuine.utils.Misc;
 
@@ -62,7 +67,12 @@ public class MaskableManager {
                 mTextView.setText(R.string.httpErrorConnect);
             } else {
                 mImageButton.setImageResource(R.drawable.ic_action_refresh);
-                mTextView.setText(R.string.systemError);
+                String error = exception.getMessage();
+                if (TextUtils.isEmpty(error)) {
+                    mTextView.setText(R.string.systemError);
+                }else{
+                    mTextView.setText(error);
+                }
             }
             mProgressBar.setVisibility(View.GONE);
             mTextView.setVisibility(View.VISIBLE);

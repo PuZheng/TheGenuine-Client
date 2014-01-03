@@ -21,6 +21,7 @@ import android.view.Window;
 import android.widget.Toast;
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.netutils.WebService;
+import com.puzheng.the_genuine.utils.Misc;
 import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
 
 import java.io.UnsupportedEncodingException;
@@ -183,6 +184,17 @@ public class MainActivity extends Activity implements BackPressedInterface {
                         intent.putExtra(TAG_TAG_ID, code);
                     }
                     startActivity(intent);
+                }
+            });
+            builder.exceptionHandler(new PoliteBackgroundTask.ExceptionHandler() {
+                @Override
+                public void run(Exception e) {
+                    if (Misc.isNetworkException(e)) {
+                        Toast.makeText(MainActivity.this, R.string.httpError, Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                    MainActivity.this.onResume();
                 }
             });
             builder.create().start();

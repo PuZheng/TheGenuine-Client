@@ -56,8 +56,8 @@ public class PoliteBackgroundTask<Result> {
         pd.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                final AlertDialog ad = new AlertDialog.Builder(mContext).create();
                 if (mException == null) { // success
+                    final AlertDialog ad = new AlertDialog.Builder(mContext).create();
                     ad.setMessage(PoliteBackgroundTask.this.messageGenerator.genMessage(xRunnableResult));
                     ad.setOnShowListener(new DialogInterface.OnShowListener() {
 
@@ -80,23 +80,26 @@ public class PoliteBackgroundTask<Result> {
                             }
                         }
                     });
+                    ad.show();
                 } else {
                     String errMsg = mException.getMessage();
                     if (TextUtils.isEmpty(errMsg)) {
                         errMsg = UNKNOWN_ERROR;
                     }
-                    ad.setMessage(errMsg);
-                    ad.setTitle(ERROR);
-                    ad.setButton(DialogInterface.BUTTON_NEGATIVE, I_SEE, new OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            ad.dismiss();
-                            if (mExceptionHandler != null) {
-                                mExceptionHandler.run(mException);
+                    if (mExceptionHandler != null) {
+                        mExceptionHandler.run(mException);
+                    } else {
+                        final AlertDialog ad = new AlertDialog.Builder(mContext).create();
+                        ad.setMessage(errMsg);
+                        ad.setTitle(ERROR);
+                        ad.setButton(DialogInterface.BUTTON_NEGATIVE, I_SEE, new OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                ad.dismiss();
                             }
-                        }
-                    });
+                        });
+                        ad.show();
+                    }
                 }
-                ad.show();
             }
         });
         pd.setMessage(mMsg);

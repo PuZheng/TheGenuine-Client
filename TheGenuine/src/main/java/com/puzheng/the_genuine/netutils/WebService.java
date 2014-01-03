@@ -7,15 +7,27 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.puzheng.the_genuine.Constants;
 import com.puzheng.the_genuine.MyApp;
-import com.puzheng.the_genuine.data_structure.*;
+import com.puzheng.the_genuine.data_structure.Category;
+import com.puzheng.the_genuine.data_structure.Comment;
+import com.puzheng.the_genuine.data_structure.Favor;
+import com.puzheng.the_genuine.data_structure.Recommendation;
+import com.puzheng.the_genuine.data_structure.SPUResponse;
+import com.puzheng.the_genuine.data_structure.StoreResponse;
+import com.puzheng.the_genuine.data_structure.User;
+import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.utils.BadResponseException;
 import com.puzheng.the_genuine.utils.HttpUtil;
+import com.puzheng.the_genuine.utils.LocateErrorException;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -31,21 +43,6 @@ public class WebService {
         this.context = c;
     }
 
-    public boolean denounce(String tag, String reason) throws IOException, BadResponseException {
-        HashMap<String, String> params = getCurrentLocation();
-        params.put("reason", reason.trim());
-        String url = HttpUtil.composeUrl("tag-ws", "tag-denounce/" + tag.trim(), params);
-        HttpUtil.postStringResult(url);
-        return true;
-    }
-
-    public static WebService getInstance(Context c) {
-        if (instance == null) {
-            instance = new WebService(c);
-        }
-        return instance;
-    }
-
     public void addComment(int spu_id, String comment, float rating) throws IOException, BadResponseException {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("spu_id", String.valueOf(spu_id));
@@ -57,6 +54,19 @@ public class WebService {
 
     public boolean addFavor(int spu_id) throws IOException, BadResponseException {
         String url = HttpUtil.composeUrl("favor-ws", "favor/" + spu_id);
+        HttpUtil.postStringResult(url);
+        return true;
+    }
+
+    public boolean denounce(String tag, String reason) throws IOException, BadResponseException {
+        HashMap<String, String> params = null;
+        try {
+            params = getCurrentLocation();
+        } catch (LocateErrorException e) {
+            params = new HashMap<String, String>();
+        }
+        params.put("reason", reason.trim());
+        String url = HttpUtil.composeUrl("tag-ws", "tag-denounce/" + tag.trim(), params);
         HttpUtil.postStringResult(url);
         return true;
     }
@@ -84,7 +94,13 @@ public class WebService {
     }
 
     public HashMap<String, List<Favor>> getFavorCategories() throws IOException, JSONException, BadResponseException {
-        String url = HttpUtil.composeUrl("favor-ws", "favors", getCurrentLocation());
+        HashMap<String, String> currentLocation = null;
+        try {
+            currentLocation = getCurrentLocation();
+        } catch (LocateErrorException e) {
+            e.printStackTrace();
+        }
+        String url = HttpUtil.composeUrl("favor-ws", "favors", currentLocation);
         String result = HttpUtil.getStringResult(url);
         HashMap<String, List<Favor>> ret = new HashMap<String, List<Favor>>();
         Type type = new TypeToken<List<Favor>>() {
@@ -101,7 +117,14 @@ public class WebService {
         return ret;
     }
 
-    public List<StoreResponse> getNearbyStoreList(int spu_id) throws IOException, JSONException, BadResponseException {
+    public static WebService getInstance(Context c) {
+        if (instance == null) {
+            instance = new WebService(c);
+        }
+        return instance;
+    }
+
+    public List<StoreResponse> getNearbyStoreList(int spu_id) throws IOException, JSONException, BadResponseException, LocateErrorException {
         HashMap<String, String> params = getCurrentLocation();
         if (spu_id != Constants.INVALID_ARGUMENT) {
             params.put("spu_id", String.valueOf(spu_id));
@@ -115,22 +138,28 @@ public class WebService {
         return gson.fromJson(object.getString("data"), type);
     }
 
-    public List<Recommendation> getSPUListByCategory(int category_id, String orderBy) throws IOException, JSONException, BadResponseException {
-        HashMap<String, String> params = getCurrentLocation();
-        params.put("spu_type_id", String.valueOf(category_id));
-        params.put("order_by", orderBy);
-        return getSPUList(params);
-    }
-
-    public List<Recommendation> getSPUListByName(String query, String orderBy) throws IOException, JSONException, BadResponseException {
-        HashMap<String, String> params = getCurrentLocation();
-        params.put("kw", query);
-        params.put("order_by", orderBy);
-        return getSPUList(params);
+    private String getOriginalUrl(String shortURL) throws IOException, BadResponseException, JSONException {
+        String queryURL = "http://dwz.cn/query.php";
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("tinyurl", shortURL.trim());
+        String result = HttpUtil.postStringResult(queryURL, params);
+        JSONObject object = new JSONObject(result);
+        int status_code = object.getInt("status");
+        if (status_code == 0) {
+            return object.getString("longurl");
+        } else {
+            throw new BadResponseException(status_code, params.toString(), object.getString("err_msg"));
+        }
     }
 
     public List<Recommendation> getRecommendations(String queryType, int productId) throws IOException, JSONException, BadResponseException {
-        HashMap<String, String> params = getCurrentLocation();
+        HashMap<String, String> params;
+        try {
+            params = getCurrentLocation();
+        } catch (LocateErrorException e) {
+            e.printStackTrace();
+            params = new HashMap<String, String>();
+        }
         params.put("spu_id", String.valueOf(productId));
         params.put("kind", queryType);
         String url = HttpUtil.composeUrl("rcmd-ws", "rcmd-list", params);
@@ -140,6 +169,43 @@ public class WebService {
         }.getType();
         Gson gson = new Gson();
         return gson.fromJson(object.getString("data"), type);
+    }
+
+    public List<Recommendation> getSPUListByCategory(int category_id, String orderBy) throws IOException, JSONException, BadResponseException {
+        HashMap<String, String> params;
+        try {
+            params = getCurrentLocation();
+        } catch (LocateErrorException e) {
+            params = new HashMap<String, String>();
+        }
+        params.put("spu_type_id", String.valueOf(category_id));
+        params.put("order_by", orderBy);
+        return getSPUList(params);
+    }
+
+    public List<Recommendation> getSPUListByName(String query, String orderBy) throws IOException, JSONException, BadResponseException {
+        HashMap<String, String> params;
+        try {
+            params = getCurrentLocation();
+        } catch (LocateErrorException e) {
+            params = new HashMap<String, String>();
+        }
+        params.put("kw", query);
+        params.put("order_by", orderBy);
+        return getSPUList(params);
+    }
+
+    public SPUResponse getSPUResponse(int spu_id) throws IOException, BadResponseException {
+        HashMap<String, String> currentLocation = null;
+        try {
+            currentLocation = getCurrentLocation();
+        } catch (LocateErrorException e) {
+            e.printStackTrace();
+        }
+        String url = HttpUtil.composeUrl("spu-ws", "spu/" + spu_id, currentLocation);
+        String result = HttpUtil.getStringResult(url);
+        Gson gson = new GsonBuilder().setDateFormat(Constants.DATE_FORMAT).create();
+        return gson.fromJson(result, SPUResponse.class);
     }
 
     public User login(String email, String password) throws IOException, BadResponseException {
@@ -162,8 +228,15 @@ public class WebService {
         return gson.fromJson(result, User.class);
     }
 
-    public VerificationInfo verify(String code) throws IOException, BadResponseException {
-        String url = HttpUtil.composeUrl("tag-ws", "tag/" + code.trim(), getCurrentLocation());
+    public VerificationInfo verify(String code) throws IOException, BadResponseException, JSONException {
+        String tag = getTag(code);
+        HashMap<String, String> params = null;
+        try {
+            params = getCurrentLocation();
+        } catch (LocateErrorException e) {
+            e.printStackTrace();
+        }
+        String url = HttpUtil.composeUrl("tag-ws", "tag/" + tag, params);
         try {
             String result = HttpUtil.getStringResult(url);
             Gson gson = new GsonBuilder().setDateFormat(Constants.DATE_FORMAT).create();
@@ -177,22 +250,13 @@ public class WebService {
         }
     }
 
-
-    public SPUResponse getSPUResponse(int spu_id) throws IOException, BadResponseException {
-        String url = HttpUtil.composeUrl("spu-ws", "spu/" + spu_id, getCurrentLocation());
-        String result = HttpUtil.getStringResult(url);
-        Gson gson = new GsonBuilder().setDateFormat(Constants.DATE_FORMAT).create();
-        return gson.fromJson(result, SPUResponse.class);
-    }
-
-    private HashMap<String, String> getCurrentLocation() {
+    private HashMap<String, String> getCurrentLocation() throws LocateErrorException {
         HashMap<String, String> params = new HashMap<String, String>();
         Pair<Double, Double> location = MyApp.getLocation();
         params.put("longitude", String.valueOf(location.first));
         params.put("latitude", String.valueOf(location.second));
         return params;
     }
-
 
     private List<Recommendation> getSPUList(HashMap<String, String> params) throws IOException, JSONException, BadResponseException {
         String url = HttpUtil.composeUrl("spu-ws", "spu-list", params);
@@ -204,4 +268,21 @@ public class WebService {
         return gson.fromJson(object.getString("data"), type);
     }
 
+    private String getTag(String url) throws BadResponseException, IOException, JSONException {
+        try {
+            if (url.startsWith("http")) {
+                String originalUrl = getOriginalUrl(url);
+                List<NameValuePair> params = URLEncodedUtils.parse(new URI(originalUrl), HttpUtil.CHARSET);
+                for (NameValuePair param : params) {
+                    if (param.getName().equals("tag")) {
+                        return param.getValue();
+                    }
+                }
+            } else {
+                return url;
+            }
+        } catch (URISyntaxException e) {
+        }
+        throw new BadResponseException(-1, url, "条码有误，请重试！");
+    }
 }

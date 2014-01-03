@@ -1,23 +1,18 @@
 package com.puzheng.the_genuine;
 
-import android.app.*;
+import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.*;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Window;
-
 import com.puzheng.the_genuine.data_structure.StoreResponse;
 import com.puzheng.the_genuine.netutils.WebService;
-import com.puzheng.the_genuine.utils.BadResponseException;
 import com.puzheng.the_genuine.views.NavBar;
-import org.json.JSONException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,13 +98,8 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
         public NearbyPagerAdapter(FragmentManager fragmentManager, List<StoreResponse> list) {
             super(fragmentManager);
             mFragmentList = new ArrayList<Fragment>();
-            if (list == null) {
-                mFragmentList.add(new ErrorSupportFragment());
-                mFragmentList.add(new ErrorSupportFragment());
-            } else {
-                mFragmentList.add(new BaiduMapFragment(list));
-                mFragmentList.add(new NearbyFragment(NearbyActivity.this, list));
-            }
+            mFragmentList.add(new BaiduMapFragment(list));
+            mFragmentList.add(new NearbyFragment(NearbyActivity.this, list));
         }
 
         @Override

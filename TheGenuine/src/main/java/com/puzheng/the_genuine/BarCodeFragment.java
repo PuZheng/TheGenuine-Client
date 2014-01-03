@@ -12,7 +12,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.text.TextUtils;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import com.google.zxing.BarcodeFormat;
@@ -23,6 +27,7 @@ import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.decoding.CaptureActivityHandler;
 import com.puzheng.the_genuine.decoding.InactivityTimer;
 import com.puzheng.the_genuine.netutils.WebService;
+import com.puzheng.the_genuine.utils.Misc;
 import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
 import com.puzheng.the_genuine.views.NavBar;
 import com.puzheng.the_genuine.views.ViewfinderView;
@@ -88,7 +93,6 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
             });
             builder.after(new PoliteBackgroundTask.OnAfter<VerificationInfo>() {
 
-
                 @Override
                 public void onAfter(VerificationInfo verificationInfo) {
                     Intent intent;
@@ -105,6 +109,11 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
             builder.exceptionHandler(new PoliteBackgroundTask.ExceptionHandler() {
                 @Override
                 public void run(Exception e) {
+                    if (Misc.isNetworkException(e)) {
+                        Toast.makeText(getActivity(), R.string.httpError, Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                     BarCodeFragment.this.onResume();
                 }
             });

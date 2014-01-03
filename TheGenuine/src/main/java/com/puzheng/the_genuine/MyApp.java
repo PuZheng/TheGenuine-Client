@@ -11,6 +11,7 @@ import com.baidu.mapapi.map.LocationData;
 import com.google.gson.Gson;
 import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.netutils.WebService;
+import com.puzheng.the_genuine.utils.LocateErrorException;
 import com.puzheng.the_genuine.utils.Misc;
 
 import java.io.Serializable;
@@ -52,11 +53,12 @@ public class MyApp extends Application {
         Misc.storeUserPrefs(user, context);
     }
 
-    public static Pair<Double, Double> getLocation() {
+    public static Pair<Double, Double> getLocation() throws LocateErrorException {
+        mLocationData = null;
         if (mLocationData != null) {
             return new Pair<Double, Double>(mLocationData.longitude, mLocationData.latitude);
         }
-        throw new RuntimeException("定位失败");
+        throw new LocateErrorException(context.getString(R.string.locate_error));
     }
 
     public static Pair<String, Integer> getServerAddress() {
