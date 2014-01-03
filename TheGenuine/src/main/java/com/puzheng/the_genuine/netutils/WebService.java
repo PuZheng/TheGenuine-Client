@@ -138,20 +138,6 @@ public class WebService {
         return gson.fromJson(object.getString("data"), type);
     }
 
-    private String getOriginalUrl(String shortURL) throws IOException, BadResponseException, JSONException {
-        String queryURL = "http://dwz.cn/query.php";
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put("tinyurl", shortURL.trim());
-        String result = HttpUtil.postStringResult(queryURL, params);
-        JSONObject object = new JSONObject(result);
-        int status_code = object.getInt("status");
-        if (status_code == 0) {
-            return object.getString("longurl");
-        } else {
-            throw new BadResponseException(status_code, params.toString(), object.getString("err_msg"));
-        }
-    }
-
     public List<Recommendation> getRecommendations(String queryType, int productId) throws IOException, JSONException, BadResponseException {
         HashMap<String, String> params;
         try {
@@ -271,8 +257,7 @@ public class WebService {
     private String getTag(String url) throws BadResponseException, IOException, JSONException {
         try {
             if (url.startsWith("http")) {
-                String originalUrl = getOriginalUrl(url);
-                List<NameValuePair> params = URLEncodedUtils.parse(new URI(originalUrl), HttpUtil.CHARSET);
+                List<NameValuePair> params = URLEncodedUtils.parse(new URI(url), HttpUtil.CHARSET);
                 for (NameValuePair param : params) {
                     if (param.getName().equals("tag")) {
                         return param.getValue();
