@@ -31,16 +31,16 @@ public class VerificationInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_verification_info, container, false);
-        TextView textView = (TextView)rootView.findViewById(R.id.textViewCode);
+        TextView textView = (TextView) rootView.findViewById(R.id.textViewCode);
         textView.setText(verificationInfo.getSKU().getSPU().getCode());
-        textView = (TextView)rootView.findViewById(R.id.textViewName);
+        textView = (TextView) rootView.findViewById(R.id.textViewName);
         textView.setText(verificationInfo.getSKU().getSPU().getName());
-        textView = (TextView)rootView.findViewById(R.id.textViewVendorName);
+        textView = (TextView) rootView.findViewById(R.id.textViewVendorName);
         textView.setText(verificationInfo.getSKU().getSPU().getVendorName());
-        textView = (TextView)rootView.findViewById(R.id.textViewManufactureDate);
+        textView = (TextView) rootView.findViewById(R.id.textViewManufactureDate);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.DATE_FORMAT);
         textView.setText(simpleDateFormat.format(verificationInfo.getSKU().getManufactureDate()));
-        textView = (TextView)rootView.findViewById(R.id.textViewExpiredDate);
+        textView = (TextView) rootView.findViewById(R.id.textViewExpiredDate);
         textView.setText(simpleDateFormat.format(verificationInfo.getSKU().getExpireDate()));
 
         Date now = new Date();
@@ -55,7 +55,7 @@ public class VerificationInfoFragment extends Fragment {
         textView = (TextView) rootView.findViewById(R.id.lastVerifyTime);
         simpleDateFormat = new SimpleDateFormat(Constants.TIME_FORMAT);
         Date lastVerifyDate = verificationInfo.getLastVerifyTime();
-        textView.setText(lastVerifyDate != null?simpleDateFormat.format(lastVerifyDate): "--");
+        textView.setText(lastVerifyDate != null ? simpleDateFormat.format(lastVerifyDate) : "--");
 
         textView = (TextView) rootView.findViewById(R.id.textViewVendorAddress);
         textView.setText(verificationInfo.getSKU().getSPU().getVendor().getAddress());
@@ -64,13 +64,13 @@ public class VerificationInfoFragment extends Fragment {
         final String website = verificationInfo.getSKU().getSPU().getVendor().getWebsite();
         textView.setText(website);
         if (!TextUtils.isEmpty(website)) {
-            textView.getPaint().setFlags(Paint. UNDERLINE_TEXT_FLAG ); //下划线
+            textView.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //下划线
             textView.setTextColor(Color.BLUE);
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(website));
-                    startActivity(browserIntent);
+                    getActivity().startActivity(Intent.createChooser(browserIntent, "选择浏览器"));
                 }
             });
         }

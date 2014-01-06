@@ -46,7 +46,7 @@ public class SPUFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(website));
-                    startActivity(browserIntent);
+                    getActivity().startActivity(Intent.createChooser(browserIntent, "选择浏览器"));
                 }
             });
         }
