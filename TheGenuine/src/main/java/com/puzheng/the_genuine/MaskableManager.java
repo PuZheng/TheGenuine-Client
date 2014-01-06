@@ -1,5 +1,6 @@
 package com.puzheng.the_genuine;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.puzheng.the_genuine.utils.BadResponseException;
+import com.puzheng.the_genuine.utils.LocateErrorException;
 import com.puzheng.the_genuine.utils.Misc;
 
 /**
@@ -66,7 +68,8 @@ public class MaskableManager {
                 mTextView.setText(R.string.httpErrorConnect);
             } else {
                 mImageButton.setImageResource(R.drawable.ic_action_refresh);
-                if (exception instanceof BadResponseException) {
+                if ((exception instanceof BadResponseException || exception instanceof LocateErrorException)
+                        && !TextUtils.isEmpty(exception.getMessage())) {
                     mTextView.setText(exception.getMessage());
                 } else {
                     mTextView.setText(R.string.systemError);

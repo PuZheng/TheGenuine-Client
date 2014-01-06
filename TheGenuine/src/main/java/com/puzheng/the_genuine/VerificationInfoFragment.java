@@ -54,7 +54,8 @@ public class VerificationInfoFragment extends Fragment {
 
         textView = (TextView) rootView.findViewById(R.id.lastVerifyTime);
         simpleDateFormat = new SimpleDateFormat(Constants.TIME_FORMAT);
-        textView.setText(simpleDateFormat.format(verificationInfo.getLastVerifyTime()));
+        Date lastVerifyDate = verificationInfo.getLastVerifyTime();
+        textView.setText(lastVerifyDate != null?simpleDateFormat.format(lastVerifyDate): "--");
 
         textView = (TextView) rootView.findViewById(R.id.textViewVendorAddress);
         textView.setText(verificationInfo.getSKU().getSPU().getVendor().getAddress());

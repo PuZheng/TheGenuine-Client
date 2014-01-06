@@ -54,7 +54,6 @@ public class MyApp extends Application {
     }
 
     public static Pair<Double, Double> getLocation() throws LocateErrorException {
-        mLocationData = null;
         if (mLocationData != null) {
             return new Pair<Double, Double>(mLocationData.longitude, mLocationData.latitude);
         }
