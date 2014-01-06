@@ -1,6 +1,5 @@
 package com.puzheng.the_genuine;
 
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -56,7 +55,7 @@ public class MaskableManager {
         } else {
             if (BuildConfig.DEBUG) {
                 if (exception instanceof BadResponseException) {
-                    Log.e(MaskableManager.class.getSimpleName(),((BadResponseException) exception).getUrl(), exception);
+                    Log.e(MaskableManager.class.getSimpleName(), ((BadResponseException) exception).getUrl(), exception);
                 } else {
                     Log.e(MaskableManager.class.getSimpleName(), String.valueOf(exception.getMessage()), exception);
                 }
@@ -67,11 +66,10 @@ public class MaskableManager {
                 mTextView.setText(R.string.httpErrorConnect);
             } else {
                 mImageButton.setImageResource(R.drawable.ic_action_refresh);
-                String error = exception.getMessage();
-                if (TextUtils.isEmpty(error)) {
+                if (exception instanceof BadResponseException) {
+                    mTextView.setText(exception.getMessage());
+                } else {
                     mTextView.setText(R.string.systemError);
-                }else{
-                    mTextView.setText(error);
                 }
             }
             mProgressBar.setVisibility(View.GONE);

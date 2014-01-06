@@ -6,6 +6,7 @@ package com.puzheng.the_genuine;
 public interface Constants {
     public static final int INVALID_ARGUMENT = Integer.MIN_VALUE;
     public static final String DATE_FORMAT = "yyyy-MM-dd";
+    public static final String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String BAIDU_MAP_KEY = "UTW8RC2pRPD9oGrGn8jXgcnO";
     public static final String TAG_SPU_ID = "SPU_ID";
     public static final String TAG_LOCATION_DATA = "LOCATION_DATA";

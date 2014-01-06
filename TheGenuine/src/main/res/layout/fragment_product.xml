@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -40,7 +40,7 @@
                 android:layout_span="2"
                 android:layout_height="1px"
                 android:layout_width="fill_parent"
-                android:text=""></View>
+                android:text="" />
         </TableRow>
 
         <TableRow
@@ -73,7 +73,7 @@
                 android:layout_span="2"
                 android:layout_height="1px"
                 android:layout_width="fill_parent"
-                android:text=""></View>
+                android:text="" />
         </TableRow>
 
         <TableRow
@@ -86,7 +86,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="生产厂家"
+                android:text="生产商"
                 android:textColor="@android:color/darker_gray"
                 android:id="@+id/textView" />
 
@@ -106,7 +106,7 @@
                 android:layout_span="2"
                 android:layout_height="1px"
                 android:layout_width="fill_parent"
-                android:text=""></View>
+                android:text="" />
         </TableRow>
 
         <TableRow
@@ -127,7 +127,6 @@
                 android:layout_width="match_parent"
                 android:layout_weight="7"
                 android:layout_height="wrap_content"
-                android:text="address"
                 android:id="@+id/textViewVendorAddress" />
         </TableRow>
 
@@ -139,10 +138,11 @@
                 android:layout_span="2"
                 android:layout_height="1px"
                 android:layout_width="fill_parent"
-                android:text=""/>
+                android:text="" />
         </TableRow>
 
         <TableRow
+            android:id="@+id/call"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:padding="10dp"
@@ -156,25 +156,24 @@
                 android:textColor="@android:color/darker_gray"
                 android:id="@+id/textView" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_weight="7">
+                <ImageView
+                    android:src="@android:drawable/ic_menu_call"
+                    android:id="@+id/VendorTelButton"
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_toRightOf="@id/VendorTelButton"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="telephone"
                     android:id="@+id/textViewVendorTel" />
-                <Button
-                    style="?android:buttonStyleSmall"
-                    android:background="@android:drawable/ic_menu_call"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp" />
-            </LinearLayout>
 
-
+            </RelativeLayout>
         </TableRow>
 
         <TableRow
@@ -185,7 +184,7 @@
                 android:layout_span="2"
                 android:layout_height="1px"
                 android:layout_width="fill_parent"
-                android:text=""/>
+                android:text="" />
         </TableRow>
 
         <TableRow
@@ -207,7 +206,6 @@
                 android:layout_width="match_parent"
                 android:layout_weight="7"
                 android:layout_height="wrap_content"
-                android:text="website"
                 android:id="@+id/textViewVendorWebsite" />
         </TableRow>
 
@@ -219,7 +217,7 @@
                 android:layout_span="2"
                 android:layout_height="1px"
                 android:layout_width="fill_parent"
-                android:text=""/>
+                android:text="" />
         </TableRow>
     </TableLayout>
-</LinearLayout>
+</ScrollView>

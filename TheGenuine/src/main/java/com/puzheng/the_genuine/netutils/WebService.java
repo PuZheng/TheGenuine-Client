@@ -225,7 +225,7 @@ public class WebService {
         String url = HttpUtil.composeUrl("tag-ws", "tag/" + tag, params);
         try {
             String result = HttpUtil.getStringResult(url);
-            Gson gson = new GsonBuilder().setDateFormat(Constants.DATE_FORMAT).create();
+            Gson gson = new GsonBuilder().setDateFormat(Constants.TIME_FORMAT).create();
             return gson.fromJson(result, VerificationInfo.class);
         } catch (BadResponseException e) {
             if (e.getStatusCode() == HttpURLConnection.HTTP_NOT_FOUND) {
