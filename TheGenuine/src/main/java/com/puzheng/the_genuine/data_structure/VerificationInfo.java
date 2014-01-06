@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 /**
  * Created by xc on 13-11-19.
  */
@@ -28,6 +30,11 @@ public class VerificationInfo implements Parcelable {
     @SerializedName("comments_cnt")
     private int commentsCnt;
     private boolean favored;
+    @SerializedName("verify_cnt")
+    private int verifyCnt;
+
+    @SerializedName("last_verify_time")
+    private Date lastVerifyTime;
 
     public VerificationInfo(SKU sku, int nearbyRecommendationsCnt, int sameVendorRecommendationsCnt, int commentsCnt, boolean favored) {
         this.sku = sku;
@@ -43,6 +50,8 @@ public class VerificationInfo implements Parcelable {
         sameVendorRecommendationsCnt = source.readInt();
         commentsCnt = source.readInt();
         favored = Boolean.parseBoolean(source.readString());
+        verifyCnt = source.readInt();
+        lastVerifyTime = (Date) source.readSerializable();
     }
 
     @Override
@@ -52,6 +61,10 @@ public class VerificationInfo implements Parcelable {
 
     public int getCommentsCnt() {
         return commentsCnt;
+    }
+
+    public Date getLastVerifyTime() {
+        return lastVerifyTime;
     }
 
     public int getNearbyRecommendationsCnt() {
@@ -64,6 +77,10 @@ public class VerificationInfo implements Parcelable {
 
     public int getSameVendorRecommendationsCnt() {
         return sameVendorRecommendationsCnt;
+    }
+
+    public int getVerifyCnt() {
+        return verifyCnt;
     }
 
     public boolean isFavored() {
@@ -81,5 +98,7 @@ public class VerificationInfo implements Parcelable {
         dest.writeInt(sameVendorRecommendationsCnt);
         dest.writeInt(commentsCnt);
         dest.writeString(String.valueOf(favored));
+        dest.writeInt(verifyCnt);
+        dest.writeSerializable(lastVerifyTime);
     }
 }

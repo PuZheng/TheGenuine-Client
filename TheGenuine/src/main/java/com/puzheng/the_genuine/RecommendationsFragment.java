@@ -18,6 +18,7 @@ public class RecommendationsFragment extends ListFragment implements RefreshInte
     public static final int SAME_CATEGORY = 3;
     private static final String NEARYBY = "nearby";
     private static final String SAME_VENDOR = "same_vendor";
+    private static final String SAME_TYPE = "same_type";
     private String queryType;
     private int mSpuId;
     private MaskableManager maskableManager;
@@ -29,6 +30,10 @@ public class RecommendationsFragment extends ListFragment implements RefreshInte
 
     public static RecommendationsFragment createNearByProductsFragment(int productId) {
         return new RecommendationsFragment(NEARYBY, productId);
+    }
+
+    public static RecommendationsFragment createSameTypeProductsFragment(int productId) {
+        return new RecommendationsFragment(SAME_TYPE, productId);
     }
 
     public static RecommendationsFragment createSameVendorProductsFragment( int productId) {
@@ -84,11 +89,12 @@ public class RecommendationsFragment extends ListFragment implements RefreshInte
             if (maskableManager.unmask(exception)) {
                 if (recommendations != null && !recommendations.isEmpty()) {
                     listFragment.setListAdapter(new RecommendationListAdapter(recommendations, getActivity(), (ImageFetcherInteface) getActivity()));
+                    return;
                 }else {
-                    listFragment.setListAdapter(null);
                     listFragment.setEmptyText(listFragment.getString(R.string.search_no_result_found));
                 }
             }
+            listFragment.setListAdapter(null);
         }
 
         @Override

@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.puzheng.the_genuine.utils.BadResponseException;
+import com.puzheng.the_genuine.utils.LocateErrorException;
 import com.puzheng.the_genuine.utils.Misc;
 
 /**
@@ -56,7 +57,7 @@ public class MaskableManager {
         } else {
             if (BuildConfig.DEBUG) {
                 if (exception instanceof BadResponseException) {
-                    Log.e(MaskableManager.class.getSimpleName(),((BadResponseException) exception).getUrl(), exception);
+                    Log.e(MaskableManager.class.getSimpleName(), ((BadResponseException) exception).getUrl(), exception);
                 } else {
                     Log.e(MaskableManager.class.getSimpleName(), String.valueOf(exception.getMessage()), exception);
                 }
@@ -67,11 +68,11 @@ public class MaskableManager {
                 mTextView.setText(R.string.httpErrorConnect);
             } else {
                 mImageButton.setImageResource(R.drawable.ic_action_refresh);
-                String error = exception.getMessage();
-                if (TextUtils.isEmpty(error)) {
+                if ((exception instanceof BadResponseException || exception instanceof LocateErrorException)
+                        && !TextUtils.isEmpty(exception.getMessage())) {
+                    mTextView.setText(exception.getMessage());
+                } else {
                     mTextView.setText(R.string.systemError);
-                }else{
-                    mTextView.setText(error);
                 }
             }
             mProgressBar.setVisibility(View.GONE);

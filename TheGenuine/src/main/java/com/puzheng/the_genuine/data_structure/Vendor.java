@@ -19,22 +19,26 @@ public class Vendor implements Parcelable {
         }
     };
     private int id;
-
-    public Vendor(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
+    private String tel;
     private String name;
+    private String address;
+    private String website;
 
     public Vendor(Parcel parcel) {
         id = parcel.readInt();
         name = parcel.readString();
+        tel = parcel.readString();
+        address = parcel.readString();
+        website = parcel.readString();
     }
 
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public String getAddress() {
+        return address;
     }
 
     public int getId() {
@@ -45,9 +49,20 @@ public class Vendor implements Parcelable {
         return name;
     }
 
+    public String getTel() {
+        return tel;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
         dest.writeString(name);
+        dest.writeString(tel);
+        dest.writeString(address);
+        dest.writeString(website);
     }
 }

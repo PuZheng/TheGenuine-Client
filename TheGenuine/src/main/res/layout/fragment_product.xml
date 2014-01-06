@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -40,7 +40,7 @@
                 android:layout_span="2"
                 android:layout_height="1px"
                 android:layout_width="fill_parent"
-                android:text=""></View>
+                android:text="" />
         </TableRow>
 
         <TableRow
@@ -73,7 +73,7 @@
                 android:layout_span="2"
                 android:layout_height="1px"
                 android:layout_width="fill_parent"
-                android:text=""></View>
+                android:text="" />
         </TableRow>
 
         <TableRow
@@ -86,7 +86,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="生产厂家"
+                android:text="生产商"
                 android:textColor="@android:color/darker_gray"
                 android:id="@+id/textView" />
 
@@ -106,7 +106,28 @@
                 android:layout_span="2"
                 android:layout_height="1px"
                 android:layout_width="fill_parent"
-                android:text=""></View>
+                android:text="" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:padding="10dp"
+            android:layout_marginBottom="1dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="生产商地址"
+                android:textColor="@android:color/darker_gray"
+                android:id="@+id/textView" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="7"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewVendorAddress" />
         </TableRow>
 
         <TableRow
@@ -117,7 +138,86 @@
                 android:layout_span="2"
                 android:layout_height="1px"
                 android:layout_width="fill_parent"
-                android:text=""></View>
+                android:text="" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/call"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:layout_marginBottom="1dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="生产商电话"
+                android:textColor="@android:color/darker_gray"
+                android:id="@+id/textView" />
+
+            <RelativeLayout
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_weight="7">
+                <ImageView
+                    android:src="@android:drawable/ic_menu_call"
+                    android:id="@+id/VendorTelButton"
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_toRightOf="@id/VendorTelButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/textViewVendorTel" />
+
+            </RelativeLayout>
+        </TableRow>
+
+        <TableRow
+            android:layout_height="1px"
+            android:background="#BDBDBD">
+
+            <View
+                android:layout_span="2"
+                android:layout_height="1px"
+                android:layout_width="fill_parent"
+                android:text="" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:padding="10dp"
+            android:layout_marginBottom="1dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+
+                android:text="生产商网址"
+                android:textColor="@android:color/darker_gray"
+                android:id="@+id/textView" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="7"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewVendorWebsite" />
+        </TableRow>
+
+        <TableRow
+            android:layout_height="1px"
+            android:background="#BDBDBD">
+
+            <View
+                android:layout_span="2"
+                android:layout_height="1px"
+                android:layout_width="fill_parent"
+                android:text="" />
         </TableRow>
     </TableLayout>
-</LinearLayout>
+</ScrollView>
