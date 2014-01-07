@@ -14,10 +14,10 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.SearchView;
+
 import com.puzheng.the_genuine.R;
 import com.puzheng.the_genuine.SPUActivity;
 import com.puzheng.the_genuine.SPUListActivity;
-import com.puzheng.the_genuine.views.NavBar;
 
 
 /**
@@ -69,8 +69,6 @@ public class SearchActivity extends Activity {
         mClearButton = (Button) findViewById(R.id.clear_recent_search);
         setClearButton(mClearButton);
 
-        NavBar navBar = (NavBar) findViewById(R.id.navBar);
-        navBar.setContext(this);
         handleIntent(getIntent());
     }
 

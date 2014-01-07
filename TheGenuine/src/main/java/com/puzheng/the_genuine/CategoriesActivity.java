@@ -6,14 +6,22 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.view.*;
-import android.widget.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.ImageView;
+
 import com.puzheng.the_genuine.data_structure.Category;
 import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.search.SearchActivity;
 import com.puzheng.the_genuine.utils.Misc;
-import com.puzheng.the_genuine.views.NavBar;
 
 import java.util.List;
 
@@ -68,9 +76,6 @@ public class CategoriesActivity extends ActionBarActivity implements BackPressed
         int imageThumbSize = getResources().getDimensionPixelSize(R.dimen.categories_grid_item_width);
 
         mImageFetcher = ImageFetcher.getImageFetcher(this, imageThumbSize, 0.25f);
-
-        NavBar navBar = (NavBar) findViewById(R.id.navBar);
-        navBar.setContext(this);
         gridView = (GridView) findViewById(R.id.gridView);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -100,7 +105,7 @@ public class CategoriesActivity extends ActionBarActivity implements BackPressed
 
             @Override
             public void onScroll(AbsListView absListView, int firstVisibleItem,
-                    int visibleItemCount, int totalItemCount) {
+                                 int visibleItemCount, int totalItemCount) {
             }
         });
 

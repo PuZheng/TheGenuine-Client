@@ -6,7 +6,6 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
-import com.puzheng.the_genuine.views.NavBar;
 
 /**
  * Created by abc549825@163.com(https://github.com/abc549825) at 12-17.
@@ -38,8 +37,6 @@ public class RegisterActivity extends ActionBarActivity {
 
         showRegisterFragment();
 
-        NavBar navBar = (NavBar) findViewById(R.id.navBar);
-        navBar.setContext(this);
     }
 
     @Override

@@ -13,13 +13,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.text.TextUtils;
-import android.view.*;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.Misc;
-import com.puzheng.the_genuine.views.NavBar;
 
 public class CounterfeitActivity extends Activity {
     private ProgressDialog progressDialog;
@@ -79,8 +83,6 @@ public class CounterfeitActivity extends Activity {
         mMediaPlayer.setLooping(false);
         mMediaPlayer.start();
 
-        NavBar navBar = (NavBar) findViewById(R.id.navBar);
-        navBar.setContext(this);
     }
 
     class DenounceTask extends AsyncTask<String, Void, Boolean> {

@@ -13,8 +13,20 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.SparseArray;
-import android.view.*;
-import android.widget.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RatingBar;
+import android.widget.TextView;
+
 import com.puzheng.the_genuine.data_structure.Favor;
 import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.netutils.WebService;
@@ -200,7 +212,6 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
     private void setNavBar() {
         NavBar navBar = (NavBar) findViewById(R.id.navBar);
         navBar.enableTab(NavBar.FAVOR, true);
-        navBar.setContext(this);
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
