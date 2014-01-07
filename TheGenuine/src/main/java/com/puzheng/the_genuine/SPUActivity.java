@@ -188,8 +188,8 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         return verificationInfo != null ? verificationInfo.getCommentsCnt() : spuResponse.getCommentsCnt();
     }
 
-    private int getNearbyRecommendationsCnt() {
-        return verificationInfo != null ? verificationInfo.getNearbyRecommendationsCnt() : spuResponse.getNearbyRecommendationsCnt();
+    private int getSameTypeRecommendationsCnt() {
+        return verificationInfo != null ? verificationInfo.getSameTypeRecommendationsCnt() : spuResponse.getSameTypeRecommendationsCnt();
     }
 
     private List<String> getPicUrlList() {
@@ -258,7 +258,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         tabSpec.setContent(new MyTabFactory(this));
         tabHost.addTab(tabSpec);
 
-        s = "同类推荐(" + Misc.humanizeNum(getNearbyRecommendationsCnt()) + ")";
+        s = "同类推荐(" + Misc.humanizeNum(getSameTypeRecommendationsCnt()) + ")";
         tabSpec = tabHost.newTabSpec("tab2").setIndicator(s);
         tabSpec.setContent(new MyTabFactory(this));
         tabHost.addTab(tabSpec);

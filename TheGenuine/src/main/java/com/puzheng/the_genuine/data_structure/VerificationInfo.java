@@ -23,8 +23,8 @@ public class VerificationInfo implements Parcelable {
         }
     };
     private SKU sku;
-    @SerializedName("nearby_recommendations_cnt")
-    private int nearbyRecommendationsCnt;
+    @SerializedName("same_type_recommendations_cnt")
+    private int sameTypeRecommendationsCnt;
     @SerializedName("same_vendor_recommendations_cnt")
     private int sameVendorRecommendationsCnt;
     @SerializedName("comments_cnt")
@@ -36,9 +36,9 @@ public class VerificationInfo implements Parcelable {
     @SerializedName("last_verify_time")
     private Date lastVerifyTime;
 
-    public VerificationInfo(SKU sku, int nearbyRecommendationsCnt, int sameVendorRecommendationsCnt, int commentsCnt, boolean favored) {
+    public VerificationInfo(SKU sku, int sameTypeRecommendationsCnt, int sameVendorRecommendationsCnt, int commentsCnt, boolean favored) {
         this.sku = sku;
-        this.nearbyRecommendationsCnt = nearbyRecommendationsCnt;
+        this.sameTypeRecommendationsCnt = sameTypeRecommendationsCnt;
         this.sameVendorRecommendationsCnt = sameVendorRecommendationsCnt;
         this.commentsCnt = commentsCnt;
         this.favored = favored;
@@ -46,7 +46,7 @@ public class VerificationInfo implements Parcelable {
 
     public VerificationInfo(Parcel source) {
         sku = source.readParcelable(SKU.class.getClassLoader());
-        nearbyRecommendationsCnt = source.readInt();
+        sameTypeRecommendationsCnt = source.readInt();
         sameVendorRecommendationsCnt = source.readInt();
         commentsCnt = source.readInt();
         favored = Boolean.parseBoolean(source.readString());
@@ -67,8 +67,8 @@ public class VerificationInfo implements Parcelable {
         return lastVerifyTime;
     }
 
-    public int getNearbyRecommendationsCnt() {
-        return nearbyRecommendationsCnt;
+    public int getSameTypeRecommendationsCnt() {
+        return sameTypeRecommendationsCnt;
     }
 
     public SKU getSKU() {
@@ -94,7 +94,7 @@ public class VerificationInfo implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(sku, flags);
-        dest.writeInt(nearbyRecommendationsCnt);
+        dest.writeInt(sameTypeRecommendationsCnt);
         dest.writeInt(sameVendorRecommendationsCnt);
         dest.writeInt(commentsCnt);
         dest.writeString(String.valueOf(favored));
