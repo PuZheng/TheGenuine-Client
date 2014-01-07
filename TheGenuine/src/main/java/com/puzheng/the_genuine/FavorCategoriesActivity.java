@@ -115,8 +115,10 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
         if (resultCode == RESULT_OK) {
             if (requestCode == MyApp.LOGIN_ACTION) {
                 new GetFavorsTask().execute();
-
             }
+        }
+        if (resultCode == RESULT_CANCELED) {
+            this.doBackPressed();
         }
     }
 
@@ -170,13 +172,12 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
     }
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
+    protected void onDestroy() {
+        super.onDestroy();
+        mImageFetcher.closeCache();
     }
 
-        @Override
+    @Override
     protected void onPause() {
         super.onPause();
         mImageFetcher.setPauseWork(false);
@@ -185,15 +186,16 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        mImageFetcher.setExitTasksEarly(false);
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mImageFetcher.closeCache();
+    protected void onResume() {
+        super.onResume();
+        mImageFetcher.setExitTasksEarly(false);
     }
 
     private void selectItem(int position) {
@@ -242,11 +244,6 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
         private Exception exception;
 
         @Override
-        protected void onPreExecute() {
-            maskableManager.mask();
-        }
-
-        @Override
         protected HashMap<String, List<Favor>> doInBackground(Void... params) {
             try {
                 return WebService.getInstance(FavorCategoriesActivity.this).getFavorCategories();
@@ -286,6 +283,11 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
                 getActionBar().setSubtitle(null);
                 mDrawerLayout.setDrawerListener(null);
             }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            maskableManager.mask();
         }
     }
 
