@@ -79,6 +79,7 @@
             android:name=".SPUActivity"
             android:theme="@style/WithUpIndicatorTheme"
             android:label="@string/title_activity_spu"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"
             android:uiOptions="splitActionBarWhenNarrow">
             <meta-data

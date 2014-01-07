@@ -64,5 +64,6 @@
     <string name="email_max_length">64</string>
     <string name="email_max_length_error">用户名长度不能超过64</string>
     <string name="locate_error">定位失败</string>
-
+    <string name="share_template">拒绝伪品，鉴真于“芯”，坚持真品就这么简单！立刻下载360乐鉴防伪神器</string>
+    <string name="share_url_template">www.360legit.com</string>
 </resources>
