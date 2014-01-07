@@ -22,17 +22,17 @@ public class SPUResponse implements Parcelable {
         }
     };
     private SPU spu;
-    @SerializedName("nearby_recommendations_cnt")
-    private int nearbyRecommendationsCnt;
+    @SerializedName("same_type_recommendations_cnt")
+    private int sameTypeRecommendationsCnt;
     @SerializedName("same_vendor_recommendations_cnt")
     private int sameVendorRecommendationsCnt;
     @SerializedName("comments_cnt")
     private int commentsCnt;
     private boolean favored;
 
-    public SPUResponse(SPU spu, int nearbyRecommendationsCnt, int sameVendorRecommendationsCnt, int commentsCnt, boolean favored) {
+    public SPUResponse(SPU spu, int sameTypeRecommendationsCnt, int sameVendorRecommendationsCnt, int commentsCnt, boolean favored) {
         this.spu = spu;
-        this.nearbyRecommendationsCnt = nearbyRecommendationsCnt;
+        this.sameTypeRecommendationsCnt = sameTypeRecommendationsCnt;
         this.sameVendorRecommendationsCnt = sameVendorRecommendationsCnt;
         this.commentsCnt = commentsCnt;
         this.favored = favored;
@@ -40,7 +40,7 @@ public class SPUResponse implements Parcelable {
 
     public SPUResponse(Parcel source) {
         spu = new SPU(source);
-        nearbyRecommendationsCnt = source.readInt();
+        sameTypeRecommendationsCnt = source.readInt();
         sameVendorRecommendationsCnt = source.readInt();
         commentsCnt = source.readInt();
         favored = Boolean.parseBoolean(source.readString());
@@ -55,8 +55,8 @@ public class SPUResponse implements Parcelable {
         return commentsCnt;
     }
 
-    public int getNearbyRecommendationsCnt() {
-        return nearbyRecommendationsCnt;
+    public int getSameTypeRecommendationsCnt() {
+        return sameTypeRecommendationsCnt;
     }
 
     public SPU getSPU() {
@@ -78,7 +78,7 @@ public class SPUResponse implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         spu.writeToParcel(dest, flags);
-        dest.writeInt(nearbyRecommendationsCnt);
+        dest.writeInt(sameTypeRecommendationsCnt);
         dest.writeInt(sameVendorRecommendationsCnt);
         dest.writeInt(commentsCnt);
         dest.writeString(String.valueOf(favored));
