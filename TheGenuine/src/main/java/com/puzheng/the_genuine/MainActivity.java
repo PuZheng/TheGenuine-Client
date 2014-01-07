@@ -108,7 +108,7 @@ public class MainActivity extends Activity implements BackPressedInterface {
         }).setNegativeButton("取消", null).show();
     }
 
-    private String extractNFCMessage(Intent intent) {
+    private String extractCode(Intent intent) {
         String action = intent.getAction();
         Tag tag = null;
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
@@ -146,11 +146,15 @@ public class MainActivity extends Activity implements BackPressedInterface {
         if (ndefMessage != null) {
             NdefRecord[] records = ndefMessage.getRecords();
             for (NdefRecord ndefRecord : records) {
-                if (ndefRecord.getTnf() == NdefRecord.TNF_WELL_KNOWN && Arrays.equals(ndefRecord.getType(), NdefRecord.RTD_TEXT)) {
-                    try {
-                        return readText(ndefRecord);
-                    } catch (UnsupportedEncodingException e) {
-                        Toast.makeText(MainActivity.this, "Unsupported Encoding" + e, Toast.LENGTH_SHORT).show();
+                if (ndefRecord.getTnf() == NdefRecord.TNF_WELL_KNOWN) {
+                    if (Arrays.equals(ndefRecord.getType(), NdefRecord.RTD_TEXT)) {
+                        try {
+                            return readText(ndefRecord);
+                        } catch (UnsupportedEncodingException e) {
+                            Toast.makeText(MainActivity.this, "Unsupported Encoding" + e, Toast.LENGTH_SHORT).show();
+                        }
+                    } else if (Arrays.equals(ndefRecord.getType(), NdefRecord.RTD_URI)) {
+                        return readURI(ndefRecord);
                     }
                 }
             }
@@ -161,7 +165,7 @@ public class MainActivity extends Activity implements BackPressedInterface {
     }
 
     private void handleIntent(Intent intent) {
-        final String code = extractNFCMessage(intent);
+        final String code = extractCode(intent);
         if (!TextUtils.isEmpty(code)) {
             PoliteBackgroundTask.Builder<VerificationInfo> builder = new PoliteBackgroundTask.Builder<VerificationInfo>(this);
             builder.msg("已读取NFC信息，正在验证真伪");
@@ -220,5 +224,19 @@ public class MainActivity extends Activity implements BackPressedInterface {
         // e.g. "en"
         // Get the Text
         return new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
+    }
+
+    private String readURI(NdefRecord record) {
+        /*
+         * see NFC Data Exchange Format (NDEF) Technical Specification URI TYPE DEFINITION
+         */
+        byte[] payload = record.getPayload();
+        byte identifierCode = payload[0];
+        // http://www or https://www or http:// or https://
+        if (identifierCode == 1 || identifierCode == 2 || identifierCode == 3 || identifierCode == 4) {
+            // compensate "http://"
+            return "http://" + new String(payload, 1, payload.length-1);
+        }
+        return null;
     }
 }
