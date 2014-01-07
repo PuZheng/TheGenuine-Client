@@ -10,7 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import com.puzheng.the_genuine.*;
+
+import com.puzheng.the_genuine.AccountSettingsActivity;
+import com.puzheng.the_genuine.CategoriesActivity;
+import com.puzheng.the_genuine.FavorCategoriesActivity;
+import com.puzheng.the_genuine.MainActivity;
+import com.puzheng.the_genuine.NearbyActivity;
+import com.puzheng.the_genuine.R;
 
 import java.util.ArrayList;
 
@@ -24,7 +30,6 @@ public class NavBar extends LinearLayout {
     private static final int AROUND = 2;
     private static final int ACCOUNT = 4;
     private final View rootView;
-    private Context context;
     private int mCurrentActiveTabId;
     private ArrayList<Integer> mAllResId = new ArrayList<Integer>();
 
@@ -98,10 +103,6 @@ public class NavBar extends LinearLayout {
         }
     }
 
-    public void setContext(Context context) {
-        this.context = context;
-    }
-
     private void initTab(final int resId, final Class<?> activityClass) {
         if (!mAllResId.contains(resId)) {
             mAllResId.add(resId);
@@ -110,22 +111,20 @@ public class NavBar extends LinearLayout {
         imageButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (NavBar.this.context.getClass().equals(activityClass)) {
+                if (getContext().getClass().equals(activityClass)) {
                     return;
                 }
-                Intent intent = new Intent(context, activityClass);
+                Intent intent = new Intent(getContext(), activityClass);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                context.startActivity(intent);
-                if (context instanceof Activity) {
-                    if (mCurrentActiveTabId == resId) {
-                        ((Activity) context).finish();
-                        return;
-                    }
-                    if (isLeft(resId)) {
-                        ((Activity) context).overridePendingTransition(R.anim.slide_in_form_left, R.anim.slide_out_from_right);
-                    } else {
-                        ((Activity) context).overridePendingTransition(R.anim.slide_in_form_right, R.anim.slide_out_from_left);
-                    }
+                getContext().startActivity(intent);
+                if (mCurrentActiveTabId == resId) {
+                    ((Activity) getContext()).finish();
+                    return;
+                }
+                if (isLeft(resId)) {
+                    ((Activity) getContext()).overridePendingTransition(R.anim.slide_in_form_left, R.anim.slide_out_from_right);
+                } else {
+                    ((Activity) getContext()).overridePendingTransition(R.anim.slide_in_form_right, R.anim.slide_out_from_left);
                 }
             }
         });

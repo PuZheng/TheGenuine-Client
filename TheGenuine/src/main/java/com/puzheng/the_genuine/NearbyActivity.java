@@ -9,9 +9,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+
 import com.puzheng.the_genuine.data_structure.StoreResponse;
 import com.puzheng.the_genuine.netutils.WebService;
-import com.puzheng.the_genuine.views.NavBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,9 +85,6 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
                 getActionBar().setSelectedNavigationItem(position);
             }
         });
-
-        NavBar navBar = (NavBar) findViewById(R.id.navBar);
-        navBar.setContext(this);
 
         new GetNearbyListTask().execute();
     }

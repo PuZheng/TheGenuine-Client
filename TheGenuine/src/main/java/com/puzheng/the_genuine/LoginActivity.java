@@ -6,7 +6,6 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import com.puzheng.the_genuine.views.NavBar;
 
 /**
  * Activity which displays a register_or_login screen to the user, offering registration as
@@ -62,8 +61,6 @@ public class LoginActivity extends Activity implements BackPressedInterface {
 
         showLoginFragment();
 
-        NavBar navBar = (NavBar) findViewById(R.id.navBar);
-        navBar.setContext(this);
     }
 
     private boolean isTop() {

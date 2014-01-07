@@ -7,8 +7,8 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
 import com.puzheng.the_genuine.data_structure.User;
-import com.puzheng.the_genuine.views.NavBar;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -65,8 +65,7 @@ public class AccountSettingsActivity extends Activity implements BackPressedInte
                 login();
             }
         });
-        NavBar navBar = (NavBar) findViewById(R.id.navBar);
-        navBar.setContext(this);
+
     }
 
     private void login() {

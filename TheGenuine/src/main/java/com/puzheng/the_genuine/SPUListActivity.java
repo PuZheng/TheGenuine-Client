@@ -13,13 +13,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import android.view.View;
 import android.widget.ListView;
+
 import com.puzheng.the_genuine.data_structure.Recommendation;
 import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.search.SearchActivity;
-import com.puzheng.the_genuine.views.NavBar;
 
 /**
  * Created by abc549825@163.com(https://github.com/abc549825) at 12-03.
@@ -88,8 +87,6 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
         setContentView(R.layout.activity_product_list);
         orderByDescs = getResources().getStringArray(R.array.order_by_list);
         orderByStrs = getResources().getStringArray(R.array.order_by_str_list);
-        NavBar navBar = (NavBar) findViewById(R.id.navBar);
-        navBar.setContext(this);
         mViewPager = (ViewPager) findViewById(R.id.pager);
         addTabs();
     }

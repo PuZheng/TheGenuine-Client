@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.puzheng.the_genuine.camera.AmbientLightManager;
@@ -29,7 +30,6 @@ import com.puzheng.the_genuine.decoding.InactivityTimer;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.Misc;
 import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
-import com.puzheng.the_genuine.views.NavBar;
 import com.puzheng.the_genuine.views.ViewfinderView;
 
 import java.io.IOException;
@@ -146,8 +146,6 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
         }
 
 
-        NavBar navBar = (NavBar) mRootView.findViewById(R.id.navBar);
-        navBar.setContext(this.getActivity());
         return mRootView;
     }
 

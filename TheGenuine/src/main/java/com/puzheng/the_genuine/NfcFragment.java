@@ -21,8 +21,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.puzheng.the_genuine.views.NavBar;
-
 /**
  * Created by abc549825@163.com(https://github.com/abc549825) at 12-05.
  */
@@ -80,8 +78,6 @@ public class NfcFragment extends Fragment {
             }
         });
 
-        NavBar navBar = (NavBar) rootView.findViewById(R.id.navBar);
-        navBar.setContext(this.getActivity());
         mask = rootView.findViewById(R.id.mask);
         return rootView;
     }
