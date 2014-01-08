@@ -37,7 +37,7 @@
     <LinearLayout
         android:id="@+id/imageButtonLayout"
         android:orientation="vertical"
-        android:layout_marginTop="@dimen/margin2top"
+        android:layout_marginTop="@dimen/margin2right"
         android:layout_marginRight="@dimen/margin2right"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"

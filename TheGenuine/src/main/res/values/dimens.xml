@@ -13,6 +13,6 @@
     <dimen name="image_view_list_item_height">64dp</dimen>
     <dimen name="padding_top">24dp</dimen>
     <dimen name="cover_size">128dp</dimen>
-    <dimen name="margin2top">4dp</dimen>
+    <dimen name="margin2top">48dp</dimen>
     <dimen name="margin2right">4dp</dimen>
 </resources>

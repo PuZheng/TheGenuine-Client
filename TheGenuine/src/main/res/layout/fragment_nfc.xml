@@ -21,7 +21,7 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_marginTop="@dimen/margin2top"
+        android:layout_marginTop="@dimen/margin2right"
         android:layout_marginRight="@dimen/margin2right"
         android:layout_width="@dimen/image_view_list_item_width"
         android:layout_height="wrap_content"
