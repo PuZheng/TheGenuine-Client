@@ -32,7 +32,6 @@ import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.BadResponseException;
-import com.puzheng.the_genuine.utils.HttpUtil;
 import com.puzheng.the_genuine.utils.Misc;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.controller.RequestType;
@@ -323,11 +322,11 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     }
 
     private void shareInit() {
-        String contentUrl = HttpUtil.composeUrl("share", String.valueOf(getSPUId()));
+        String contentUrl = getString(R.string.share_url_template);
         final UMSocialService mController = UMServiceFactory.getUMSocialService("com.umeng.share",
                 RequestType.SOCIAL);
 
-        mController.setShareContent(String.format("%s让您不再上当, %s", getString(R.string.app_name), contentUrl));
+        mController.setShareContent(getString(R.string.share_template) +" " + contentUrl);
     /*
             mController.setShareMedia(new UMImage(this,
                     "http://www.umeng.com/images/pic/banner_module_social.png"));
