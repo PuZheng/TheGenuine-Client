@@ -55,6 +55,37 @@
                     app:fillColor="#FFb2b2b2"
                     app:pageColor="#FFFF7418" />
 
+                <LinearLayout
+                    android:layout_marginRight="44dp"
+                    android:layout_width="148dp"
+                    android:layout_height="64dp"
+                    android:layout_marginBottom="24dp"
+                    android:layout_gravity="right|bottom"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:id="@+id/checksumLayout"
+                    android:background="@drawable/round_background">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:text="验证码：测试测试"
+                        android:gravity="center"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:id="@+id/textViewChecksum" />
+
+                    <TextView
+                        android:layout_weight="2"
+                        android:textColor="@android:color/white"
+                        android:gravity="center"
+                        android:text="请刮开图层查看验证码"
+                        android:layout_gravity="right|bottom"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </LinearLayout>
+
             </FrameLayout>
 
             <LinearLayout

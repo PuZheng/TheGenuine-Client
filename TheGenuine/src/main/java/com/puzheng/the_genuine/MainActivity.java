@@ -32,6 +32,7 @@ public class MainActivity extends Activity implements BackPressedInterface {
     public static final String TAG_TAG_ID = "TOKEN_ID";
     public static final String TAG_PRODUCT_RESPONSE = "PRODUCT_RESPONSE";
     private static final String MIME_TEXT_PLAIN = "text/plain";
+    public static final String TAG_VERIFICATION_FINISHED = "VERIFICATION_FINISHED";
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
     public static boolean isNfcEnabled = true;
 
@@ -183,6 +184,7 @@ public class MainActivity extends Activity implements BackPressedInterface {
                     if (verificationInfo != null) {
                         intent = new Intent(MainActivity.this, SPUActivity.class);
                         intent.putExtra(TAG_VERIFICATION_INFO, verificationInfo);
+                        intent.putExtra(TAG_VERIFICATION_FINISHED, true);
                     } else {
                         intent = new Intent(MainActivity.this, CounterfeitActivity.class);
                         intent.putExtra(TAG_TAG_ID, code);
