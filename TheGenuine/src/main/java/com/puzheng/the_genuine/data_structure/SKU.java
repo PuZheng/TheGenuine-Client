@@ -19,6 +19,7 @@ public class SKU implements Parcelable {
     @SerializedName("expire_time")
     private Date expireDate;
 
+    private String checksum;
     public SKU(int id, SPU spu, Date manufactureDate, Date expireDate) {
         this.id = id;
         this.spu = spu;
@@ -32,6 +33,7 @@ public class SKU implements Parcelable {
         spu = new SPU(source);
         manufactureDate = new Date(source.readLong());
         expireDate = new Date(source.readLong());
+        checksum = source.readString();
     }
 
 
@@ -46,6 +48,7 @@ public class SKU implements Parcelable {
         spu.writeToParcel(dest, flags);
         dest.writeLong(manufactureDate.getTime());
         dest.writeLong(expireDate.getTime());
+        dest.writeString(checksum);
     }
 
     public static final Creator<SKU> CREATOR = new Creator<SKU>() {
@@ -74,5 +77,9 @@ public class SKU implements Parcelable {
 
     public int getId() {
         return id;
+    }
+
+    public String getChecksum() {
+        return checksum;
     }
 }

@@ -27,7 +27,6 @@ import android.widget.RatingBar;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.puzheng.the_genuine.data_structure.SPUResponse;
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.image_utils.ImageFetcher;
@@ -50,6 +49,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     private static final String TAG = "SPUActivity";
     private ViewPager viewPager;
     private VerificationInfo verificationInfo;
+    private boolean verificationFinished;
     private SPUResponse spuResponse;
     private ViewPager viewPagerCover;
     private TabHost tabHost;
@@ -126,6 +126,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 
         setContentView(R.layout.activity_spu);
         verificationInfo = getIntent().getParcelableExtra(MainActivity.TAG_VERIFICATION_INFO);
+        verificationFinished = getIntent().getBooleanExtra(MainActivity.TAG_VERIFICATION_FINISHED, false);
         spu_id = getIntent().getIntExtra(Constants.TAG_SPU_ID, -1);
 
         if (verificationInfo == null && spu_id == -1) {
@@ -217,10 +218,16 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         setTitle();
         shareInit();
         updateFavorView(isFavored());
-
+        ImageView imageView = (ImageView) findViewById(R.id.imageView);
         if (verificationInfo == null) {
-            ImageView imageView = (ImageView) findViewById(R.id.imageView);
             imageView.setVisibility(View.GONE);
+        }else {
+            if (!verificationFinished) {
+                findViewById(R.id.checksumLayout).setVisibility(View.VISIBLE);
+                ((TextView) findViewById(R.id.textViewChecksum)).setText(String.format("验证码: %s",
+                        verificationInfo.getSKU().getChecksum()));
+                imageView.setVisibility(View.GONE);
+            }
         }
 
 
