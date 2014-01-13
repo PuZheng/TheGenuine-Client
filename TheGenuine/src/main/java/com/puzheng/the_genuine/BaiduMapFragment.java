@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -23,7 +24,6 @@ import com.baidu.mapapi.map.OverlayItem;
 import com.baidu.mapapi.map.PopupClickListener;
 import com.baidu.mapapi.map.PopupOverlay;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
-import com.google.gson.Gson;
 import com.puzheng.the_genuine.data_structure.StoreResponse;
 import com.puzheng.the_genuine.utils.Misc;
 
@@ -46,8 +46,8 @@ public class BaiduMapFragment extends Fragment {
     private View popupInfo = null;
     private TextView popupText = null;
     private MyOverlay mOverlay = null;
-    private BaiduMapBroadcastReceiver receiver;
     private ArrayList<Integer> marks;
+    private BroadcastReceiver receiver;
 
     public BaiduMapFragment(List<StoreResponse> storeList) {
         this.mStoreList = storeList;
@@ -69,15 +69,16 @@ public class BaiduMapFragment extends Fragment {
         mMapController.enableClick(true);
         mMapController.setZoom(18);
 
-        receiver = new BaiduMapBroadcastReceiver();
+        receiver = new LocationBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
-        filter.addAction(BaiduMapService.MY_LOCATION_ACTION);
+        filter.addAction(LocationService.LOCATION_ACTION);
         getActivity().registerReceiver(receiver, filter);
 
         myLocationOverlay = new MyLocationOverlay(mMapView);
 
-        mLocationData = Misc.getLastLocation(getActivity());
-        if (mLocationData != null) {
+        Location data = Misc.getLastLocation(getActivity());
+        if (data != null) {
+            mLocationData = parseData(data);
             animateToLastLocation();
         } else {
             mLocationData = new LocationData();
@@ -181,6 +182,15 @@ public class BaiduMapFragment extends Fragment {
         return marks;
     }
 
+    private LocationData parseData(Location location) {
+        LocationData data = new LocationData();
+        data.longitude = location.getLongitude();
+        data.latitude = location.getLatitude();
+        data.speed = location.getSpeed();
+        data.accuracy = location.getAccuracy();
+        return data;
+    }
+
     Bitmap getBitmapFromView(View view) {
         view.destroyDrawingCache();
         view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
@@ -219,15 +229,14 @@ public class BaiduMapFragment extends Fragment {
         }
     }
 
-    private class BaiduMapBroadcastReceiver extends BroadcastReceiver {
+    private class LocationBroadcastReceiver extends BroadcastReceiver {
         private Toast toast;
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String data = intent.getStringExtra(Constants.TAG_LOCATION_DATA);
-            Gson gson = new Gson();
-            mLocationData = gson.fromJson(data, LocationData.class);
-            if (mLocationData != null) {
+            Location data = intent.getParcelableExtra(Constants.TAG_LOCATION_DATA);
+            if (data != null) {
+                mLocationData = parseData(data);
                 //更新定位数据
                 myLocationOverlay.setData(mLocationData);
                 //更新图层数据执行刷新后生效

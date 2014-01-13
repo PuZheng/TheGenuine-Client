@@ -1,7 +1,7 @@
 package com.puzheng.the_genuine.netutils;
 
 import android.content.Context;
-import android.util.Pair;
+import android.location.Location;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -238,9 +238,9 @@ public class WebService {
 
     private HashMap<String, String> getCurrentLocation() throws LocateErrorException {
         HashMap<String, String> params = new HashMap<String, String>();
-        Pair<Double, Double> location = MyApp.getLocation();
-        params.put("longitude", String.valueOf(location.first));
-        params.put("latitude", String.valueOf(location.second));
+        Location location = MyApp.getLocation();
+        params.put("longitude", String.valueOf(location.getLongitude()));
+        params.put("latitude", String.valueOf(location.getLatitude()));
         return params;
     }
 

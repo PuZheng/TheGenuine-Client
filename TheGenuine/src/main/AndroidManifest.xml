@@ -27,9 +27,15 @@
     <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_GPS" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-feature
         android:name="android.hardware.nfc"
+        android:required="true" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
         android:required="true" />
 
     <application
@@ -42,8 +48,7 @@
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote" />
-        <service android:name=".BaiduMapService" />
-
+        <service android:name=".LocationService" />
         <activity
             android:name="com.puzheng.the_genuine.MainActivity"
             android:label="@string/app_name"
@@ -109,6 +114,12 @@
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="5295e18156240b7c6f01eadb" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyCeZ87Ep2QXIHE898Stwv-FxzCE0hf3i9c" />
 
         <activity
             android:name="com.puzheng.the_genuine.CategoriesActivity"

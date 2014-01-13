@@ -9,7 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-
+import com.google.android.gms.maps.SupportMapFragment;
 import com.puzheng.the_genuine.data_structure.StoreResponse;
 import com.puzheng.the_genuine.netutils.WebService;
 
@@ -24,7 +24,7 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
     private ViewPager mViewPager;
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
     private int mSpuId = Constants.INVALID_ARGUMENT;
-            private MaskableManager maskableManager;
+    private MaskableManager maskableManager;
 
     @Override
     public void doBackPressed() {
@@ -95,7 +95,11 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
         public NearbyPagerAdapter(FragmentManager fragmentManager, List<StoreResponse> list) {
             super(fragmentManager);
             mFragmentList = new ArrayList<Fragment>();
-            mFragmentList.add(new BaiduMapFragment(list));
+            if (MyApp.isGooglePlayServiceAvailable()) {
+                mFragmentList.add(new SupportMapFragment());
+            } else {
+                mFragmentList.add(new BaiduMapFragment(list));
+            }
             mFragmentList.add(new NearbyFragment(NearbyActivity.this, list));
         }
 
