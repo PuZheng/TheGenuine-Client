@@ -23,9 +23,14 @@ public class NearbyFragment extends ListFragment {
     private Context mContext;
     private ImageFetcher mImageFetcher;
 
-    public NearbyFragment(Context context, List<StoreResponse> storeList) {
+    public NearbyFragment(Context context) {
         this.mContext = context;
-        setListAdapter(new NearbyListAdapter(storeList));
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        this.setListAdapter(new NearbyListAdapter(((NearbyActivity) getActivity()).getStoreResponses()));
     }
 
     @Override
