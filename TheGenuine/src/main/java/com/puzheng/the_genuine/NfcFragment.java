@@ -125,7 +125,7 @@ public class NfcFragment extends Fragment {
             @Override
             public void onAnimationEnd(Animator animation) {
                 if (reset) {
-                    anim.translationY(-scale * 0).withLayer().setDuration(0);
+                    anim.translationY(0).withLayer().setDuration(0);
                 } else {
                     anim.translationY(scale * 70).withLayer().setDuration(3000);
                 }
