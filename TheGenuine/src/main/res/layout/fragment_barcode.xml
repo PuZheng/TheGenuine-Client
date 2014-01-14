@@ -49,7 +49,7 @@
             android:layout_height="@dimen/image_view_list_item_height"
             android:scaleType="centerCrop"
             android:id="@+id/imageButton"
-            android:src="@drawable/ic_launcher"
+            android:src="@drawable/logo"
             android:layout_gravity="center" />
 
         <TextView

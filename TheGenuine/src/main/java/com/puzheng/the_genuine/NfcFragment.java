@@ -114,7 +114,7 @@ public class NfcFragment extends Fragment {
     private void startAnim() {
         //TODO this should be adapt to older versions
         final float scale = getResources().getDisplayMetrics().density;
-        final ViewPropertyAnimator anim = mask.animate().translationY(scale * 100).withLayer().setDuration(3000);
+        final ViewPropertyAnimator anim = mask.animate().translationY(scale * 70).withLayer().setDuration(3000);
         reset = true;
         anim.setListener(new Animator.AnimatorListener() {
             @Override
@@ -125,9 +125,9 @@ public class NfcFragment extends Fragment {
             @Override
             public void onAnimationEnd(Animator animation) {
                 if (reset) {
-                    anim.translationY(0).withLayer().setDuration(0);
+                    anim.translationY(-scale * 0).withLayer().setDuration(0);
                 } else {
-                    anim.translationY(scale * 100).withLayer().setDuration(3000);
+                    anim.translationY(scale * 70).withLayer().setDuration(3000);
                 }
                 reset = (!reset);
             }
