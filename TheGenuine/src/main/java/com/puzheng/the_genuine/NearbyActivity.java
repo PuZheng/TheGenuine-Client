@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-
 import com.puzheng.the_genuine.data_structure.StoreResponse;
 import com.puzheng.the_genuine.netutils.WebService;
 
@@ -24,7 +23,10 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
     private ViewPager mViewPager;
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
     private int mSpuId = Constants.INVALID_ARGUMENT;
-            private MaskableManager maskableManager;
+    private MaskableManager maskableManager;
+    private GetNearbyListTask task;
+    private List<StoreResponse> mStoreList;
+
 
     @Override
     public void doBackPressed() {
@@ -42,7 +44,10 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
 
     @Override
     public void refresh() {
-        new GetNearbyListTask().execute();
+        if (task == null) {
+            task = new GetNearbyListTask();
+            task.execute();
+        }
     }
 
     @Override
@@ -79,24 +84,40 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
 
         actionBar.addTab(actionBar.newTab().setText("列表").setTabListener(listener));
 
+        mViewPager.setAdapter(new NearbyPagerAdapter(getSupportFragmentManager()));
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 getActionBar().setSelectedNavigationItem(position);
             }
         });
+    }
 
-        new GetNearbyListTask().execute();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (task == null) {
+            task = new GetNearbyListTask();
+            task.execute();
+        }
+    }
+
+    public List<StoreResponse> getStoreResponses() {
+        return this.mStoreList;
     }
 
     class NearbyPagerAdapter extends FragmentPagerAdapter {
         private List<Fragment> mFragmentList;
 
-        public NearbyPagerAdapter(FragmentManager fragmentManager, List<StoreResponse> list) {
+        public NearbyPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
             mFragmentList = new ArrayList<Fragment>();
-            mFragmentList.add(new BaiduMapFragment(list));
-            mFragmentList.add(new NearbyFragment(NearbyActivity.this, list));
+            if (MyApp.isGooglePlayServiceAvailable()) {
+                mFragmentList.add(new GoogleMapFragment());
+            } else {
+                mFragmentList.add(new BaiduMapFragment());
+            }
+            mFragmentList.add(new NearbyFragment(NearbyActivity.this));
         }
 
         @Override
@@ -117,6 +138,7 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
         @Override
         protected List<StoreResponse> doInBackground(Void... params) {
             try {
+                Thread.sleep(1000);
                 return WebService.getInstance(NearbyActivity.this).getNearbyStoreList(mSpuId);
             } catch (Exception e) {
                 exception = e;
@@ -126,8 +148,9 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
 
         @Override
         protected void onPostExecute(List<StoreResponse> storeList) {
+            task = null;
+            mStoreList = storeList;
             if (maskableManager.unmask(exception)) {
-                mViewPager.setAdapter(new NearbyPagerAdapter(getSupportFragmentManager(), storeList));
                 int current = getIntent().getIntExtra("current", 0);
                 getActionBar().setSelectedNavigationItem(current);
                 mViewPager.setCurrentItem(current);

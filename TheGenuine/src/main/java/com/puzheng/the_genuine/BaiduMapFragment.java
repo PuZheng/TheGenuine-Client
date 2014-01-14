@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -23,11 +24,10 @@ import com.baidu.mapapi.map.OverlayItem;
 import com.baidu.mapapi.map.PopupClickListener;
 import com.baidu.mapapi.map.PopupOverlay;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
-import com.google.gson.Gson;
 import com.puzheng.the_genuine.data_structure.StoreResponse;
+import com.puzheng.the_genuine.utils.LocateErrorException;
 import com.puzheng.the_genuine.utils.Misc;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,7 +35,6 @@ import java.util.List;
  */
 public class BaiduMapFragment extends Fragment {
     boolean isFirstLoc = true;//是否首次定位
-    private List<StoreResponse> mStoreList;
     private BMapManager mBMapManager;
     private MapView mMapView;
     private LocationData mLocationData;
@@ -46,12 +45,7 @@ public class BaiduMapFragment extends Fragment {
     private View popupInfo = null;
     private TextView popupText = null;
     private MyOverlay mOverlay = null;
-    private BaiduMapBroadcastReceiver receiver;
-    private ArrayList<Integer> marks;
-
-    public BaiduMapFragment(List<StoreResponse> storeList) {
-        this.mStoreList = storeList;
-    }
+    private BroadcastReceiver receiver;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,26 +63,14 @@ public class BaiduMapFragment extends Fragment {
         mMapController.enableClick(true);
         mMapController.setZoom(18);
 
-        receiver = new BaiduMapBroadcastReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BaiduMapService.MY_LOCATION_ACTION);
+        receiver = new LocationBroadcastReceiver();
+        IntentFilter filter = new IntentFilter(LocationService.LOCATION_ACTION);
         getActivity().registerReceiver(receiver, filter);
 
         myLocationOverlay = new MyLocationOverlay(mMapView);
-
-        mLocationData = Misc.getLastLocation(getActivity());
-        if (mLocationData != null) {
-            animateToLastLocation();
-        } else {
-            mLocationData = new LocationData();
-        }
-
-        //设置定位数据
-        myLocationOverlay.setData(mLocationData);
         //添加定位图层
         mMapView.getOverlays().add(myLocationOverlay);
-        myLocationOverlay.enableCompass();
-
+        locateToMyLocation();
         mMapView.refresh();
         return rootView;
     }
@@ -128,57 +110,76 @@ public class BaiduMapFragment extends Fragment {
         super.onResume();
     }
 
-    private void addItemOverlay(MapView mapView) {
-        if (myLocationOverlay != null) {
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        this.setStores(((NearbyActivity) getActivity()).getStoreResponses());
+    }
+
+    public void setStores(List<StoreResponse> storeList) {
+        if (storeList == null) {
+            return;
+        }
+        if (mMapView != null) {
             Drawable mark = getResources().getDrawable(R.drawable.red_mark);
 
             //创建IteminizedOverlay
-            mOverlay = new MyOverlay(mark, mapView);
-            //将IteminizedOverlay添加到MapView中
-            mapView.getOverlays().add(mOverlay);
-            ArrayList<Integer> markIcons = getMarks();
+            if (mOverlay == null) {
+                mOverlay = new MyOverlay(mark, mMapView);
+                //将IteminizedOverlay添加到MapView中
+                mMapView.getOverlays().add(mOverlay);
+            }
+            mOverlay.getAllItem().clear();
 
-            for (int i = 0, size = mStoreList.size(); i < size; i++) {
-                StoreResponse storeResponse = mStoreList.get(i);
+            for (int i = 0, size = storeList.size(); i < size; i++) {
+                StoreResponse storeResponse = storeList.get(i);
                 GeoPoint p = new GeoPoint((int) (storeResponse.getStore().getLatitude() * 1E6), ((int) (storeResponse.getStore().getLongitude() * 1E6)));
                 OverlayItem item = new OverlayItem(p, storeResponse.getStore().getName(), storeResponse.getStore().getDesc());
-                if (i < markIcons.size()) {
-                    item.setMarker(getResources().getDrawable(markIcons.get(i)));
+                if (i < Constants.MARKS.size()) {
+                    item.setMarker(getResources().getDrawable(Constants.MARKS.get(i)));
                 }
                 mOverlay.addItem(item);
             }
 
-            pop = new PopupOverlay(mapView, new PopupClickListener() {
+            pop = new PopupOverlay(mMapView, new PopupClickListener() {
                 @Override
                 public void onClickedPopup(int index) {
                 }
             });
+            mMapView.refresh();
         }
-        mapView.refresh();
     }
 
     private void animateToLastLocation() {
-        addItemOverlay(mMapView);
         //移动地图到定位点
         mMapController.animateTo(new GeoPoint((int) (mLocationData.latitude * 1e6), (int) (mLocationData.longitude * 1e6)));
-        myLocationOverlay.setLocationMode(MyLocationOverlay.LocationMode.FOLLOWING);
+        myLocationOverlay.setLocationMode(MyLocationOverlay.LocationMode.NORMAL);
     }
 
-    private ArrayList<Integer> getMarks() {
-        if (marks == null) {
-            marks = new ArrayList<Integer>();
-            marks.add(R.drawable.icon_mark1);
-            marks.add(R.drawable.icon_mark2);
-            marks.add(R.drawable.icon_mark3);
-            marks.add(R.drawable.icon_mark4);
-            marks.add(R.drawable.icon_mark5);
-            marks.add(R.drawable.icon_mark6);
-            marks.add(R.drawable.icon_mark7);
-            marks.add(R.drawable.icon_mark8);
-            marks.add(R.drawable.icon_mark9);
-            marks.add(R.drawable.icon_mark10);
+    private void locateToMyLocation() {
+        Location data;
+        try {
+            data = MyApp.getLocation();
+        } catch (LocateErrorException e) {
+            data = Misc.getLastLocation(getActivity());
         }
-        return marks;
+        if (data != null) {
+            mLocationData = parseData(data);
+            //设置定位数据
+            animateToLastLocation();
+        }else {
+            mLocationData = new LocationData();
+        }
+        myLocationOverlay.setData(mLocationData);
+    }
+
+    private LocationData parseData(Location location) {
+        LocationData data = new LocationData();
+        data.longitude = location.getLongitude();
+        data.latitude = location.getLatitude();
+        data.speed = location.getSpeed();
+        data.accuracy = location.getAccuracy();
+        return data;
     }
 
     Bitmap getBitmapFromView(View view) {
@@ -219,15 +220,14 @@ public class BaiduMapFragment extends Fragment {
         }
     }
 
-    private class BaiduMapBroadcastReceiver extends BroadcastReceiver {
+    private class LocationBroadcastReceiver extends BroadcastReceiver {
         private Toast toast;
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String data = intent.getStringExtra(Constants.TAG_LOCATION_DATA);
-            Gson gson = new Gson();
-            mLocationData = gson.fromJson(data, LocationData.class);
-            if (mLocationData != null) {
+            Location data = intent.getParcelableExtra(Constants.TAG_LOCATION_DATA);
+            if (data != null) {
+                mLocationData = parseData(data);
                 //更新定位数据
                 myLocationOverlay.setData(mLocationData);
                 //更新图层数据执行刷新后生效

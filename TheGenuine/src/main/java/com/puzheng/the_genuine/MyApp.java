@@ -2,13 +2,15 @@ package com.puzheng.the_genuine;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.location.Location;
+import android.os.IBinder;
 import android.util.Pair;
-import com.baidu.mapapi.map.LocationData;
-import com.google.gson.Gson;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.LocateErrorException;
@@ -21,10 +23,10 @@ import java.util.Map;
 
 public class MyApp extends Application {
     public static final int LOGIN_ACTION = 1;
+    public static ServiceConnection connection;
     private static User user;
     private static Context context;
-    private static LocationData mLocationData;
-    private BaiduMapBroadcastReceiver receiver;
+    private static LocationService mLocationService;
     private WebService webServieHandler;
 
     public static void doLoginIn(Activity activity) {
@@ -53,22 +55,25 @@ public class MyApp extends Application {
         Misc.storeUserPrefs(user, context);
     }
 
-    public static Pair<Double, Double> getLocation() throws LocateErrorException {
-        if (mLocationData != null) {
-            return new Pair<Double, Double>(mLocationData.longitude, mLocationData.latitude);
+    public static Location getLocation() throws LocateErrorException {
+        if (mLocationService != null) {
+            Location location = mLocationService.getLocation();
+            if (location != null) {
+                return location;
+            }
         }
         throw new LocateErrorException(context.getString(R.string.locate_error));
     }
 
-    public static Pair<String, Integer> getServerAddress() {
 
+    public static Pair<String, Integer> getServerAddress() {
         return Misc.getServerAddress(context);
     }
 
-    public static void unsetCurrentUser() {
-        MyApp.user = null;
-        Misc.clearUserPrefs(MyApp.context);
+    public static boolean isGooglePlayServiceAvailable() {
+        return ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
     }
+
 
     @Override
     public void onCreate() {
@@ -76,22 +81,30 @@ public class MyApp extends Application {
         MyApp.context = getApplicationContext();
         webServieHandler = WebService.getInstance(MyApp.context);
         Misc.assertDirExists(Misc.getStorageDir());
-
-        startService(new Intent(getApplicationContext(), BaiduMapService.class));
-
-        receiver = new BaiduMapBroadcastReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BaiduMapService.MY_LOCATION_ACTION);
-        registerReceiver(receiver, filter);
+        connectLocationService();
     }
 
-    private class BaiduMapBroadcastReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String data = intent.getStringExtra(Constants.TAG_LOCATION_DATA);
-            Gson gson = new Gson();
-            mLocationData = gson.fromJson(data, LocationData.class);
+    public static void unsetCurrentUser() {
+        MyApp.user = null;
+        Misc.clearUserPrefs(MyApp.context);
+    }
+
+    private void connectLocationService() {
+        Intent intent = new Intent(context, LocationService.class);
+        if (connection == null) {
+            connection = new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    mLocationService = ((LocationService.LocationBind) service).getService();
+                }
+
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+                    mLocationService = null;
+                }
+            };
         }
-    }
 
+        bindService(intent, connection, BIND_AUTO_CREATE);
+    }
 }
