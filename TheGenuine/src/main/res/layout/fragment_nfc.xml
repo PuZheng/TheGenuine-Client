@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="@android:color/white">
+    android:background="@drawable/nfc_bg">
 
     <ImageView
         android:layout_alignParentTop="true"
@@ -61,21 +61,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/imageView"
-                android:src="@drawable/logo_bg" />
+                android:src="@drawable/fingerprint" />
 
-            <ImageView
-                android:id="@+id/mask"
-                android:layout_width="117dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/scan_mask"
-                android:scaleType="fitXY"
-                android:layout_gravity="center_horizontal" />
+            <FrameLayout
+                android:layout_width="111dp"
+                android:layout_gravity="center"
+                android:layout_height="100dp">
+
+                <ImageView
+                    android:id="@+id/mask"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/scan_mask"
+                    android:scaleType="fitXY"
+                    android:layout_gravity="center" />
+            </FrameLayout>
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/imageView"
                 android:src="@drawable/scan_bg" />
+
 
         </FrameLayout>
 
