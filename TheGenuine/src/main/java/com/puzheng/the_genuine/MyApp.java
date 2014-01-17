@@ -28,6 +28,8 @@ public class MyApp extends Application {
     private static Context context;
     private static LocationService mLocationService;
     private WebService webServieHandler;
+    public static boolean isNetworkSettingDialogShowed = false;
+    public static boolean isGPSSettingDialogShowed = false;
 
     public static void doLoginIn(Activity activity) {
         doLoginIn(activity, null);

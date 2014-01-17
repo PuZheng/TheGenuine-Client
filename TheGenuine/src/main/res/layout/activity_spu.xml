@@ -55,36 +55,54 @@
                     app:fillColor="#FFb2b2b2"
                     app:pageColor="#FFFF7418" />
 
-                <LinearLayout
-                    android:layout_marginRight="44dp"
-                    android:layout_width="148dp"
-                    android:layout_height="64dp"
+                <RelativeLayout
+                    android:layout_marginLeft="2dp"
+                    android:layout_gravity="left"
                     android:layout_marginBottom="24dp"
-                    android:layout_gravity="right|bottom"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    android:id="@+id/checksumLayout"
-                    android:background="@drawable/round_background">
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:text="验证码：测试测试"
-                        android:gravity="center"
-                        android:textColor="@android:color/white"
-                        android:textSize="18sp"
-                        android:layout_weight="1"
-                        android:layout_height="match_parent"
-                        android:id="@+id/textViewChecksum" />
+                    <RatingBar
+                        android:layout_marginTop="25dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:isIndicator="true"
+                        android:numStars="5"
+                        style="@style/RatingBarSmallAppTheme"
+                        android:stepSize="0.5"
+                        android:id="@+id/productRatingBar" />
 
-                    <TextView
-                        android:layout_weight="2"
-                        android:textColor="@android:color/white"
-                        android:gravity="center"
-                        android:text="请刮开图层查看验证码"
-                        android:layout_gravity="right|bottom"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-                </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="64dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:id="@+id/checksumLayout"
+                        android:background="@drawable/round_background">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:text="验证码\n：测试测试"
+                            android:gravity="center"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent"
+                            android:id="@+id/textViewChecksum" />
+
+                        <TextView
+                            android:layout_weight="2"
+                            android:textColor="@android:color/white"
+                            android:gravity="center"
+                            android:textSize="10dp"
+                            android:text="请刮开图层\n查看验证码"
+                            android:layout_gravity="right|bottom"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+                    </LinearLayout>
+                </RelativeLayout>
+
 
             </FrameLayout>
 
@@ -97,31 +115,23 @@
                 android:layout_gravity="right"
                 android:gravity="right">
 
-                <RatingBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:isIndicator="true"
-                    android:numStars="5"
-                    style="@style/RatingBarSmallAppTheme"
-                    android:stepSize="0.5"
-                    android:id="@+id/productRatingBar" />
 
                 <ImageButton
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:id="@+id/imageButtonShare"
                     android:background="@drawable/product_small_button"
-                    android:src="@drawable/social_share_light"
-                    android:layout_marginTop="17dp" />
+                    android:src="@drawable/social_share_light" />
+
 
                 <ImageButton
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:adjustViewBounds="true"
                     android:id="@+id/imageButtonFavor"
-                    android:src="@drawable/favor_light"
+                    android:src="@drawable/ic_action_not_important"
                     android:background="@drawable/product_small_button"
-                    android:layout_marginTop="17dp" />
+                    android:layout_marginTop="15dp" />
 
                 <Button
                     android:layout_width="40dp"
@@ -130,7 +140,17 @@
                     android:textSize="8dp"
                     android:textColor="@android:color/white"
                     android:background="@drawable/product_small_button"
-                    android:layout_marginTop="17dp" />
+                    android:layout_marginTop="15dp" />
+
+                <Button
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/buttonNearby"
+                    android:text="5米"
+                    android:textSize="8dp"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/product_small_button"
+                    android:layout_marginTop="15dp" />
             </LinearLayout>
 
         </FrameLayout>

@@ -29,13 +29,15 @@ public class SPUResponse implements Parcelable {
     @SerializedName("comments_cnt")
     private int commentsCnt;
     private boolean favored;
+    private int distance;
 
-    public SPUResponse(SPU spu, int sameTypeRecommendationsCnt, int sameVendorRecommendationsCnt, int commentsCnt, boolean favored) {
+    public SPUResponse(SPU spu, int sameTypeRecommendationsCnt, int sameVendorRecommendationsCnt, int commentsCnt, boolean favored, int distance) {
         this.spu = spu;
         this.sameTypeRecommendationsCnt = sameTypeRecommendationsCnt;
         this.sameVendorRecommendationsCnt = sameVendorRecommendationsCnt;
         this.commentsCnt = commentsCnt;
         this.favored = favored;
+        this.distance = distance;
     }
 
     public SPUResponse(Parcel source) {
@@ -44,6 +46,7 @@ public class SPUResponse implements Parcelable {
         sameVendorRecommendationsCnt = source.readInt();
         commentsCnt = source.readInt();
         favored = Boolean.parseBoolean(source.readString());
+        distance = source.readInt();
     }
 
     @Override
@@ -53,6 +56,10 @@ public class SPUResponse implements Parcelable {
 
     public int getCommentsCnt() {
         return commentsCnt;
+    }
+
+    public int getDistance() {
+        return distance;
     }
 
     public int getSameTypeRecommendationsCnt() {
@@ -82,6 +89,7 @@ public class SPUResponse implements Parcelable {
         dest.writeInt(sameVendorRecommendationsCnt);
         dest.writeInt(commentsCnt);
         dest.writeString(String.valueOf(favored));
+        dest.writeInt(distance);
     }
 
 }

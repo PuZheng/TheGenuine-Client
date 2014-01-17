@@ -138,7 +138,6 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
         @Override
         protected List<StoreResponse> doInBackground(Void... params) {
             try {
-                Thread.sleep(1000);
                 return WebService.getInstance(NearbyActivity.this).getNearbyStoreList(mSpuId);
             } catch (Exception e) {
                 exception = e;

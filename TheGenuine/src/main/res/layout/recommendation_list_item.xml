@@ -57,7 +57,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:id="@+id/button"
-                android:text="最近100米"
                 android:textSize="10dp"
                 style="@style/ButtonAppTheme"
                 android:layout_alignParentRight="true"

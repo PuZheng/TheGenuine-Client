@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.nfc.NdefMessage;
@@ -15,6 +16,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.Window;
@@ -28,16 +30,14 @@ import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 public class MainActivity extends Activity implements BackPressedInterface {
-    public static final String TAG_VERIFICATION_INFO = "VERIFICATION_INFO";
-    public static final String TAG_TAG_ID = "TOKEN_ID";
     public static final String TAG_PRODUCT_RESPONSE = "PRODUCT_RESPONSE";
-    private static final String MIME_TEXT_PLAIN = "text/plain";
+    public static final String TAG_TAG_ID = "TOKEN_ID";
     public static final String TAG_VERIFICATION_FINISHED = "VERIFICATION_FINISHED";
-    private BackPressedHandle backPressedHandle = new BackPressedHandle();
+    public static final String TAG_VERIFICATION_INFO = "VERIFICATION_INFO";
+    private static final String MIME_TEXT_PLAIN = "text/plain";
     public static boolean isNfcEnabled = true;
+    private BackPressedHandle backPressedHandle = new BackPressedHandle();
 
-
-    @Override
     public void doBackPressed() {
         super.onBackPressed();
     }
@@ -72,9 +72,6 @@ public class MainActivity extends Activity implements BackPressedInterface {
             ft.commit();
         }
 
-        if (!isNetworkAvailable()) {
-            setNetwork();
-        }
     }
 
     @Override
@@ -83,15 +80,37 @@ public class MainActivity extends Activity implements BackPressedInterface {
         handleIntent(intent);
     }
 
-    private boolean isNetworkAvailable() {
-        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo info = manager.getActiveNetworkInfo();
-        return info != null && info.isAvailable();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (MyApp.isNetworkSettingDialogShowed || enableNetworkIfNecessary()) {
+            enableGPSIfNecessary();
+        }
     }
 
-    private void setNetwork() {
+    private void enableGPS() {
+        MyApp.isGPSSettingDialogShowed = true;
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("网络设置").setMessage("网络连接不可用, 是否进行设置?").setPositiveButton("设置", new DialogInterface.OnClickListener() {
+        builder.setTitle("GPS设置").setMessage("GPS未启用，是否进行设置").setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent settingIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(settingIntent);
+            }
+        }).setNegativeButton(android.R.string.cancel, null);
+        builder.show();
+    }
+
+    private void enableGPSIfNecessary() {
+        if (!isGPSAvailabled() && !MyApp.isGPSSettingDialogShowed) {
+            enableGPS();
+        }
+    }
+
+    private void enableNetwork() {
+        MyApp.isNetworkSettingDialogShowed = true;
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("网络设置").setMessage("网络连接不可用, 是否进行设置?").setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -106,7 +125,25 @@ public class MainActivity extends Activity implements BackPressedInterface {
                 }
                 startActivity(intent);
             }
-        }).setNegativeButton("取消", null).show();
+        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                enableGPSIfNecessary();
+            }
+        }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                enableGPSIfNecessary();
+            }
+        }).show();
+    }
+
+    private boolean enableNetworkIfNecessary() {
+        final boolean networkAvailable = isNetworkAvailable();
+        if (!networkAvailable && !MyApp.isNetworkSettingDialogShowed) {
+            enableNetwork();
+        }
+        return networkAvailable;
     }
 
     private String extractCode(Intent intent) {
@@ -197,7 +234,7 @@ public class MainActivity extends Activity implements BackPressedInterface {
                 public void run(Exception e) {
                     if (Misc.isNetworkException(e)) {
                         Toast.makeText(MainActivity.this, R.string.httpError, Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                     MainActivity.this.onResume();
@@ -205,6 +242,17 @@ public class MainActivity extends Activity implements BackPressedInterface {
             });
             builder.create().start();
         }
+    }
+
+    private boolean isGPSAvailabled() {
+        return ((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager
+                .GPS_PROVIDER);
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = manager.getActiveNetworkInfo();
+        return info != null && info.isAvailable();
     }
 
     private String readText(NdefRecord record) throws UnsupportedEncodingException {
@@ -237,7 +285,7 @@ public class MainActivity extends Activity implements BackPressedInterface {
         // http://www or https://www or http:// or https://
         if (identifierCode == 1 || identifierCode == 2 || identifierCode == 3 || identifierCode == 4) {
             // compensate "http://"
-            return "http://" + new String(payload, 1, payload.length-1);
+            return "http://" + new String(payload, 1, payload.length - 1);
         }
         return null;
     }

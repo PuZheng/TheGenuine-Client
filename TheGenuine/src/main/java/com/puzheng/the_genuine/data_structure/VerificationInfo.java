@@ -36,12 +36,14 @@ public class VerificationInfo implements Parcelable {
     @SerializedName("last_verify_time")
     private Date lastVerifyTime;
 
-    public VerificationInfo(SKU sku, int sameTypeRecommendationsCnt, int sameVendorRecommendationsCnt, int commentsCnt, boolean favored) {
+    private int distance;
+    public VerificationInfo(SKU sku, int sameTypeRecommendationsCnt, int sameVendorRecommendationsCnt, int commentsCnt, boolean favored, int distance) {
         this.sku = sku;
         this.sameTypeRecommendationsCnt = sameTypeRecommendationsCnt;
         this.sameVendorRecommendationsCnt = sameVendorRecommendationsCnt;
         this.commentsCnt = commentsCnt;
         this.favored = favored;
+        this.distance = distance;
     }
 
     public VerificationInfo(Parcel source) {
@@ -52,6 +54,7 @@ public class VerificationInfo implements Parcelable {
         favored = Boolean.parseBoolean(source.readString());
         verifyCnt = source.readInt();
         lastVerifyTime = (Date) source.readSerializable();
+        distance = source.readInt();
     }
 
     @Override
@@ -61,6 +64,10 @@ public class VerificationInfo implements Parcelable {
 
     public int getCommentsCnt() {
         return commentsCnt;
+    }
+
+    public int getDistance() {
+        return distance;
     }
 
     public Date getLastVerifyTime() {
@@ -100,5 +107,6 @@ public class VerificationInfo implements Parcelable {
         dest.writeString(String.valueOf(favored));
         dest.writeInt(verifyCnt);
         dest.writeSerializable(lastVerifyTime);
+        dest.writeInt(distance);
     }
 }
