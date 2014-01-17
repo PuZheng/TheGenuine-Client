@@ -213,9 +213,14 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
                 spuResponse.getSPU().getVendorId();
     }
 
+    private int getDistance() {
+        return verificationInfo != null ? verificationInfo.getDistance() : spuResponse.getDistance();
+    }
+
     private void initViews() {
         setTitle();
         shareInit();
+        locate2Nearby();
         updateFavorView(isFavored());
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
         if (verificationInfo == null) {
@@ -223,7 +228,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         }else {
             if (!verificationFinished) {
                 findViewById(R.id.checksumLayout).setVisibility(View.VISIBLE);
-                ((TextView) findViewById(R.id.textViewChecksum)).setText(String.format("验证码: %s",
+                ((TextView) findViewById(R.id.textViewChecksum)).setText(String.format("验证码\n %s",
                         verificationInfo.getSKU().getChecksum()));
                 imageView.setVisibility(View.GONE);
             }
@@ -352,7 +357,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     private void updateFavorView(final boolean isFavored) {
         ImageButton button = (ImageButton) findViewById(R.id.imageButtonFavor);
         if (isFavored) {
-            button.setImageResource(R.drawable.favored);
+            button.setImageResource(R.drawable.ic_action_important);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -376,6 +381,26 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 
     }
 
+    private void locate2Nearby() {
+        Button button = (Button) findViewById(R.id.buttonNearby);
+        final int distance = getDistance();
+        if (distance == -1) {
+            button.setText("周边");
+            button.setClickable(false);
+        } else {
+            button.setText("周边\n" + Misc.humanizeDistance(distance));
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(SPUActivity.this, NearbyActivity.class);
+                    intent.putExtra("current", NearbyActivity.NEARBY_LIST);
+                    intent.putExtra(Constants.TAG_SPU_ID, getSPUId());
+                    SPUActivity.this.startActivity(intent);
+                }
+            });
+        }
+    }
+
     private class FavorTask extends AsyncTask<Void, Void, Void> {
         private Exception exception;
 
@@ -396,6 +421,9 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
                 updateFavorView(true);
             } else {
                 if (exception instanceof BadResponseException) {
+                    if (((BadResponseException) exception).getStatusCode() == 403) {
+                        updateFavorView(true);
+                    }
                     Toast.makeText(SPUActivity.this, exception.getMessage(), Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(SPUActivity.this, "收藏失败", Toast.LENGTH_SHORT).show();

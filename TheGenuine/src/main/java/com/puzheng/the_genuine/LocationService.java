@@ -94,22 +94,14 @@ public class LocationService extends Service implements LocationListener {
 
     private void initLocation() {
         locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        final boolean isGPSEnabled = locManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        if (!isGPSEnabled) {
-            setGPSEnabled();
-        }
-        locManager.getBestProvider(getCriteria(), true);
         String[] providers = {LocationManager.GPS_PROVIDER, LocationManager.NETWORK_PROVIDER};
         for (String provider : providers) {
-            if (locManager.isProviderEnabled(provider)) {
-                Location location = locManager.getLastKnownLocation(provider);
-                if (isBetterLocation(location, mLocation)) {
-                    mLocation = location;
-                }
-                locManager.requestLocationUpdates(provider, FASTEST_INTERVAL_IN_SECONDS, 8, this);
+            Location location = locManager.getLastKnownLocation(provider);
+            if (isBetterLocation(location, mLocation)) {
+                mLocation = location;
             }
+            locManager.requestLocationUpdates(provider, FASTEST_INTERVAL_IN_SECONDS, 8, this);
         }
-
     }
 
     private boolean isBetterLocation(Location location, Location currentBestLocation) {
