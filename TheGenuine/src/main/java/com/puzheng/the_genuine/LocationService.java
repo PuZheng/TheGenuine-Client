@@ -96,11 +96,16 @@ public class LocationService extends Service implements LocationListener {
         locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         String[] providers = {LocationManager.GPS_PROVIDER, LocationManager.NETWORK_PROVIDER};
         for (String provider : providers) {
-            Location location = locManager.getLastKnownLocation(provider);
-            if (isBetterLocation(location, mLocation)) {
-                mLocation = location;
+            try {
+                Location location = locManager.getLastKnownLocation(provider);
+                if (isBetterLocation(location, mLocation)) {
+                    mLocation = location;
+                }
+                locManager.requestLocationUpdates(provider, FASTEST_INTERVAL_IN_SECONDS, 8, this);
+            } catch (IllegalArgumentException e) {
+                // provider is null or doesn't exists
+                e.printStackTrace();
             }
-            locManager.requestLocationUpdates(provider, FASTEST_INTERVAL_IN_SECONDS, 8, this);
         }
     }
 

@@ -58,12 +58,12 @@
                 <RelativeLayout
                     android:layout_marginLeft="2dp"
                     android:layout_gravity="left"
+                    android:layout_marginTop="24dp"
                     android:layout_marginBottom="24dp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent">
 
                     <RatingBar
-                        android:layout_marginTop="25dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:isIndicator="true"
@@ -110,47 +110,75 @@
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginRight="2dp"
                 android:layout_gravity="right"
                 android:gravity="right">
 
 
-                <ImageButton
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:id="@+id/imageButtonShare"
-                    android:background="@drawable/product_small_button"
-                    android:src="@drawable/social_share_light" />
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content">
+
+                    <ImageButton
+                        android:layout_width="@dimen/spu_button_width"
+                        android:layout_height="@dimen/spu_button_height"
+                        android:id="@+id/imageButtonShare"
+                        android:background="@drawable/product_small_button"
+                        android:src="@drawable/social_share_light" />
+                </LinearLayout>
 
 
-                <ImageButton
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:adjustViewBounds="true"
-                    android:id="@+id/imageButtonFavor"
-                    android:src="@drawable/ic_action_not_important"
-                    android:background="@drawable/product_small_button"
-                    android:layout_marginTop="15dp" />
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content">
 
-                <Button
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:id="@+id/buttonComment"
-                    android:textSize="8dp"
-                    android:textColor="@android:color/white"
-                    android:background="@drawable/product_small_button"
-                    android:layout_marginTop="15dp" />
+                    <ImageButton
+                        android:layout_width="@dimen/spu_button_width"
+                        android:layout_height="@dimen/spu_button_height"
+                        android:adjustViewBounds="true"
+                        android:id="@+id/imageButtonFavor"
+                        android:src="@drawable/ic_action_not_important"
+                        android:background="@drawable/product_small_button" />
+                </LinearLayout>
 
-                <Button
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:id="@+id/buttonNearby"
-                    android:text="5米"
-                    android:textSize="8dp"
-                    android:textColor="@android:color/white"
-                    android:background="@drawable/product_small_button"
-                    android:layout_marginTop="15dp" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content">
+
+                    <Button
+                        android:layout_width="@dimen/spu_button_width"
+                        android:layout_height="@dimen/spu_button_height"
+                        android:id="@+id/buttonComment"
+                        android:textSize="8dp"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/product_small_button" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content">
+
+                    <Button
+                        android:layout_width="@dimen/spu_button_width"
+                        android:layout_height="@dimen/spu_button_height"
+                        android:id="@+id/buttonNearby"
+                        android:text="5米"
+                        android:textSize="8dp"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/product_small_button" />
+                </LinearLayout>
+
             </LinearLayout>
 
         </FrameLayout>
