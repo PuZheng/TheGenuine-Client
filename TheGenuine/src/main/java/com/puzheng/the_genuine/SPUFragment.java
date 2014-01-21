@@ -158,8 +158,10 @@ public class SPUFragment extends Fragment {
                         final boolean followed = isFollowed(umFriends);
                         if (!followed && doFollow) {
                             follow(getWeibo());
+                        } else {
+                            updateFollowedView(followed);
                         }
-                        updateFollowedView(followed);
+
                     }
                 }
             }, SHARE_MEDIA.SINA);
