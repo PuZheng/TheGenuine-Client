@@ -37,6 +37,8 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.controller.RequestType;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.controller.UMSsoHandler;
+import com.umeng.socialize.sso.SinaSsoHandler;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.ArrayList;
@@ -57,6 +59,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     private FavorTask mTask;
     private MyCoverAdapter mAdapter;
     private ImageFetcher mImageFetcher;
+    private UMSocialService mController;
 
     public ImageFetcher getImageFetcher() {
         return mImageFetcher;
@@ -112,11 +115,16 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        UMSsoHandler ssoHandler = mController.getConfig().getSsoHandler(requestCode);
+        if (ssoHandler != null) {
+            ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+        }
         if (resultCode == RESULT_OK) {
             if (requestCode == MyApp.LOGIN_ACTION) {
                 doAddFavor();
             }
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -139,7 +147,8 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         display.getSize(point);
 
         mImageFetcher = ImageFetcher.getImageFetcher(this, point.x, point.y / 2, 0.25f);
-
+        mController = UMServiceFactory.getUMSocialService("com.umeng.share",
+                RequestType.SOCIAL);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle();
         if (verificationInfo != null) {
@@ -188,8 +197,8 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         return verificationInfo != null ? verificationInfo.getCommentsCnt() : spuResponse.getCommentsCnt();
     }
 
-    private int getSameTypeRecommendationsCnt() {
-        return verificationInfo != null ? verificationInfo.getSameTypeRecommendationsCnt() : spuResponse.getSameTypeRecommendationsCnt();
+    private int getDistance() {
+        return verificationInfo != null ? verificationInfo.getDistance() : spuResponse.getDistance();
     }
 
     private List<String> getPicUrlList() {
@@ -204,6 +213,10 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         return verificationInfo != null ? verificationInfo.getSKU().getSPU().getId() : spuResponse.getSPU().getId();
     }
 
+    private int getSameTypeRecommendationsCnt() {
+        return verificationInfo != null ? verificationInfo.getSameTypeRecommendationsCnt() : spuResponse.getSameTypeRecommendationsCnt();
+    }
+
     private int getSameVendorRecommendationsCnt() {
         return verificationInfo != null ? verificationInfo.getSameVendorRecommendationsCnt() : spuResponse.getSameVendorRecommendationsCnt();
     }
@@ -211,10 +224,6 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     private int getVendorId() {
         return verificationInfo != null ? verificationInfo.getSKU().getSPU().getVendorId() :
                 spuResponse.getSPU().getVendorId();
-    }
-
-    private int getDistance() {
-        return verificationInfo != null ? verificationInfo.getDistance() : spuResponse.getDistance();
     }
 
     private void initViews() {
@@ -225,7 +234,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
         if (verificationInfo == null) {
             imageView.setVisibility(View.GONE);
-        }else {
+        } else {
             if (!verificationFinished) {
                 findViewById(R.id.checksumLayout).setVisibility(View.VISIBLE);
                 ((TextView) findViewById(R.id.textViewChecksum)).setText(String.format("验证码\n %s",
@@ -299,6 +308,26 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         }
     }
 
+    private void locate2Nearby() {
+        Button button = (Button) findViewById(R.id.buttonNearby);
+        final int distance = getDistance();
+        if (distance == -1) {
+            button.setText("周边");
+            button.setClickable(false);
+        } else {
+            button.setText("周边\n" + Misc.humanizeDistance(distance));
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(SPUActivity.this, NearbyActivity.class);
+                    intent.putExtra("current", NearbyActivity.NEARBY_LIST);
+                    intent.putExtra(Constants.TAG_SPU_ID, getSPUId());
+                    SPUActivity.this.startActivity(intent);
+                }
+            });
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void setBottomTabs() {
         for (int i = 0; i < tabHost.getTabWidget().getChildCount(); ++i) {
@@ -328,10 +357,8 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 
     private void shareInit() {
         String contentUrl = getString(R.string.share_url_template);
-        final UMSocialService mController = UMServiceFactory.getUMSocialService("com.umeng.share",
-                RequestType.SOCIAL);
 
-        mController.setShareContent(getString(R.string.share_template) +" " + contentUrl);
+        mController.setShareContent(getString(R.string.share_template) + " " + contentUrl);
     /*
             mController.setShareMedia(new UMImage(this,
                     "http://www.umeng.com/images/pic/banner_module_social.png"));
@@ -344,6 +371,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         // 支持微信朋友圈
         mController.getConfig().supportWXCirclePlatform(this, appID, contentUrl);
 
+        mController.getConfig().setSsoHandler(new SinaSsoHandler());
         ImageButton imageButton = (ImageButton) findViewById(R.id.imageButtonShare);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -379,26 +407,6 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             });
         }
 
-    }
-
-    private void locate2Nearby() {
-        Button button = (Button) findViewById(R.id.buttonNearby);
-        final int distance = getDistance();
-        if (distance == -1) {
-            button.setText("周边");
-            button.setClickable(false);
-        } else {
-            button.setText("周边\n" + Misc.humanizeDistance(distance));
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(SPUActivity.this, NearbyActivity.class);
-                    intent.putExtra("current", NearbyActivity.NEARBY_LIST);
-                    intent.putExtra(Constants.TAG_SPU_ID, getSPUId());
-                    SPUActivity.this.startActivity(intent);
-                }
-            });
-        }
     }
 
     private class FavorTask extends AsyncTask<Void, Void, Void> {

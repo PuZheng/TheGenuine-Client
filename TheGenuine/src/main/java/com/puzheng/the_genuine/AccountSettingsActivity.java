@@ -7,8 +7,15 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import com.puzheng.the_genuine.data_structure.User;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.bean.SocializeEntity;
+import com.umeng.socialize.controller.RequestType;
+import com.umeng.socialize.controller.UMServiceFactory;
+import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.controller.listener.SocializeListeners;
+import com.umeng.socialize.db.OauthHelper;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -16,6 +23,8 @@ import java.util.HashMap;
 public class AccountSettingsActivity extends Activity implements BackPressedInterface {
 
     private BackPressedHandle mBackPressedHandle = new BackPressedHandle();
+    private UMSocialService mController;
+    private Button cancelButton;
 
     @Override
     public void doBackPressed() {
@@ -48,6 +57,8 @@ public class AccountSettingsActivity extends Activity implements BackPressedInte
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mController = UMServiceFactory.getUMSocialService("com.umeng.login",
+                RequestType.SOCIAL);
         super.onCreate(savedInstanceState);
         if (MyApp.getCurrentUser() == null) {
             login();
@@ -65,7 +76,33 @@ public class AccountSettingsActivity extends Activity implements BackPressedInte
                 login();
             }
         });
+//        mController.openUserCenter(AccountSettingsActivity.this, SocializeConstants.FLAG_USER_CENTER_HIDE_LOGININFO);
+        cancelButton = (Button) findViewById(R.id.cancelVerify);
+        if (OauthHelper.isAuthenticated(AccountSettingsActivity.this, SHARE_MEDIA.SINA)) {
+            cancelButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mController.deleteOauth(AccountSettingsActivity.this, SHARE_MEDIA.SINA, new SocializeListeners.SocializeClientListener() {
+                        @Override
+                        public void onStart() {
 
+                        }
+
+                        @Override
+                        public void onComplete(int i, SocializeEntity socializeEntity) {
+                            if (i == 200 && socializeEntity != null) {
+                                Toast.makeText(AccountSettingsActivity.this, "取消授权成功", Toast.LENGTH_SHORT).show();
+                                cancelButton.setVisibility(View.GONE);
+                            } else {
+                                Toast.makeText(AccountSettingsActivity.this, "取消授权失败", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            });
+        } else {
+            cancelButton.setVisibility(View.GONE);
+        }
     }
 
     private void login() {
