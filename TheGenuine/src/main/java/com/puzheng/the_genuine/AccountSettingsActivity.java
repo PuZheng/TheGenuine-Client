@@ -91,10 +91,10 @@ public class AccountSettingsActivity extends Activity implements BackPressedInte
                         @Override
                         public void onComplete(int i, SocializeEntity socializeEntity) {
                             if (i == 200 && socializeEntity != null) {
-                                Toast.makeText(AccountSettingsActivity.this, "取消授权成功", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AccountSettingsActivity.this, "取消绑定成功", Toast.LENGTH_SHORT).show();
                                 cancelButton.setVisibility(View.GONE);
                             } else {
-                                Toast.makeText(AccountSettingsActivity.this, "取消授权失败", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AccountSettingsActivity.this, "取消绑定失败", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
