@@ -273,6 +273,7 @@
                 android:layout_weight="7">
 
                 <Button
+                    android:visibility="gone"
                     android:gravity="center"
                     android:textSize="10sp"
                     style="@style/ButtonAppTheme"
@@ -281,6 +282,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="-5dp"
                     android:layout_marginTop="-10dp"
                     android:layout_marginBottom="-10dp"
                     android:layout_alignParentBottom="true" />

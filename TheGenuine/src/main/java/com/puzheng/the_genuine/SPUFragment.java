@@ -203,6 +203,7 @@ public class SPUFragment extends Fragment {
         Button addFocus = (Button) mView.findViewById(R.id.btnAddFocus);
         mView.findViewById(R.id.layoutAddFocus).setOnClickListener(null);
         if (!TextUtils.isEmpty(weibo)) {
+            addFocus.setVisibility(View.VISIBLE);
             if (isFollowed) {
                 addFocus.setText("已关注");
                 addFocus.setOnClickListener(null);
