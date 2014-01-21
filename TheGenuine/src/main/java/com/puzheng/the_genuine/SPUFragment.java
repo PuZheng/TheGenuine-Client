@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.puzheng.the_genuine.data_structure.SPU;
@@ -91,9 +92,20 @@ public class SPUFragment extends Fragment {
         textView = (TextView) mView.findViewById(R.id.textViewWeixin);
         textView.setText(weiXin);
 
-        final String weibo = getWeibo();
         textView = (TextView) mView.findViewById(R.id.textViewWeibo);
-        textView.setText(weibo);
+        final String weiboLink = spu.getVendor().getWeiboLink();
+        textView.setText(weiboLink);
+        if (!TextUtils.isEmpty(weiboLink)) {
+            textView.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //下划线
+            textView.setTextColor(Color.BLUE);
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(weiboLink));
+                    getActivity().startActivity(Intent.createChooser(browserIntent, "选择浏览器"));
+                }
+            });
+        }
 
         getFriendsAndUpdateView(false);
         return mView;
@@ -188,15 +200,15 @@ public class SPUFragment extends Fragment {
 
     private void updateFollowedView(boolean isFollowed) {
         final String weibo = getWeibo();
-        TextView textView = (TextView) mView.findViewById(R.id.textViewAddFocus);
+        Button addFocus = (Button) mView.findViewById(R.id.btnAddFocus);
         mView.findViewById(R.id.layoutAddFocus).setOnClickListener(null);
         if (!TextUtils.isEmpty(weibo)) {
             if (isFollowed) {
-                textView.setText("已关注");
-                mView.findViewById(R.id.layoutAddFocus).setOnClickListener(null);
+                addFocus.setText("已关注");
+                addFocus.setOnClickListener(null);
             } else {
-                textView.setText("加关注");
-                mView.findViewById(R.id.layoutAddFocus).setOnClickListener(new View.OnClickListener() {
+                addFocus.setText("加关注");
+                addFocus.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (!OauthHelper.isAuthenticated(getActivity(), SHARE_MEDIA.SINA)) {
@@ -210,7 +222,7 @@ public class SPUFragment extends Fragment {
 
             }
         } else {
-            textView.setText("");
+            addFocus.setText("");
         }
     }
 }

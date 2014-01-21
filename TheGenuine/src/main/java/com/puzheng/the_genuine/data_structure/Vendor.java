@@ -2,6 +2,7 @@ package com.puzheng.the_genuine.data_structure;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by abc549825@163.com(https://github.com/abc549825) at 12-06.
@@ -25,6 +26,8 @@ public class Vendor implements Parcelable {
     private String website;
     private String weibo;
     private String weixin;
+    @SerializedName("weibo_link")
+    private String weiboLink;
 
     public Vendor(Parcel parcel) {
         id = parcel.readInt();
@@ -34,6 +37,7 @@ public class Vendor implements Parcelable {
         website = parcel.readString();
         weibo = parcel.readString();
         weixin = parcel.readString();
+        weiboLink = parcel.readString();
     }
 
     @Override
@@ -65,6 +69,10 @@ public class Vendor implements Parcelable {
         return weibo;
     }
 
+    public String getWeiboLink() {
+        return weiboLink;
+    }
+
     public String getWeixin() {
         return weixin;
     }
@@ -76,5 +84,8 @@ public class Vendor implements Parcelable {
         dest.writeString(tel);
         dest.writeString(address);
         dest.writeString(website);
+        dest.writeString(weibo);
+        dest.writeString(weixin);
+        dest.writeString(weiboLink);
     }
 }
