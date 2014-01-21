@@ -222,7 +222,7 @@ public class SPUFragment extends Fragment {
 
             }
         } else {
-            addFocus.setText("");
+            addFocus.setVisibility(View.GONE);
         }
     }
 }
