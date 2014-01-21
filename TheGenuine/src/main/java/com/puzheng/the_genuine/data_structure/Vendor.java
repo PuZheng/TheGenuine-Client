@@ -23,6 +23,8 @@ public class Vendor implements Parcelable {
     private String name;
     private String address;
     private String website;
+    private String weibo;
+    private String weixin;
 
     public Vendor(Parcel parcel) {
         id = parcel.readInt();
@@ -30,6 +32,8 @@ public class Vendor implements Parcelable {
         tel = parcel.readString();
         address = parcel.readString();
         website = parcel.readString();
+        weibo = parcel.readString();
+        weixin = parcel.readString();
     }
 
     @Override
@@ -55,6 +59,14 @@ public class Vendor implements Parcelable {
 
     public String getWebsite() {
         return website;
+    }
+
+    public String getWeibo() {
+        return weibo;
+    }
+
+    public String getWeixin() {
+        return weixin;
     }
 
     @Override

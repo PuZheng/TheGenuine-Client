@@ -55,13 +55,23 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="取消授权"
+        android:id="@+id/cancelVerify"
+        android:textSize="16dp"
+        android:layout_margin="16dp"
+        android:layout_below="@+id/tableLayout"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/apptheme_btn_default_holo_light"
         android:text="退出登录"
         android:id="@+id/button"
         android:textSize="16dp"
         android:textColor="@android:color/white"
         android:layout_margin="16dp"
-        android:layout_below="@+id/tableLayout"
+        android:layout_below="@+id/cancelVerify"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
