@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Pair;
 import com.google.android.gms.common.ConnectionResult;
@@ -17,6 +18,7 @@ import com.puzheng.the_genuine.utils.LocateErrorException;
 import com.puzheng.the_genuine.utils.Misc;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,9 +29,13 @@ public class MyApp extends Application {
     private static User user;
     private static Context context;
     private static LocationService mLocationService;
+    public static String SHAREURL;
     private WebService webServieHandler;
     public static boolean isNetworkSettingDialogShowed = false;
     public static boolean isGPSSettingDialogShowed = false;
+
+    public static String SHARETEMPLATE = null;
+    public static boolean SHAREMEDIA = false;
 
     public static void doLoginIn(Activity activity) {
         doLoginIn(activity, null);
@@ -84,6 +90,7 @@ public class MyApp extends Application {
         webServieHandler = WebService.getInstance(MyApp.context);
         Misc.assertDirExists(Misc.getStorageDir());
         connectLocationService();
+        new GetShareTemplateClass().execute();
     }
 
     public static void unsetCurrentUser() {
@@ -109,4 +116,31 @@ public class MyApp extends Application {
 
         bindService(intent, connection, BIND_AUTO_CREATE);
     }
+
+    private class GetShareTemplateClass extends AsyncTask<Void, Void, HashMap<String, Object>>{
+
+        @Override
+        protected HashMap<String, Object> doInBackground(Void... params) {
+            try {
+                ArrayList<String> configs = new ArrayList<String>();
+                configs.add("share_content");
+                configs.add("spu_share_media");
+                configs.add("share_url");
+                return WebService.getInstance(context).getConfigs(configs);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(HashMap<String, Object> map) {
+            if (map != null) {
+                MyApp.SHARETEMPLATE = (String) map.get("share_content");
+                MyApp.SHAREMEDIA = (Boolean) map.get("spu_share_media");
+                MyApp.SHAREURL = (String) map.get("share_url");
+            }
+        }
+    }
+
 }
