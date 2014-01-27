@@ -125,7 +125,7 @@ public class MyApp extends Application {
                 ArrayList<String> configs = new ArrayList<String>();
                 configs.add("share_content");
                 configs.add("spu_share_media");
-                configs.add("share_url");
+                configs.add("spu_share_url");
                 return WebService.getInstance(context).getConfigs(configs);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -138,7 +138,7 @@ public class MyApp extends Application {
             if (map != null) {
                 MyApp.SHARETEMPLATE = (String) map.get("share_content");
                 MyApp.SHAREMEDIA = (Boolean) map.get("spu_share_media");
-                MyApp.SHAREURL = (String) map.get("share_url");
+                MyApp.SHAREURL = (String) map.get("spu_share_url");
             }
         }
     }
