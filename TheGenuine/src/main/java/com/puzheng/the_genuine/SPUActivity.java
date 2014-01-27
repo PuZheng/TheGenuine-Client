@@ -27,20 +27,25 @@ import android.widget.RatingBar;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.puzheng.the_genuine.data_structure.SPU;
 import com.puzheng.the_genuine.data_structure.SPUResponse;
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.BadResponseException;
+import com.puzheng.the_genuine.utils.HttpUtil;
 import com.puzheng.the_genuine.utils.Misc;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.controller.RequestType;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.controller.UMSsoHandler;
+import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.sso.SinaSsoHandler;
 import com.viewpagerindicator.CirclePageIndicator;
+import org.stringtemplate.v4.ST;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -221,6 +226,10 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         return verificationInfo != null ? verificationInfo.getSameVendorRecommendationsCnt() : spuResponse.getSameVendorRecommendationsCnt();
     }
 
+    private SPU getSPU() {
+        return verificationInfo != null ? verificationInfo.getSKU().getSPU() : spuResponse.getSPU();
+    }
+
     private int getVendorId() {
         return verificationInfo != null ? verificationInfo.getSKU().getSPU().getVendorId() :
                 spuResponse.getSPU().getVendorId();
@@ -355,14 +364,45 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         getActionBar().setTitle(spu_name);
     }
 
-    private void shareInit() {
-        String contentUrl = getString(R.string.share_url_template);
+    private String getShareContent(String shareURL) {
+        if (!TextUtils.isEmpty(MyApp.SHARETEMPLATE)) {
+            try {
+                ST template = new ST(MyApp.SHARETEMPLATE);
+                template.add("spu", getSPU());
+                return template.render();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return getString(R.string.share_template) + " " + shareURL;
+    }
 
-        mController.setShareContent(getString(R.string.share_template) + " " + contentUrl);
-    /*
-            mController.setShareMedia(new UMImage(this,
-                    "http://www.umeng.com/images/pic/banner_module_social.png"));
-    */
+    private String getShareURL() {
+        if (!TextUtils.isEmpty(MyApp.SHAREURL)) {
+             try {
+                ST template = new ST(MyApp.SHAREURL);
+                template.add("spu", getSPU());
+                return template.render();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return getString(R.string.share_url_template);
+    }
+
+    private void shareInit() {
+        String contentUrl = getShareURL();
+        List<String> picUrlList = getPicUrlList();
+        if (MyApp.SHAREMEDIA && picUrlList != null && picUrlList.size() > 1) {
+            try {
+                mController.setShareMedia(new UMImage(SPUActivity.this, HttpUtil.getURL(picUrlList.get(0)).toString()));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        mController.setShareContent(getShareContent(contentUrl));
+
         mController.getConfig().removePlatform(SHARE_MEDIA.EMAIL, SHARE_MEDIA.DOUBAN, SHARE_MEDIA.RENREN);
         String appID = "wx061490cf3011fbd0";
         // 微信图文分享必须设置一个url

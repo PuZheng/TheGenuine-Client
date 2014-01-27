@@ -194,6 +194,44 @@ public class WebService {
         return gson.fromJson(result, SPUResponse.class);
     }
 
+    public HashMap<String, Object> getConfigs(List<String> configs) throws IOException, BadResponseException,
+            JSONException {
+        StringBuilder builder = new StringBuilder();
+        builder.append("config/");
+        boolean first = true;
+        for (String config : configs) {
+            if (!first) {
+                builder.append(",");
+            }
+            builder.append(config);
+            first = false;
+        }
+
+        String url = HttpUtil.composeUrl("config-ws", builder.toString());
+        String result = HttpUtil.getStringResult(url);
+        JSONObject object = new JSONObject(result);
+        HashMap<String, Object> configMap = new HashMap<String, Object>();
+        for (String config : configs) {
+            configMap.put(config, getData(object, config));
+        }
+
+        return configMap;
+    }
+
+    private Object getData(JSONObject object, String config) throws JSONException {
+        JSONObject obj = object.getJSONObject(config);
+        String type = obj.getString("type");
+        if (type.equals("bool")) {
+            return obj.getBoolean("value");
+        } else if (type.equals("int")) {
+            return obj.getInt("value");
+        } else if (type.equals("double")) {
+            return obj.getDouble("value");
+        } else {
+            return obj.getString("value");
+        }
+    }
+
     public User login(String email, String password) throws IOException, BadResponseException {
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("name", email);
