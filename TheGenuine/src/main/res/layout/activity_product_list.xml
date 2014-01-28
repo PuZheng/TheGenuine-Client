@@ -6,11 +6,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <com.puzheng.the_genuine.views.NavBar
         android:id="@+id/navBar"
         android:layout_width="fill_parent"
@@ -19,4 +14,11 @@
         android:background="#3c3c3c"
         android:weightSum="6"
         app:enabledTab="genuines" />
+
+    <android.support.v4.view.ViewPager
+        android:layout_above="@id/navBar"
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </RelativeLayout>
