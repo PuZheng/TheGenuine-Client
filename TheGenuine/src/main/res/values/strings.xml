@@ -99,8 +99,18 @@
     <string name="verify_number">Verify Number\n %s</string>
     <string name="verify_info">Verification Info</string>
     <string name="product_info">Product Info</string>
-    <string name="sameType">Same Type（%s）</string>
+    <string name="sameType">Same Type(%s)</string>
     <string name="sameVendor">Same Vendor(%s)</string>
     <string name="counterfeit">Counterfeit</string>
     <string name="enter_reason">Enter Reason</string>
+    <string name="comment_number">Comment(%s)</string>
+    <string name="verify_number_info">Scratch Coating\n To Find The Number</string>
+    <string name="pid">Product ID</string>
+    <string name="pname">Product Name</string>
+    <string name="vendor">Vendor</string>
+    <string name="vendor_address">Address</string>
+    <string name="telephone">Telephone</string>
+    <string name="website">Website</string>
+    <string name="weixin_number">Weixin Number</string>
+    <string name="weibo">Weibo</string>
 </resources>

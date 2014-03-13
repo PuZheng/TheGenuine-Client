@@ -104,4 +104,14 @@
     <string name="sameVendor">同厂推荐(%s)</string>
     <string name="counterfeit">举报</string>
     <string name="enter_reason">请输入理由</string>
+    <string name="verify_number_info">请刮开图层\n查看验证码</string>
+    <string name="comment_number">评论(%s)</string>
+    <string name="pid">产品编号</string>
+    <string name="pname">产品名称</string>
+    <string name="vendor">生产商</string>
+    <string name="vendor_address">生产商地址</string>
+    <string name="telephone">生产商电话</string>
+    <string name="website">生产商网址</string>
+    <string name="weixin_number">生产商微信号</string>
+    <string name="weibo">生产商微博</string>
 </resources>

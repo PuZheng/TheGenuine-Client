@@ -257,7 +257,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 
         Button button = (Button) findViewById(R.id.buttonComment);
 
-        button.setText("评论\n(" + Misc.humanizeNum(getCommentsCnt(), SPUActivity.this) + ")");
+        button.setText(getString(R.string.comment_number,  Misc.humanizeNum(getCommentsCnt(), SPUActivity.this)));
         button.setOnClickListener(new View.OnClickListener() {
 
             @Override
