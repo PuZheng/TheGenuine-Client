@@ -16,6 +16,6 @@
 
     <string name="error_invalid_email">Invalid Email</string>
     <string name="error_invalid_password">Password Too Short</string>
-    <string name="error_incorrect_password">Password Incorrect</string>
+    <string name="error_incorrect_password">Email/Password Error, Please Try Again</string>
     <string name="error_field_required">Not Empty Allowed</string>
 </resources>

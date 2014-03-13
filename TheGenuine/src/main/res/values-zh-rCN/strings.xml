@@ -114,4 +114,6 @@
     <string name="website">生产商网址</string>
     <string name="weixin_number">生产商微信号</string>
     <string name="weibo">生产商微博</string>
+    <string name="enter_email">请输入您的邮箱</string>
+    <string name="enter_password">请输入您的密码</string>
 </resources>
