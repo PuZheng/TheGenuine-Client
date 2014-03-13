@@ -54,9 +54,9 @@
     <string name="switch_to_nfc">NFC</string>
     <string name="price_prefix">Cost: ￥</string>
     <string name="app_message">拒绝伪品，鉴真于\"芯\"</string>
-    <string name="denounce_success">举报成功</string>
-    <string name="denounce_fail">举报失败</string>
-    <string name="denounce_empty">理由不能为空</string>
+    <string name="denounce_success">Denounce Succeed</string>
+    <string name="denounce_fail">Denounce Failed</string>
+    <string name="denounce_empty">Not Empty Allowed</string>
     <string name="new_comment">Comment</string>
     <string name="CommentActivity">Comment</string>
     <string name="ProductListActivity">Product List</string>
@@ -100,6 +100,7 @@
     <string name="verify_info">Verification Info</string>
     <string name="product_info">Product Info</string>
     <string name="sameType">Same Type（%s）</string>
-    <string name="sameType">Same Type（%s）</string>
-    <string name="sameVendor">Same Vender(%s)</string>
+    <string name="sameVendor">Same Vendor(%s)</string>
+    <string name="counterfeit">Counterfeit</string>
+    <string name="enter_reason">Enter Reason</string>
 </resources>

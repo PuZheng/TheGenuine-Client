@@ -102,4 +102,6 @@
     <string name="product_info">产品信息</string>
     <string name="sameType">同类推荐（%s）</string>
     <string name="sameVendor">同厂推荐(%s)</string>
+    <string name="counterfeit">举报</string>
+    <string name="enter_reason">请输入理由</string>
 </resources>
