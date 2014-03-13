@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">乐鉴</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_spu">产品页</string>
+    <string name="title_activity_counterfeit">验证失败</string>
+    <string name="nearby_list">列表</string>
+    <string name="nearby_map">地图</string>
+    <string name="title_activity_nearby">NeighborhoodActivity</string>
+    <string name="title_activity_barcode">BarCodeActivity</string>
+    <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
+    <string name="title_activity_capture">扫描</string>
+    <string name="msg_camera_framework_bug">出现bug</string>
+    <string name="title_activity_comments">CommentsActivity</string>
+    <string name="title_activity_categories">CategoriesActivity</string>
+    <string name="exit_press_back_twice_message">再按一次，退出程序</string>
+    <string name="add_comment">请输入评论</string>
+    <string name="add_comment_failure">发表评论失败</string>
+    <string name="add_comment_succeed">发表评论成功</string>
+    <string name="add_comment_empty">评论不能为空</string>
+    <string name="comment">发表</string>
+    <string name="search_hint">搜索</string>
+    <string name="search_product">搜索产品</string>
+    <string name="search_instructions">搜索产品</string>
+    <string name="clear_recent_search">清空搜索历史</string>
+    <string name="search_no_result_found">暂无数据</string>
+    <string-array name="order_by_list">
+        <item>按价格排序</item>
+        <item>按距离排序</item>
+        <item>按星级排序</item>
+    </string-array>
+    <string-array name="order_by_str_list">
+        <item>price</item>
+        <item>distance</item>
+        <item>rating</item>
+    </string-array>
+    <string name="title_activity_account_settings">账户管理</string>
+    <string name="action_search">搜索</string>
+    <string name="search_result">搜索结果</string>
+    <string name="action_login">登录</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="error_message">对不起，出错了</string>
+    <string name="action_enter_password_again">请再次输入密码</string>
+    <string name="text_register">免费注册</string>
+    <string name="error_incorrect_confirm_password">两次输入的密码不一致</string>
+    <string name="action_register_fail">注册失败</string>
+    <string name="httpError">无法连接到服务器</string>
+    <string name="httpErrorConnect">无法连接到服务器，点击重试</string>
+    <string name="systemError">系统异常，点击重试</string>
+    <string name="title_activity_favor">我的收藏</string>
+    <string name="switch_to_barcode">转换二维码验证</string>
+    <string name="switch_to_nfc">转换NFC验证</string>
+    <string name="price_prefix">零售价: ￥</string>
+    <string name="app_message">拒绝伪品，鉴真于\"芯\"</string>
+    <string name="denounce_success">举报成功</string>
+    <string name="denounce_fail">举报失败</string>
+    <string name="denounce_empty">理由不能为空</string>
+    <string name="new_comment">新建评论</string>
+    <string name="CommentActivity">新建评论</string>
+    <string name="ProductListActivity">产品列表</string>
+    <string name="email_max_length">64</string>
+    <string name="email_max_length_error">用户名长度不能超过64</string>
+    <string name="locate_error">定位失败</string>
+    <string name="share_template">拒绝伪品，鉴真于“芯”，坚持真品就这么简单！立刻下载360乐鉴防伪神器</string>
+    <string name="share_url_template">www.360legit.com</string>
+    <string name="unbinding_succeed">取消绑定成功</string>
+    <string name="unbinding_failed">取消绑定失败</string>
+    <string name="verifying">已读取条码信息，正在验证真伪</string>
+    <string name="categories">分类列表</string>
+    <string name="committing">正在提交</string>
+    <string name="loading_failed">加载评论失败</string>
+    <string name="taxonomy">选择分类</string>
+    <string name="all">所有</string>
+    <string name="popularity">人气%s</string>
+    <string name="nearest">最近%s</string>
+    <string name="meter">米</string>
+    <string name="kilometers">千米</string>
+    <string name="EnableGPS">开启GPS获取更好的定位</string>
+    <string name="GPS_setting">GPS设置</string>
+    <string name="enable_gps">GPS未启用，是否进行设置</string>
+    <string name="network_setting">网络设置</string>
+    <string name="setting_network">网络连接不可用, 是否进行设置?</string>
+    <string name="NFC_message_error">无法识别的NFC标签</string>
+    <string name="map">地图</string>
+    <string name="list">列表</string>
+    <string name="favored">您已收藏该产品</string>
+    <string name="favor_succeed">收藏成功</string>
+    <string name="favor_failed">收藏失败</string>
+    <string name="choose_browser">选择浏览器</string>
+    <string name="binding_succeed">授权成功</string>
+    <string name="binding_failed">授权失败</string>
+    <string name="watch_succeed">关注成功</string>
+    <string name="watch_failed">关注失败</string>
+    <string name="watched">已关注</string>
+    <string name="watch">加关注</string>
+    <string name="thousand">千+</string>
+    <string name="verify_number">验证码\n %s</string>
+    <string name="verify_info">验证信息</string>
+    <string name="product_info">产品信息</string>
+    <string name="sameType">同类推荐（%s）</string>
+    <string name="sameVendor">同厂推荐(%s)</string>
+</resources>

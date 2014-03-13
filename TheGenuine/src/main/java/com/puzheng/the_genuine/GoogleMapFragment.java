@@ -83,7 +83,7 @@ public class GoogleMapFragment extends SupportMapFragment {
 
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, zoom));
         } else {
-            Toast.makeText(getActivity(), "定位失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.locate_error), Toast.LENGTH_SHORT).show();
         }
     }
 

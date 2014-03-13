@@ -130,7 +130,7 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
             actionBar.setTitle(mQuery);
             actionBar.setSubtitle(R.string.search_result);
         } else {
-            actionBar.setTitle("360真品");
+            actionBar.setTitle(R.string.app_name);
             actionBar.setSubtitle(getIntent().getStringExtra("categoryName"));
         }
     }

@@ -111,8 +111,8 @@ public class CategoriesActivity extends ActionBarActivity implements BackPressed
 
         maskableManager = new MaskableManager(gridView, this);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setSubtitle("分类列表");
-        actionBar.setTitle("360真品");
+        actionBar.setSubtitle(getString(R.string.categories));
+        actionBar.setTitle(getString(R.string.app_name));
         new GetCategoriesTask(gridView).execute();
     }
 

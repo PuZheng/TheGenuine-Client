@@ -84,7 +84,7 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
             //显示
             onPause();
             PoliteBackgroundTask.Builder<VerificationInfo> builder = new PoliteBackgroundTask.Builder<VerificationInfo>(this.getActivity());
-            builder.msg("已读取条码信息，正在验证真伪");
+            builder.msg(getString(R.string.verifying));
             builder.run(new PoliteBackgroundTask.XRunnable<VerificationInfo>() {
                 @Override
                 public VerificationInfo run() throws Exception {

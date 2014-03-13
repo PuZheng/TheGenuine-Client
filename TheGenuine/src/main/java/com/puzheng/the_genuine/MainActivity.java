@@ -15,6 +15,7 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -91,7 +92,7 @@ public class MainActivity extends Activity implements BackPressedInterface {
     private void enableGPS() {
         MyApp.isGPSSettingDialogShowed = true;
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("GPS设置").setMessage("GPS未启用，是否进行设置").setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.GPS_setting).setMessage(R.string.enable_gps).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent settingIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -110,13 +111,13 @@ public class MainActivity extends Activity implements BackPressedInterface {
     private void enableNetwork() {
         MyApp.isNetworkSettingDialogShowed = true;
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("网络设置").setMessage("网络连接不可用, 是否进行设置?").setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.network_setting).setMessage(R.string.setting_network).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent;
-                if (android.os.Build.VERSION.SDK_INT > 10) {
-                    intent = new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS);
+                if (Build.VERSION.SDK_INT > 10) {
+                    intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
                 } else {
                     intent = new Intent();
                     ComponentName component = new ComponentName("com.android.settings", "com.android.settings.WirelessSettings");
@@ -125,7 +126,7 @@ public class MainActivity extends Activity implements BackPressedInterface {
                 }
                 startActivity(intent);
             }
-        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+        }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 enableGPSIfNecessary();
@@ -168,7 +169,7 @@ public class MainActivity extends Activity implements BackPressedInterface {
                 }
             }
             if (!hit) {
-                Toast.makeText(MainActivity.this, "无法识别的NFC标签", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getString(R.string.NFC_message_error), Toast.LENGTH_SHORT).show();
                 tag = null;
             }
         }
@@ -197,7 +198,7 @@ public class MainActivity extends Activity implements BackPressedInterface {
                 }
             }
         } else {
-            Toast.makeText(MainActivity.this, "无法识别的NFC标签", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, getString(R.string.NFC_message_error), Toast.LENGTH_SHORT).show();
         }
         return null;
     }
@@ -206,7 +207,7 @@ public class MainActivity extends Activity implements BackPressedInterface {
         final String code = extractCode(intent);
         if (!TextUtils.isEmpty(code)) {
             PoliteBackgroundTask.Builder<VerificationInfo> builder = new PoliteBackgroundTask.Builder<VerificationInfo>(this);
-            builder.msg("已读取NFC信息，正在验证真伪");
+            builder.msg(getString(R.string.verifying));
             builder.run(new PoliteBackgroundTask.XRunnable<VerificationInfo>() {
                 @Override
                 public VerificationInfo run() throws Exception {

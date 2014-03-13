@@ -246,8 +246,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         } else {
             if (!verificationFinished) {
                 findViewById(R.id.checksumLayout).setVisibility(View.VISIBLE);
-                ((TextView) findViewById(R.id.textViewChecksum)).setText(String.format("验证码\n %s",
-                        verificationInfo.getSKU().getChecksum()));
+                ((TextView) findViewById(R.id.textViewChecksum)).setText(getString(R.string.verify_number, verificationInfo.getSKU().getChecksum()));
                 imageView.setVisibility(View.GONE);
             }
         }
@@ -258,7 +257,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 
         Button button = (Button) findViewById(R.id.buttonComment);
 
-        button.setText("评论\n(" + Misc.humanizeNum(getCommentsCnt()) + ")");
+        button.setText("评论\n(" + Misc.humanizeNum(getCommentsCnt(), SPUActivity.this) + ")");
         button.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -279,20 +278,18 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         tabHost = (TabHost) findViewById(R.id.tabHost);
         tabHost.setup();
 
-        String s = "验证信息";
+        String s = getString(R.string.verify_info);
         if (spuResponse != null) {
-            s = "产品信息";
+            s = getString(R.string.product_info);
         }
         TabHost.TabSpec tabSpec = tabHost.newTabSpec("tab1").setIndicator(s);
         tabSpec.setContent(new MyTabFactory(this));
         tabHost.addTab(tabSpec);
-
-        s = "同类推荐(" + Misc.humanizeNum(getSameTypeRecommendationsCnt()) + ")";
+        s = getString(R.string.sameType, Misc.humanizeNum(getSameTypeRecommendationsCnt(), SPUActivity.this));
         tabSpec = tabHost.newTabSpec("tab2").setIndicator(s);
         tabSpec.setContent(new MyTabFactory(this));
         tabHost.addTab(tabSpec);
-
-        s = "同厂推荐(" + Misc.humanizeNum(getSameVendorRecommendationsCnt()) + ")";
+        s = getString(R.string.sameVendor, Misc.humanizeNum(getSameVendorRecommendationsCnt(), SPUActivity.this));
         tabSpec = tabHost.newTabSpec("tab3").setIndicator(s);
         tabSpec.setContent(new MyTabFactory(this));
         tabHost.addTab(tabSpec);
@@ -321,10 +318,10 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         Button button = (Button) findViewById(R.id.buttonNearby);
         final int distance = getDistance();
         if (distance == -1) {
-            button.setText("周边");
+            button.setText(getString(R.string.nearest, ""));
             button.setClickable(false);
         } else {
-            button.setText("周边\n" + Misc.humanizeDistance(distance));
+            button.setText(getString(R.string.nearest, Misc.humanizeDistance(distance, SPUActivity.this)));
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -429,7 +426,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(SPUActivity.this, "您已收藏该产品", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SPUActivity.this, getString(R.string.favored), Toast.LENGTH_SHORT).show();
                     setFavored(isFavored);
                 }
             });
@@ -465,7 +462,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         @Override
         protected void onPostExecute(Void aVoid) {
             if (exception == null) {
-                Toast.makeText(SPUActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SPUActivity.this, getString(R.string.favor_succeed), Toast.LENGTH_SHORT).show();
                 updateFavorView(true);
             } else {
                 if (exception instanceof BadResponseException) {
@@ -474,7 +471,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
                     }
                     Toast.makeText(SPUActivity.this, exception.getMessage(), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(SPUActivity.this, "收藏失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SPUActivity.this, getString(R.string.favor_failed), Toast.LENGTH_SHORT).show();
                 }
             }
             mTask = null;
