@@ -31,9 +31,9 @@
         <item>Sort By Ranking</item>
     </string-array>
     <string-array name="order_by_str_list">
-        <item>Price</item>
-        <item>Distance</item>
-        <item>Rating</item>
+        <item>price</item>
+        <item>distance</item>
+        <item>rating</item>
     </string-array>
     <string name="title_activity_account_settings">Account Setting</string>
     <string name="action_search">Search</string>
