@@ -47,7 +47,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="举报"
+            android:text="@string/report"
             android:id="@+id/denounce"
             style="@style/ButtonWarningAppTheme"
             android:layout_marginLeft="16dp"
@@ -56,7 +56,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="去看看附近真品"
+            android:text="@string/visit_nearby"
             android:id="@+id/button"
             style="@style/ButtonAppTheme"
             android:layout_marginLeft="16dp"

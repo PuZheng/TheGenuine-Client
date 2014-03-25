@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">乐鉴</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
@@ -69,7 +68,7 @@
     <string name="unbinding_succeed">取消绑定成功</string>
     <string name="unbinding_failed">取消绑定失败</string>
     <string name="verifying">已读取条码信息，正在验证真伪</string>
-    <string name="categories">分类列表</string>
+    <string name="categories">360真品列表</string>
     <string name="committing">正在提交</string>
     <string name="loading_failed">加载评论失败</string>
     <string name="taxonomy">选择分类</string>
@@ -116,4 +115,17 @@
     <string name="weibo">生产商微博</string>
     <string name="enter_email">请输入您的邮箱</string>
     <string name="enter_password">请输入您的密码</string>
+    <string name="share_title">分享</string>
+    <string name="nfc_hint">请将手机靠近NFC标签</string>
+    <string name="turn_on_nfc">请开启NFC功能</string>
+    <string name="verify_cnt">验证次数</string>
+    <string name="last_verify">上次验证时间</string>
+    <string name="production_date">生产日期</string>
+    <string name="expiration_date">保质期</string>
+    <string name="logined">您已经成功登录</string>
+    <string name="email">邮箱</string>
+    <string name="logout">退出登录</string>
+    <string name="unbinding">取消新浪微博绑定</string>
+    <string name="report">举报</string>
+    <string name="visit_nearby">去看看附近真品</string>
 </resources>
