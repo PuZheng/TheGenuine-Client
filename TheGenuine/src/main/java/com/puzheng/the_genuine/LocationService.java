@@ -166,7 +166,7 @@ public class LocationService extends Service implements LocationListener {
     }
 
     private void setGPSEnabled() {
-        Toast.makeText(getApplicationContext(), "开启GPS获取更好的定位", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), getString(R.string.EnableGPS), Toast.LENGTH_SHORT).show();
         Intent settingIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
         settingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(settingIntent);

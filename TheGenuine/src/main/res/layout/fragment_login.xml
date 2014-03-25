@@ -71,7 +71,7 @@
                         android:layout_width="180dp"
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress"
-                        android:hint="请输入您的邮箱"
+                        android:hint="@string/enter_email"
                         android:layout_toRightOf="@id/imageView"
                         android:background="@null"
                         android:layout_centerVertical="true" />
@@ -104,7 +104,7 @@
                         android:maxLines="1"
                         android:layout_width="180dp"
                         android:layout_height="wrap_content"
-                        android:hint="请输入您的密码"
+                        android:hint="@string/enter_password"
                         android:inputType="textPassword"
                         android:imeActionLabel="@string/action_sign_in_short"
                         android:imeActionId="@+id/login"

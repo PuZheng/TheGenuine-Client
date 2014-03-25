@@ -70,7 +70,7 @@ public class SPUFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(website));
-                    getActivity().startActivity(Intent.createChooser(browserIntent, "选择浏览器"));
+                    getActivity().startActivity(Intent.createChooser(browserIntent, getString(R.string.choose_browser)));
                 }
             });
         }
@@ -102,7 +102,7 @@ public class SPUFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(weiboLink));
-                    getActivity().startActivity(Intent.createChooser(browserIntent, "选择浏览器"));
+                    getActivity().startActivity(Intent.createChooser(browserIntent, getString(R.string.choose_browser)));
                 }
             });
         }
@@ -120,10 +120,10 @@ public class SPUFragment extends Fragment {
             @Override
             public void onComplete(Bundle value, SHARE_MEDIA platform) {
                 if (value != null && !TextUtils.isEmpty(value.getString("uid"))) {
-                    Toast.makeText(getActivity(), "授权成功.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.binding_succeed), Toast.LENGTH_SHORT).show();
                     getFriendsAndUpdateView(true);
                 } else {
-                    Toast.makeText(getActivity(), "授权失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.binding_failed), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -142,10 +142,10 @@ public class SPUFragment extends Fragment {
             @Override
             public void onComplete(MultiStatus multiStatus, int i, SocializeEntity socializeEntity) {
                 if (i == 200) {
-                    Toast.makeText(getActivity(), "关注成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.watch_succeed), Toast.LENGTH_SHORT).show();
                     updateFollowedView(true);
                 } else {
-                    Toast.makeText(getActivity(), "关注失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.watch_failed), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -205,10 +205,10 @@ public class SPUFragment extends Fragment {
         if (!TextUtils.isEmpty(weibo)) {
             addFocus.setVisibility(View.VISIBLE);
             if (isFollowed) {
-                addFocus.setText("已关注");
+                addFocus.setText(R.string.watched);
                 addFocus.setOnClickListener(null);
             } else {
-                addFocus.setText("加关注");
+                addFocus.setText(R.string.watch);
                 addFocus.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

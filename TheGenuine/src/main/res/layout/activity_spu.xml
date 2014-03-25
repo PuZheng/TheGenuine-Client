@@ -39,6 +39,7 @@
                     android:id="@+id/viewPagerCover" />
 
                 <ImageView
+                    android:adjustViewBounds="true"
                     android:layout_width="128dp"
                     android:layout_height="97dp"
                     android:src="@drawable/real"
@@ -83,10 +84,9 @@
 
                         <TextView
                             android:layout_width="match_parent"
-                            android:text="验证码\n：测试测试"
                             android:gravity="center"
                             android:textColor="@android:color/white"
-                            android:textSize="16sp"
+                            android:textSize="12sp"
                             android:layout_weight="1"
                             android:layout_height="match_parent"
                             android:id="@+id/textViewChecksum" />
@@ -96,7 +96,7 @@
                             android:textColor="@android:color/white"
                             android:gravity="center"
                             android:textSize="10dp"
-                            android:text="请刮开图层\n查看验证码"
+                            android:text="@string/verify_number_info"
                             android:layout_gravity="right|bottom"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" />

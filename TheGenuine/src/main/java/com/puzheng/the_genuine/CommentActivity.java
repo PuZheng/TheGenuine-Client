@@ -46,7 +46,7 @@ public class CommentActivity extends Activity {
                     return;
                 }
                 PoliteBackgroundTask.Builder<Void> builder = new PoliteBackgroundTask.Builder<Void>(CommentActivity.this);
-                builder.msg("正在提交");
+                builder.msg(getString(R.string.committing));
                 final String finalComment = comment;
                 builder.run(new PoliteBackgroundTask.XRunnable<Void>() {
                     @Override

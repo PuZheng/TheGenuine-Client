@@ -208,7 +208,7 @@ public class LoginFragment extends Fragment {
             showProgress(false);
             if (success) {
                 Activity activity = getActivity();
-                Toast.makeText(activity, "您已经成功登录", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, activity.getString(R.string.logined), Toast.LENGTH_SHORT).show();
                 activity.setResult(Activity.RESULT_OK);
                 activity.finish();
             } else {

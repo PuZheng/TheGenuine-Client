@@ -49,9 +49,9 @@ public class CounterfeitActivity extends Activity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(CounterfeitActivity.this);
-                builder.setTitle("举报");
+                builder.setTitle(R.string.counterfeit);
                 final EditText reason = new EditText(CounterfeitActivity.this);
-                reason.setHint("请输入理由");
+                reason.setHint(R.string.enter_reason);
                 reason.setMinLines(3);
                 reason.setGravity(Gravity.TOP);
                 builder.setView(reason);

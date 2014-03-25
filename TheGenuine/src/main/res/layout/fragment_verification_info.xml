@@ -20,7 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="产品编号"
+                android:text="@string/pid"
                 android:textColor="@android:color/darker_gray"
                 android:id="@+id/textView" />
 
@@ -53,7 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="产品名称"
+                android:text="@string/pname"
                 android:textColor="@android:color/darker_gray"
                 android:id="@+id/textView" />
 
@@ -86,7 +86,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="验证次数"
+                android:text="@string/verify_cnt"
                 android:textColor="@android:color/darker_gray"
                 android:id="@+id/textView" />
 
@@ -118,7 +118,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="上次验证时间"
+                android:text="@string/last_verify"
                 android:textColor="@android:color/darker_gray"
                 android:id="@+id/textView" />
 
@@ -151,7 +151,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="生产商"
+                android:text="@string/vendor"
                 android:textColor="@android:color/darker_gray"
                 android:id="@+id/textView" />
 
@@ -159,7 +159,6 @@
                 android:layout_width="match_parent"
                 android:layout_weight="7"
                 android:layout_height="wrap_content"
-                android:text="manufacture"
                 android:id="@+id/textViewVendorName" />
         </TableRow>
 
@@ -171,7 +170,7 @@
                 android:layout_span="2"
                 android:layout_height="1px"
                 android:layout_width="fill_parent"
-                android:text=""></View>
+                android:text=""/>
         </TableRow>
 
         <TableRow
@@ -184,7 +183,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="生产日期"
+                android:text="@string/production_date"
                 android:textColor="@android:color/darker_gray"
                 android:id="@+id/textView" />
 
@@ -192,7 +191,6 @@
                 android:layout_width="match_parent"
                 android:layout_weight="7"
                 android:layout_height="wrap_content"
-                android:text="manufacture date"
                 android:id="@+id/textViewManufactureDate" />
         </TableRow>
 
@@ -204,7 +202,7 @@
                 android:layout_span="2"
                 android:layout_height="1px"
                 android:layout_width="fill_parent"
-                android:text=""></View>
+                android:text=""/>
         </TableRow>
 
         <TableRow
@@ -217,7 +215,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="保质期"
+                android:text="@string/expiration_date"
                 android:textColor="@android:color/darker_gray"
                 android:id="@+id/textView" />
 
@@ -225,7 +223,6 @@
                 android:layout_width="match_parent"
                 android:layout_weight="7"
                 android:layout_height="wrap_content"
-                android:text="manufacture date"
                 android:id="@+id/textViewExpiredDate" />
         </TableRow>
 
@@ -237,7 +234,7 @@
                 android:layout_span="2"
                 android:layout_height="1px"
                 android:layout_width="fill_parent"
-                android:text=""></View>
+                android:text=""/>
         </TableRow>
 
         <TableRow
@@ -250,7 +247,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="生产商地址"
+                android:text="@string/vendor_address"
                 android:textColor="@android:color/darker_gray"
                 android:id="@+id/textView" />
 
@@ -283,7 +280,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="生产商电话"
+                android:text="@string/telephone"
                 android:textColor="@android:color/darker_gray"
                 android:id="@+id/textView" />
 
@@ -330,7 +327,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
 
-                android:text="生产商网址"
+                android:text="@string/website"
                 android:textColor="@android:color/darker_gray"
                 android:id="@+id/textView" />
 

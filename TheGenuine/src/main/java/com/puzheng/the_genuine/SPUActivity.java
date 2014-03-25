@@ -25,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TabHost;
+import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.puzheng.the_genuine.data_structure.SPU;
@@ -36,10 +37,7 @@ import com.puzheng.the_genuine.utils.BadResponseException;
 import com.puzheng.the_genuine.utils.HttpUtil;
 import com.puzheng.the_genuine.utils.Misc;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.controller.RequestType;
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.controller.UMSsoHandler;
+import com.umeng.socialize.controller.*;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.sso.SinaSsoHandler;
 import com.viewpagerindicator.CirclePageIndicator;
@@ -55,7 +53,10 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     private static final String TAG = "SPUActivity";
     private ViewPager viewPager;
     private VerificationInfo verificationInfo;
+
+    //只有二维码验证才需要展示 验证码
     private boolean verificationFinished;
+
     private SPUResponse spuResponse;
     private ViewPager viewPagerCover;
     private TabHost tabHost;
@@ -245,9 +246,9 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             imageView.setVisibility(View.GONE);
         } else {
             if (!verificationFinished) {
+                // 二维码验证不提示真品伪品
                 findViewById(R.id.checksumLayout).setVisibility(View.VISIBLE);
-                ((TextView) findViewById(R.id.textViewChecksum)).setText(String.format("验证码\n %s",
-                        verificationInfo.getSKU().getChecksum()));
+                ((TextView) findViewById(R.id.textViewChecksum)).setText(getString(R.string.verify_number, verificationInfo.getSKU().getChecksum()));
                 imageView.setVisibility(View.GONE);
             }
         }
@@ -258,7 +259,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 
         Button button = (Button) findViewById(R.id.buttonComment);
 
-        button.setText("评论\n(" + Misc.humanizeNum(getCommentsCnt()) + ")");
+        button.setText(getString(R.string.comment_number,  Misc.humanizeNum(getCommentsCnt(), SPUActivity.this)));
         button.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -279,25 +280,30 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         tabHost = (TabHost) findViewById(R.id.tabHost);
         tabHost.setup();
 
-        String s = "验证信息";
+        String s = getString(R.string.verify_info);
         if (spuResponse != null) {
-            s = "产品信息";
+            s = getString(R.string.product_info);
         }
         TabHost.TabSpec tabSpec = tabHost.newTabSpec("tab1").setIndicator(s);
         tabSpec.setContent(new MyTabFactory(this));
         tabHost.addTab(tabSpec);
-
-        s = "同类推荐(" + Misc.humanizeNum(getSameTypeRecommendationsCnt()) + ")";
+        s = getString(R.string.sameType, Misc.humanizeNum(getSameTypeRecommendationsCnt(), SPUActivity.this));
         tabSpec = tabHost.newTabSpec("tab2").setIndicator(s);
         tabSpec.setContent(new MyTabFactory(this));
         tabHost.addTab(tabSpec);
-
-        s = "同厂推荐(" + Misc.humanizeNum(getSameVendorRecommendationsCnt()) + ")";
+        s = getString(R.string.sameVendor, Misc.humanizeNum(getSameVendorRecommendationsCnt(), SPUActivity.this));
         tabSpec = tabHost.newTabSpec("tab3").setIndicator(s);
         tabSpec.setContent(new MyTabFactory(this));
         tabHost.addTab(tabSpec);
         tabHost.setOnTabChangedListener(this);
 
+        TabWidget tabWidget = tabHost.getTabWidget();
+        int tabCounts = tabHost.getTabWidget().getTabCount();
+
+        for (int i = 0; i < tabCounts; i++) {
+            TextView textView = (TextView) tabWidget.getChildAt(i).findViewById(android.R.id.title);
+            textView.setAllCaps(false);
+        }
 
         setBottomTabs();
         viewPager = (ViewPager) findViewById(R.id.viewPagerBottom);
@@ -321,10 +327,10 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         Button button = (Button) findViewById(R.id.buttonNearby);
         final int distance = getDistance();
         if (distance == -1) {
-            button.setText("周边");
+            button.setText(getString(R.string.nearest, ""));
             button.setClickable(false);
         } else {
-            button.setText("周边\n" + Misc.humanizeDistance(distance));
+            button.setText(getString(R.string.nearest, Misc.humanizeDistance(distance, SPUActivity.this)));
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -401,13 +407,15 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             }
         }
 
+
         mController.setShareContent(getShareContent(contentUrl));
 
         mController.getConfig().removePlatform(SHARE_MEDIA.EMAIL, SHARE_MEDIA.DOUBAN, SHARE_MEDIA.RENREN);
-        String appID = "wx061490cf3011fbd0";
+        String appID = getString(R.string.weichat_app_id);
         // 微信图文分享必须设置一个url
         // 添加微信平台，参数1为当前Activity, 参数2为用户申请的AppID, 参数3为点击分享内容跳转到的目标url
-        mController.getConfig().supportWXPlatform(this, appID, contentUrl);
+        UMWXHandler wxHandler = mController.getConfig().supportWXPlatform(this, appID, contentUrl);
+        wxHandler.setWXTitle(getString(R.string.share_title));
         // 支持微信朋友圈
         mController.getConfig().supportWXCirclePlatform(this, appID, contentUrl);
 
@@ -429,7 +437,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(SPUActivity.this, "您已收藏该产品", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SPUActivity.this, getString(R.string.favored), Toast.LENGTH_SHORT).show();
                     setFavored(isFavored);
                 }
             });
@@ -465,7 +473,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         @Override
         protected void onPostExecute(Void aVoid) {
             if (exception == null) {
-                Toast.makeText(SPUActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SPUActivity.this, getString(R.string.favor_succeed), Toast.LENGTH_SHORT).show();
                 updateFavorView(true);
             } else {
                 if (exception instanceof BadResponseException) {
@@ -474,7 +482,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
                     }
                     Toast.makeText(SPUActivity.this, exception.getMessage(), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(SPUActivity.this, "收藏失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SPUActivity.this, getString(R.string.favor_failed), Toast.LENGTH_SHORT).show();
                 }
             }
             mTask = null;

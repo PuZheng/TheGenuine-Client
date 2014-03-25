@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Map;
 
 public class FavorCategoriesActivity extends ActionBarActivity implements BackPressedInterface, RefreshInterface {
-    private final String mDrawerTitle = "选择分类";
+    private String mDrawerTitle;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -106,7 +106,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
 
     public void setActionBarTitle(CharSequence title) {
         mTitle = title;
-        getActionBar().setTitle("我的收藏");
+        getActionBar().setTitle(R.string.title_activity_favor);
         getActionBar().setSubtitle(mTitle);
     }
 
@@ -126,6 +126,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favor_categories);
+        mDrawerTitle = getString(R.string.taxonomy);
         mImageFetcher = ImageFetcher.getImageFetcher(this, getResources().getDimensionPixelSize(R.dimen.image_view_list_item_width), 0.25f);
 
         maskableManager = new MaskableManager(findViewById(R.id.content_frame), FavorCategoriesActivity.this);
@@ -137,7 +138,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setTitle("我的收藏");
+        getActionBar().setTitle(R.string.title_activity_favor);
 
         setNavBar();
 
@@ -272,7 +273,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
                     allData.addAll(entry.getValue());
                     idx++;
                 }
-                mPlanetTitles.add(0, String.format(format, "所有", totalCnt));
+                mPlanetTitles.add(0, String.format(format, getString(R.string.all), totalCnt));
                 mDrawerList.setAdapter(new ArrayAdapter<String>(FavorCategoriesActivity.this,
                         R.layout.drawer_list_item, mPlanetTitles));
                 if (mDrawerList.getCheckedItemPosition() == AdapterView.INVALID_POSITION) {
@@ -340,9 +341,9 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
 
             viewHolder.textViewProductName.setText(favor.getSPU().getName());
             viewHolder.textViewPrice.setText("￥" + favor.getSPU().getMsrp());
-            viewHolder.textViewFavorCnt.setText("人气" + Misc.humanizeNum(favor.getFavorCnt()));
+            viewHolder.textViewFavorCnt.setText(getString(R.string.popularity , Misc.humanizeNum(favor.getFavorCnt(), mActivity)));
             viewHolder.ratingBar.setRating(favor.getSPU().getRating());
-            viewHolder.button.setText("最近" + Misc.humanizeDistance(favor.getDistance()));
+            viewHolder.button.setText(getString(R.string.nearest, Misc.humanizeDistance(favor.getDistance(), FavorCategoriesActivity.this)) );
             viewHolder.button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -356,7 +357,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
                 viewHolder.button.setVisibility(View.INVISIBLE);
             }
 
-            viewHolder.button.setText(Misc.humanizeDistance(favor.getDistance()));
+            viewHolder.button.setText(Misc.humanizeDistance(favor.getDistance(), FavorCategoriesActivity.this));
             viewHolder.textViewPrice.setText(String.valueOf(favor.getSPU().getMsrp()));
             return convertView;
         }

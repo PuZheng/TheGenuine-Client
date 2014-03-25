@@ -241,7 +241,7 @@ public class BaiduMapFragment extends Fragment {
                 isFirstLoc = false;
             } else {
                 if (toast == null) {
-                    toast = Toast.makeText(context, "定位失败", Toast.LENGTH_SHORT);
+                    toast = Toast.makeText(context, getString(R.string.locate_error), Toast.LENGTH_SHORT);
                     toast.show();
                     toast = null;
                 }

@@ -136,13 +136,13 @@ public class CommentsActivity extends ListActivity implements RefreshInterface {
 
         @Override
         protected void onPostExecute(List<Comment> commentList) {
-            String text = "加载评论失败";
+            String text = getString(R.string.loading_failed);
             if (maskableManager.unmask(exception)) {
                 listActivity.setListAdapter(new MyCommentsAdapter(commentList));
                 if (commentList.size() == 0) {
                     mEmptyView.setVisibility(View.VISIBLE);
                 }
-                text = "评论(" + Misc.humanizeNum(commentList.size()) + ")";
+                text = getString(R.string.comment) + "(" + Misc.humanizeNum(commentList.size(), CommentsActivity.this) + ")";
             }
             getActionBar().setTitle(text);
             task = null;

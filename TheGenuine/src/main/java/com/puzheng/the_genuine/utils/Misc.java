@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 import com.google.gson.Gson;
+import com.puzheng.the_genuine.R;
 import com.puzheng.the_genuine.data_structure.User;
 
 import java.io.File;
@@ -112,21 +113,18 @@ public class Misc {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     }
 
-    public static String humanizeDistance(int distance) {
+    public static String humanizeDistance(int distance, Context context) {
         if (distance < 1000) {
-            return String.valueOf(distance) + "米";
+            return String.valueOf(distance) + context.getString(R.string.meter);
         }
-        return String.valueOf(distance / 1000) + "千米";
+        return String.valueOf(distance / 1000) + context.getString(R.string.kilometers);
     }
 
-    public static String humanizeNum(int favorCnt) {
+    public static String humanizeNum(int favorCnt, Context context) {
         if (favorCnt < 1000) {
             return String.valueOf(favorCnt);
         }
-        if (favorCnt < 10000) {
-            return String.valueOf(favorCnt / 1000) + "千+";
-        }
-        return String.valueOf(favorCnt / 10000) + "万+";
+        return String.valueOf(favorCnt / 1000) + context.getString(R.string.thousand);
     }
 
     public static boolean isExternalStorageRemovable() {

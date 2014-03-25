@@ -80,9 +80,9 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
             }
         };
 
-        actionBar.addTab(actionBar.newTab().setText("地图").setTabListener(listener));
+        actionBar.addTab(actionBar.newTab().setText(R.string.map).setTabListener(listener));
 
-        actionBar.addTab(actionBar.newTab().setText("列表").setTabListener(listener));
+        actionBar.addTab(actionBar.newTab().setText(R.string.list).setTabListener(listener));
 
         mViewPager.setAdapter(new NearbyPagerAdapter(getSupportFragmentManager()));
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
