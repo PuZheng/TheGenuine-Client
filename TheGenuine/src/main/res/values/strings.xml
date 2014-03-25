@@ -19,7 +19,7 @@
     <string name="add_comment_failure">Add Review Failed</string>
     <string name="add_comment_succeed">Add Review Succeed</string>
     <string name="add_comment_empty">Not Empty Allowed</string>
-    <string name="comment">Reviews</string>
+    <string name="comment">Review</string>
     <string name="search_hint">Search</string>
     <string name="search_product">Search Product</string>
     <string name="search_instructions">Search Product</string>
