@@ -128,4 +128,5 @@
     <string name="unbinding">取消新浪微博绑定</string>
     <string name="report">举报</string>
     <string name="visit_nearby">去看看附近真品</string>
+    <string name="rating">评分:</string>
 </resources>
