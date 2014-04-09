@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.puzheng.the_genuine.Constants;
 import com.puzheng.the_genuine.MyApp;
+import com.puzheng.the_genuine.R;
 import com.puzheng.the_genuine.data_structure.Category;
 import com.puzheng.the_genuine.data_structure.Comment;
 import com.puzheng.the_genuine.data_structure.Favor;
@@ -306,6 +307,6 @@ public class WebService {
             }
         } catch (URISyntaxException e) {
         }
-        throw new BadResponseException(-1, url, "条码有误，请重试！");
+        throw new BadResponseException(-1, url, context.getString(R.string.error_barcode));
     }
 }

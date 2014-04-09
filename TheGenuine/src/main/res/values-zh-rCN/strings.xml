@@ -129,4 +129,5 @@
     <string name="report">举报</string>
     <string name="visit_nearby">去看看附近真品</string>
     <string name="rating">评分:</string>
+    <string name="error_barcode">条码有误，请重试！</string>
 </resources>

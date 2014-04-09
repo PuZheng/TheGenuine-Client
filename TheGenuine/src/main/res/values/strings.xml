@@ -9,7 +9,7 @@
     <string name="nearby_map">Map</string>
     <string name="title_activity_nearby">NeighborhoodActivity</string>
     <string name="title_activity_barcode">BarCodeActivity</string>
-    <string name="scan_text">Put Barcode Into Scanning Box</string>
+    <string name="scan_text">Put QR Code Into Scanning Box</string>
     <string name="title_activity_capture">scan</string>
     <string name="msg_camera_framework_bug">error!</string>
     <string name="title_activity_comments">ReviewsActivity</string>
@@ -130,4 +130,5 @@
     <string name="report">Report</string>
     <string name="visit_nearby">Visit Nearby</string>
     <string name="rating">Rating:</string>
+    <string name="error_barcode">Error Reading QR Code, Please Try Again</string>
 </resources>
