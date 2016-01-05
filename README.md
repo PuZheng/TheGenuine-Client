@@ -1,2 +1,2 @@
-TheGenuine-AdminPortal
+lejian-android-client
 ======================
