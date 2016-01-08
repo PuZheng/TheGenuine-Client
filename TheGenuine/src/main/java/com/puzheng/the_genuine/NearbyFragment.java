@@ -23,7 +23,11 @@ public class NearbyFragment extends ListFragment {
     private Context mContext;
     private ImageFetcher mImageFetcher;
 
-    public NearbyFragment(Context context) {
+    public NearbyFragment() {
+
+    }
+
+    public void setContext(Context context) {
         this.mContext = context;
     }
 

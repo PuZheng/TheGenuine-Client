@@ -32,13 +32,18 @@ import java.util.List;
  * Created by xc on 13-12-4.
  */
 public class SPUFragment extends Fragment {
-    private final SPU spu;
+    private SPU spu;
 
     private UMSocialService mController;
     private View mView;
 
-    public SPUFragment(SPU spu) {
+    public SPUFragment() {
+
+    }
+
+    public SPUFragment setSPU(SPU spu) {
         this.spu = spu;
+        return this;
     }
 
     @Override

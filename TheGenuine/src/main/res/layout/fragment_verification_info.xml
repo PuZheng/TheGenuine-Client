@@ -21,8 +21,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="@string/pid"
-                android:textColor="@android:color/darker_gray"
-                android:id="@+id/textView" />
+                android:textColor="@android:color/darker_gray" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -54,8 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="@string/pname"
-                android:textColor="@android:color/darker_gray"
-                android:id="@+id/textView" />
+                android:textColor="@android:color/darker_gray" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -87,8 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="@string/verify_cnt"
-                android:textColor="@android:color/darker_gray"
-                android:id="@+id/textView" />
+                android:textColor="@android:color/darker_gray" />
 
             <TextView
                 android:layout_weight="7"
@@ -119,8 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="@string/last_verify"
-                android:textColor="@android:color/darker_gray"
-                android:id="@+id/textView" />
+                android:textColor="@android:color/darker_gray" />
 
             <TextView
                 android:layout_weight="7"
@@ -152,8 +148,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="@string/vendor"
-                android:textColor="@android:color/darker_gray"
-                android:id="@+id/textView" />
+                android:textColor="@android:color/darker_gray" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -184,8 +179,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="@string/production_date"
-                android:textColor="@android:color/darker_gray"
-                android:id="@+id/textView" />
+                android:textColor="@android:color/darker_gray" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -216,8 +210,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="@string/expiration_date"
-                android:textColor="@android:color/darker_gray"
-                android:id="@+id/textView" />
+                android:textColor="@android:color/darker_gray" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -248,8 +241,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="@string/vendor_address"
-                android:textColor="@android:color/darker_gray"
-                android:id="@+id/textView" />
+                android:textColor="@android:color/darker_gray" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -281,8 +273,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="@string/telephone"
-                android:textColor="@android:color/darker_gray"
-                android:id="@+id/textView" />
+                android:textColor="@android:color/darker_gray" />
 
             <RelativeLayout
                 android:layout_height="match_parent"

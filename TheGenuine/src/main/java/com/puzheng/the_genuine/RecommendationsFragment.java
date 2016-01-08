@@ -20,24 +20,34 @@ public class RecommendationsFragment extends ListFragment implements RefreshInte
     private static final String SAME_VENDOR = "same_vendor";
     private static final String SAME_TYPE = "same_type";
     private String queryType;
-    private int mSpuId;
+    private int spuId;
     private MaskableManager maskableManager;
 
-    public RecommendationsFragment(String queryType, int spu_id) {
+    public RecommendationsFragment() {
+
+    }
+
+    public RecommendationsFragment setQueryType(String queryType) {
         this.queryType = queryType;
-        this.mSpuId = spu_id;
+        return this;
     }
 
-    public static RecommendationsFragment createNearByProductsFragment(int productId) {
-        return new RecommendationsFragment(NEARYBY, productId);
+    public RecommendationsFragment setSPUId(int spuId) {
+        this.spuId = spuId;
+        return this;
     }
 
-    public static RecommendationsFragment createSameTypeProductsFragment(int productId) {
-        return new RecommendationsFragment(SAME_TYPE, productId);
+
+    public static RecommendationsFragment createNearByProductsFragment(int spuId) {
+        return new RecommendationsFragment().setQueryType(NEARYBY).setSPUId(spuId);
     }
 
-    public static RecommendationsFragment createSameVendorProductsFragment( int productId) {
-        return new RecommendationsFragment(SAME_VENDOR, productId);
+    public static RecommendationsFragment createSameTypeProductsFragment(int spuId) {
+        return new RecommendationsFragment().setQueryType(SAME_TYPE).setSPUId(spuId);
+    }
+
+    public static RecommendationsFragment createSameVendorProductsFragment( int spuId) {
+        return new RecommendationsFragment().setQueryType(SAME_VENDOR).setSPUId(spuId);
     }
 
 
@@ -54,12 +64,12 @@ public class RecommendationsFragment extends ListFragment implements RefreshInte
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         maskableManager = new MaskableManager(getListView(), this);
-        new GetRecommendationsTask(this, queryType, mSpuId).execute();
+        new GetRecommendationsTask(this, queryType, spuId).execute();
     }
 
     @Override
     public void refresh() {
-        new GetRecommendationsTask(this, queryType, mSpuId).execute();
+        new GetRecommendationsTask(this, queryType, spuId).execute();
     }
 
     class GetRecommendationsTask extends AsyncTask<Void, Void, List<Recommendation>> {

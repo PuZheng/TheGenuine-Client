@@ -13,12 +13,19 @@ import com.puzheng.the_genuine.image_utils.ImageWorker;
  * Created by xc on 13-11-23.
  */
 public class CoverFragment extends Fragment {
-    private final String url;
+    private String url;
     private ImageFetcherInteface mImageFetcherInteface;
     private ImageView imageView;
 
-    public CoverFragment(Context context, String url, ImageFetcherInteface imageFetcherInteface) {
+    public CoverFragment() {
+
+    }
+
+    public void setUrl(String url) {
         this.url = url;
+    }
+
+    public void setmImageFetcherInteface(ImageFetcherInteface imageFetcherInteface) {
         this.mImageFetcherInteface = imageFetcherInteface;
     }
 

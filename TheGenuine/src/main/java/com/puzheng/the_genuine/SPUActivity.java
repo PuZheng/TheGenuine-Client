@@ -512,9 +512,9 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             super(fm);
             fragments = new ArrayList<Fragment>();
             if (verificationInfo != null) {
-                fragments.add(new VerificationInfoFragment(verificationInfo));
+                fragments.add(new VerificationInfoFragment().setVerificationInfo(verificationInfo));
             } else {
-                fragments.add(new SPUFragment(spuResponse.getSPU()));
+                fragments.add(new SPUFragment().setSPU(spuResponse.getSPU()));
             }
             fragments.add(RecommendationsFragment.createSameTypeProductsFragment(getSPUId()));
             fragments.add(RecommendationsFragment.createSameVendorProductsFragment(getSPUId()));
@@ -538,7 +538,10 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             super(fm);
             fragments = new ArrayList<Fragment>();
             for (String url : picUrlList) {
-                fragments.add(new CoverFragment(SPUActivity.this, url, SPUActivity.this));
+                CoverFragment coverFragment = new CoverFragment();
+                coverFragment.setUrl(url);
+                coverFragment.setmImageFetcherInteface(SPUActivity.this);
+                fragments.add(coverFragment);
                 Log.d(TAG, url);
             }
         }

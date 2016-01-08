@@ -201,7 +201,8 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
 
     private void selectItem(int position) {
         // update the main content by replacing fragments
-        ListFragment fragment = new FavorListFragment(FavorCategoriesActivity.this);
+        FavorListFragment fragment = new FavorListFragment();
+        fragment.setActivity(FavorCategoriesActivity.this);
         fragment.setListAdapter(new FavorListAdapter(mData.get(position), FavorCategoriesActivity.this));
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
@@ -224,12 +225,17 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
         }
     }
 
-    class FavorListFragment extends ListFragment {
+    public static class FavorListFragment extends ListFragment {
         private Activity mActivity;
 
-        FavorListFragment(Activity mActivity) {
-            this.mActivity = mActivity;
+        public FavorListFragment() {
+
         }
+
+        void setActivity(Activity activity) {
+            this.mActivity = activity;
+        }
+
 
         @Override
         public void onListItemClick(ListView l, View v, int position, long id) {

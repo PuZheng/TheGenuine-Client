@@ -1,4 +1,4 @@
-<resources>
+<resources tools:locale="zh-rCN" xmlns:tools="http://schemas.android.com/tools">
     <string name="title_activity_login">Login</string>
     <string name="title_activity_register">Register</string>
 

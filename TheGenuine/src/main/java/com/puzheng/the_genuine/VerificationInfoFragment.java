@@ -20,11 +20,16 @@ import java.util.Date;
  * Created by xc on 13-11-21.
  */
 public class VerificationInfoFragment extends Fragment {
-    private final VerificationInfo verificationInfo;
+    private VerificationInfo verificationInfo;
     private View rootView;
 
-    public VerificationInfoFragment(VerificationInfo verificationInfo) {
+    public VerificationInfoFragment() {
+
+    }
+
+    public VerificationInfoFragment setVerificationInfo(VerificationInfo verificationInfo) {
         this.verificationInfo = verificationInfo;
+        return this;
     }
 
     @Override

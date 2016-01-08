@@ -8,15 +8,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ListView;
 
-import com.puzheng.the_genuine.data_structure.Recommendation;
 import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.search.SearchActivity;
 
@@ -161,63 +157,4 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
     }
 }
 
-abstract class ProductListFragment extends ListFragment {
-    private String orderBy;
 
-    ProductListFragment(String orderBy) {
-        this.orderBy = orderBy;
-    }
-
-    public String getOrderBy() {
-        return orderBy;
-    }
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        Recommendation recommendation = (Recommendation) getListAdapter().getItem(position);
-        Intent intent = new Intent(getActivity(), SPUActivity.class);
-        intent.putExtra(Constants.TAG_SPU_ID, recommendation.getSPUId());
-        intent.putExtra(Constants.TAG_SPU_NAME, recommendation.getProductName());
-        getActivity().startActivity(intent);
-    }
-}
-
-class ProductListFragmentByName extends ProductListFragment {
-    private String mQuery;
-
-    ProductListFragmentByName(String orderBy, String query) {
-        super(orderBy);
-        this.mQuery = query;
-    }
-
-    public static ProductListFragment newInstance(String orderBy, String query) {
-        return new ProductListFragmentByName(orderBy, query);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        GetSPUListInterface queryClass = new GetSPUListByName(this.getActivity(), mQuery);
-        new GetSPUListTask(this, queryClass).execute();
-    }
-}
-
-class ProductListFragmentByCategory extends ProductListFragment {
-    private int mCategoryId;
-
-    private ProductListFragmentByCategory(String orderBy, int categoryId) {
-        super(orderBy);
-        this.mCategoryId = categoryId;
-    }
-
-    public static ProductListFragment newInstance(String orderBy, int categoryId) {
-        return new ProductListFragmentByCategory(orderBy, categoryId);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        GetSPUListInterface queryClass = new GetSPUListByCategory(this.getActivity(), mCategoryId);
-        new GetSPUListTask(this, queryClass).execute();
-    }
-}

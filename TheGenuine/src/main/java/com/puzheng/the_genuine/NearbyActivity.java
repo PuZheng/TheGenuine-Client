@@ -117,7 +117,9 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
             } else {
                 mFragmentList.add(new BaiduMapFragment());
             }
-            mFragmentList.add(new NearbyFragment(NearbyActivity.this));
+            NearbyFragment nearbyFragment = new NearbyFragment();
+            nearbyFragment.setContext(NearbyActivity.this);
+            mFragmentList.add(new NearbyFragment());
         }
 
         @Override
