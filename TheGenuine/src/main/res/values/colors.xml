@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="highlighted_tab">#ffff7418</color>
+    <color name="primary">#ffff7418</color>
     <color name="base_color1">#219ca3</color>
     <color name="result_view">#b0000000</color>
     <color name="viewfinder_mask">#60000000</color>
     <color name="possible_result_points">#c0ffff00</color>
     <color name="viewfinder_laser">#ffcc0000</color>
     <color name="white">#FFFF</color>
+    <color name="mute1">#424242</color>
+    <color name="mute2">#616161</color>
+    <color name="mute3">#757575</color>
+    <color name="mute5">#9e9e9e</color>
 </resources>
