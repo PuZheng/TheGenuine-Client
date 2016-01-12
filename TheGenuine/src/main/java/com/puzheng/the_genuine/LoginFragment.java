@@ -18,16 +18,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
+
 import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.BadResponseException;
 
-/**
- * Created by abc549825@163.com(https://github.com/abc549825) at 12-17.
- */
 public class LoginFragment extends Fragment {
     private EditText mEmailView;
-    private EditText mPasswordView;
+    private EditText passwordView;
     private View mLoginFormView;
     private View mLoginStatusView;
     private TextView mLoginStatusMessageView;
@@ -40,8 +38,8 @@ public class LoginFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
         mEmailView = (EditText) rootView.findViewById(R.id.email);
 
-        mPasswordView = (EditText) rootView.findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        passwordView = (EditText) rootView.findViewById(R.id.password);
+        passwordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
@@ -63,10 +61,19 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        initSwitch((Switch) rootView.findViewById(R.id.switch1));
-
+        ((ToggleButton) rootView.findViewById(R.id.togglePasswordVisibility)).setOnCheckedChangeListener(
+                new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        passwordView.setInputType(isChecked ?
+                                        InputType.TYPE_CLASS_TEXT :
+                                        InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
+                        );
+                        passwordView.setSelection(passwordView.getText().length());
+                    }
+                });
         TextView textView = (TextView) rootView.findViewById(R.id.register_textView);
-        textView.getPaint().setFlags(Paint. UNDERLINE_TEXT_FLAG ); //下划线
+        textView.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //下划线
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,23 +92,23 @@ public class LoginFragment extends Fragment {
 
         // Reset errors.
         mEmailView.setError(null);
-        mPasswordView.setError(null);
+        passwordView.setError(null);
 
         // Store values at the time of the register_or_login attempt.
         mEmail = mEmailView.getText().toString();
-        mPassword = mPasswordView.getText().toString();
+        mPassword = passwordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
         // Check for a valid password.
         if (TextUtils.isEmpty(mPassword)) {
-            mPasswordView.setError(getString(R.string.error_field_required));
-            focusView = mPasswordView;
+            passwordView.setError(getString(R.string.error_field_required));
+            focusView = passwordView;
             cancel = true;
         } else if (mPassword.length() < 4) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
+            passwordView.setError(getString(R.string.error_invalid_password));
+            focusView = passwordView;
             cancel = true;
         }
 
@@ -128,19 +135,6 @@ public class LoginFragment extends Fragment {
             mAuthTask = new UserLoginTask();
             mAuthTask.execute((Void) null);
         }
-    }
-
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    private void initSwitch(Switch switch_) {
-        switch_.setChecked(true);
-        switch_.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                int inputType = isChecked ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD : InputType.TYPE_CLASS_TEXT;
-                mPasswordView.setInputType(inputType);
-            }
-        });
-
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
@@ -182,6 +176,7 @@ public class LoginFragment extends Fragment {
 
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
         private Exception exception;
+
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
@@ -213,12 +208,12 @@ public class LoginFragment extends Fragment {
                 activity.finish();
             } else {
                 if (exception instanceof BadResponseException) {
-                    mPasswordView.setError(getString(R.string.error_incorrect_password));
-                }else{
-                    mPasswordView.setError(getString(R.string.httpError));
+                    passwordView.setError(getString(R.string.error_incorrect_password));
+                } else {
+                    passwordView.setError(getString(R.string.httpError));
                 }
 
-                mPasswordView.requestFocus();
+                passwordView.requestFocus();
             }
         }
     }
