@@ -26,6 +26,9 @@ android {
         targetSdkVersion 16
     }
 
+    lintOptions {
+        disable 'MissingTranslation'
+    }
 }
 
 dependencies {
