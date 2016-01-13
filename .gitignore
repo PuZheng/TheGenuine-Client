@@ -1,4 +1,4 @@
-/TheGenuine/src/main/res/config.json
+/TheGenuine/src/main/res/raw/config.json
 *.py[cod]
 
 # C extensions
