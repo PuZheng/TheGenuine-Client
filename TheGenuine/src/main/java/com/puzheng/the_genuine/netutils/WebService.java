@@ -5,6 +5,7 @@ import android.location.Location;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.orhanobut.logger.Logger;
 import com.puzheng.the_genuine.Constants;
 import com.puzheng.the_genuine.MyApp;
 import com.puzheng.the_genuine.R;
@@ -238,6 +239,7 @@ public class WebService {
         map.put("name", email);
         map.put("password", password);
         String url = HttpUtil.composeUrl("user-ws", "login", map);
+        Logger.i("requesting url: " + url);
         String result = HttpUtil.postStringResult(url);
         Gson gson = new Gson();
         return gson.fromJson(result, User.class);

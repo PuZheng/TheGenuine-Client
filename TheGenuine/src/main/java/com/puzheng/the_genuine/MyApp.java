@@ -12,6 +12,7 @@ import android.os.IBinder;
 import android.util.Pair;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.orhanobut.logger.Logger;
 import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.utils.LocateErrorException;
@@ -51,6 +52,10 @@ public class MyApp extends Application {
         activity.startActivityForResult(intent, LOGIN_ACTION);
     }
 
+    public static Context getContext() {
+        return MyApp.context;
+    }
+
     public static User getCurrentUser() {
         if (user == null) {
             user = Misc.readUserPrefs(context);
@@ -73,11 +78,6 @@ public class MyApp extends Application {
         throw new LocateErrorException(context.getString(R.string.locate_error));
     }
 
-
-    public static Pair<String, Integer> getServerAddress() {
-        return Misc.getServerAddress(context);
-    }
-
     public static boolean isGooglePlayServiceAvailable() {
         return ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
     }
@@ -91,6 +91,7 @@ public class MyApp extends Application {
         Misc.assertDirExists(Misc.getStorageDir());
         connectLocationService();
         new GetShareTemplateClass().execute();
+        Logger.init("LEJIAN");
     }
 
     public static void unsetCurrentUser() {
