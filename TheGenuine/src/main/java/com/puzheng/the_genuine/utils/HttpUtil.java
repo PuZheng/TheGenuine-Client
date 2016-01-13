@@ -1,5 +1,6 @@
 package com.puzheng.the_genuine.utils;
 
+import android.graphics.Bitmap;
 import android.util.Pair;
 import com.puzheng.the_genuine.MyApp;
 
@@ -22,8 +23,6 @@ import java.util.Map;
  * Created by abc549825@163.com(https://github.com/abc549825) at 12-06.
  */
 public class HttpUtil {
-    public static final String HTTP = "http://";
-    public static final String HTTPS = "https://";
     public static final String CHARSET = "UTF-8";
     private static final int DEAFULT_CONNECTION_TIME_OUT_MILLSECONDS = 1000;
     private static final int DEAFULT_SO_TIME_OUT_MILLSECONDS = 5000;
@@ -33,13 +32,9 @@ public class HttpUtil {
     }
 
     public static String composeUrl(String blueprint, String path, Map<String, String> params) {
-        return composeUrl(blueprint, path, params, HTTP);
-    }
-
-    public static String composeUrl(String blueprint, String path, Map<String, String> params, String protocol) {
-        Pair<String, Integer> pair = MyApp.getServerAddress();
+        String backend = ConfigUtils.getInstance().getBackend();
         StringBuilder ret = new StringBuilder();
-        ret.append(String.format("%s%s:%d/%s/%s", protocol, pair.first, pair.second, blueprint, path));
+        ret.append(String.format("%s/%s/%s", backend, blueprint, path));
         if (params != null) {
             if (MyApp.getCurrentUser() != null) {
                 params.put("auth_token", MyApp.getCurrentUser().getToken());
@@ -76,12 +71,10 @@ public class HttpUtil {
     }
 
     public static URL getURL(String sUrl) throws MalformedURLException {
-        if (sUrl.toLowerCase().startsWith(HTTP) || sUrl.toLowerCase().startsWith(HTTPS)) {
+        if (sUrl.toLowerCase().startsWith("http") || sUrl.toLowerCase().startsWith("https")) {
             return new URL(sUrl);
         } else {
-            Pair<String, Integer> serverAddress = MyApp.getServerAddress();
-            StringBuilder target = new StringBuilder(HTTP);
-            target.append(serverAddress.first).append(":").append(serverAddress.second);
+            StringBuilder target = new StringBuilder(ConfigUtils.getInstance().getBackend());
             if (sUrl.startsWith("/")) {
                 target.append(sUrl);
             } else {
