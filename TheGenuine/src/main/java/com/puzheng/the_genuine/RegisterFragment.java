@@ -28,9 +28,9 @@ import java.io.IOException;
  * Created by abc549825@163.com(https://github.com/abc549825) at 12-17.
  */
 public class RegisterFragment extends Fragment {
-    private EditText mEmailView;
-    private EditText mPasswordView;
-    private EditText mPasswordConfirmView;
+    private EditText emailView;
+    private EditText passwordView;
+    private EditText passwordConfirmView;
     private View mRegisterForm;
     private View mRegisterStatusView;
     private TextView mRegisterStatusMessageView;
@@ -42,11 +42,11 @@ public class RegisterFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_register, container, false);
-        mEmailView = (EditText) rootView.findViewById(R.id.email);
+        emailView = (EditText) rootView.findViewById(R.id.email);
 
-        mPasswordView = (EditText) rootView.findViewById(R.id.password);
-        mPasswordConfirmView = (EditText) rootView.findViewById(R.id.textPasswordConfirm);
-        mPasswordConfirmView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        passwordView = (EditText) rootView.findViewById(R.id.password);
+        passwordConfirmView = (EditText) rootView.findViewById(R.id.textPasswordConfirm);
+        passwordConfirmView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.register || id == EditorInfo.IME_ACTION_GO) {
@@ -67,7 +67,16 @@ public class RegisterFragment extends Fragment {
             }
         });
 
-        initSwitch((Switch) rootView.findViewById(R.id.switch1));
+        ((ToggleButton) rootView.findViewById(R.id.togglePasswordVisibility)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                passwordView.setInputType(isChecked ?
+                                InputType.TYPE_CLASS_TEXT :
+                                InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
+                );
+                passwordView.setSelection(passwordView.getText().length());
+            }
+        });
 
         return rootView;
     }
@@ -80,60 +89,60 @@ public class RegisterFragment extends Fragment {
         }
 
         // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
-        mPasswordConfirmView.setError(null);
+        emailView.setError(null);
+        passwordView.setError(null);
+        passwordConfirmView.setError(null);
 
-        mEmail = mEmailView.getText().toString();
-        mPassword = mPasswordView.getText().toString();
-        mPasswordConfirm = mPasswordConfirmView.getText().toString();
+        mEmail = emailView.getText().toString();
+        mPassword = passwordView.getText().toString();
+        mPasswordConfirm = passwordConfirmView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
         // Check for a valid password.
         if (TextUtils.isEmpty(mPassword)) {
-            mPasswordView.setError(getString(R.string.error_field_required));
-            focusView = mPasswordView;
+            passwordView.setError(getString(R.string.error_field_required));
+            focusView = passwordView;
             cancel = true;
         } else if (mPassword.length() < 4) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
+            passwordView.setError(getString(R.string.error_invalid_password));
+            focusView = passwordView;
             cancel = true;
         }
 
         // Check for a valid password.
         if (TextUtils.isEmpty(mPasswordConfirm)) {
-            mPasswordConfirmView.setError(getString(R.string.error_field_required));
-            focusView = mPasswordConfirmView;
+            passwordConfirmView.setError(getString(R.string.error_field_required));
+            focusView = passwordConfirmView;
             cancel = true;
         } else if (mPasswordConfirm.length() < 4) {
-            mPasswordConfirmView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordConfirmView;
+            passwordConfirmView.setError(getString(R.string.error_invalid_password));
+            focusView = passwordConfirmView;
             cancel = true;
         }
 
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(mEmail)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
+            emailView.setError(getString(R.string.error_field_required));
+            focusView = emailView;
             cancel = true;
         } else if (!mEmail.contains("@")) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
+            emailView.setError(getString(R.string.error_invalid_email));
+            focusView = emailView;
             cancel = true;
         } else if (mEmail.length() >= Integer.parseInt(getString(R.string.email_max_length))) {
-            mEmailView.setError(getString(R.string.email_max_length_error));
-            focusView = mEmailView;
+            emailView.setError(getString(R.string.email_max_length_error));
+            focusView = emailView;
             cancel = true;
         }
 
         if (!mPasswordConfirm.equals(mPassword)) {
-            mPasswordView.setError(getString(R.string.error_incorrect_confirm_password));
-            mPasswordView.setText("");
-            mPasswordConfirmView.setText("");
-            focusView = mPasswordView;
+            passwordView.setError(getString(R.string.error_incorrect_confirm_password));
+            passwordView.setText("");
+            passwordConfirmView.setText("");
+            focusView = passwordView;
             cancel = true;
         }
 
@@ -151,18 +160,6 @@ public class RegisterFragment extends Fragment {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
                 Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-    }
-
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    private void initSwitch(Switch switch_) {
-        switch_.setChecked(true);
-        switch_.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                int inputType = isChecked ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD : InputType.TYPE_CLASS_TEXT;
-                mPasswordView.setInputType(inputType);
-            }
-        });
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
@@ -238,13 +235,13 @@ public class RegisterFragment extends Fragment {
                 activity.finish();
             } else {
                 if (exception != null) {
-                    mEmailView.setError(exception.getMessage());
+                    emailView.setError(exception.getMessage());
                 } else {
-                    mEmailView.setError(getString(R.string.action_register_fail));
+                    emailView.setError(getString(R.string.action_register_fail));
                 }
-                mPasswordView.setText("");
-                mPasswordConfirmView.setText("");
-                mEmailView.requestFocus();
+                passwordView.setText("");
+                passwordConfirmView.setText("");
+                emailView.requestFocus();
             }
         }
     }

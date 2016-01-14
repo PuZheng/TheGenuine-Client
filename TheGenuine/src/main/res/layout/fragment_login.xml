@@ -122,7 +122,7 @@
                         android:textOff=""
                         android:textOn=""
                         android:background="#ffffff"
-                        android:button="@drawable/login_password_visible_toggle_selector"
+                        android:button="@drawable/password_visibility_toggle_selector"
                         />
 
                 </RelativeLayout>
