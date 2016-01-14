@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,24 +20,29 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 
+import com.google.gson.Gson;
+import com.orhanobut.logger.Logger;
 import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.netutils.WebService;
-import com.puzheng.the_genuine.utils.BadResponseException;
+import com.puzheng.the_genuine.store.AlwaysHandler;
+import com.puzheng.the_genuine.store.AuthStore;
+import com.puzheng.the_genuine.store.DoneHandler;
+import com.puzheng.the_genuine.store.FailHandler;
 
 public class LoginFragment extends Fragment {
-    private EditText mEmailView;
+    private EditText emailView;
     private EditText passwordView;
     private View mLoginFormView;
     private View mLoginStatusView;
-    private TextView mLoginStatusMessageView;
+    private TextView loginStatusMessageView;
     private UserLoginTask mAuthTask = null;
-    private String mEmail;
-    private String mPassword;
+    private String email;
+    private String password;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
-        mEmailView = (EditText) rootView.findViewById(R.id.email);
+        emailView = (EditText) rootView.findViewById(R.id.email);
 
         passwordView = (EditText) rootView.findViewById(R.id.password);
         passwordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -52,7 +58,7 @@ public class LoginFragment extends Fragment {
 
         mLoginFormView = rootView.findViewById(R.id.register_form);
         mLoginStatusView = rootView.findViewById(R.id.login_status);
-        mLoginStatusMessageView = (TextView) rootView.findViewById(R.id.login_status_message);
+        loginStatusMessageView = (TextView) rootView.findViewById(R.id.login_status_message);
 
         rootView.findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,54 +92,83 @@ public class LoginFragment extends Fragment {
     }
 
     private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
 
         // Reset errors.
-        mEmailView.setError(null);
+        emailView.setError(null);
         passwordView.setError(null);
 
         // Store values at the time of the register_or_login attempt.
-        mEmail = mEmailView.getText().toString();
-        mPassword = passwordView.getText().toString();
+        email = emailView.getText().toString();
+        password = passwordView.getText().toString();
 
-        boolean cancel = false;
+        boolean failed = false;
         View focusView = null;
 
         // Check for a valid password.
-        if (TextUtils.isEmpty(mPassword)) {
+        if (TextUtils.isEmpty(password)) {
             passwordView.setError(getString(R.string.error_field_required));
             focusView = passwordView;
-            cancel = true;
-        } else if (mPassword.length() < 4) {
+            failed = true;
+        } else if (password.length() < 4) {
             passwordView.setError(getString(R.string.error_invalid_password));
             focusView = passwordView;
-            cancel = true;
+            failed = true;
         }
 
         // Check for a valid email address.
-        if (TextUtils.isEmpty(mEmail)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!mEmail.contains("@")) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
+        if (TextUtils.isEmpty(email)) {
+            emailView.setError(getString(R.string.error_field_required));
+            focusView = emailView;
+            failed = true;
+        } else if (!email.contains("@")) {
+            emailView.setError(getString(R.string.error_invalid_email));
+            focusView = emailView;
+            failed = true;
         }
 
-        if (cancel) {
+        if (failed) {
             // There was an error; don't attempt register_or_login and focus the first
             // form field with an error.
             focusView.requestFocus();
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user register_or_login attempt.
-            mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
+            loginStatusMessageView.setText(R.string.login_progress_signing_in);
             showProgress(true);
-            mAuthTask = new UserLoginTask();
-            mAuthTask.execute((Void) null);
+            AuthStore.getInstance().login(email, password).done(new DoneHandler<User>() {
+                @Override
+                public void done(User user) {
+                    Logger.i("logged in");
+                    Logger.i(new Gson().toJson(user));
+                    Activity activity = getActivity();
+                    Toast.makeText(activity, activity.getString(R.string.logined), Toast.LENGTH_SHORT).show();
+                    activity.setResult(Activity.RESULT_OK);
+                    activity.finish();
+                }
+            }).fail(new FailHandler<Pair<String, String>>() {
+                @Override
+                public void fail(Pair<String, String> error) {
+                    Logger.i("log in failed");
+                    Logger.i(new Gson().toJson(error));
+                    if (error != null && error.first == AuthStore.INVALID_PASSWORD_OR_EMAIL) {
+                        Toast.makeText(getActivity(), "错误的用户名或者密码", Toast.LENGTH_SHORT).show();
+                        // WHY? since showProgress will make requestFocus failed
+                        emailView.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                emailView.requestFocus();
+                            }
+                        }, 300);
+                    } else {
+                        // TODO show unknown error, retry
+                    }
+                }
+            }).always(new AlwaysHandler() {
+                @Override
+                public void always() {
+                    showProgress(false);
+                }
+            });
         }
     }
 
@@ -180,7 +215,7 @@ public class LoginFragment extends Fragment {
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                User user = WebService.getInstance(LoginFragment.this.getActivity()).login(mEmail, mPassword);
+                User user = WebService.getInstance(LoginFragment.this.getActivity()).login(email, password);
                 if (user != null) {
                     MyApp.setCurrentUser(user);
                     return true;
@@ -207,13 +242,9 @@ public class LoginFragment extends Fragment {
                 activity.setResult(Activity.RESULT_OK);
                 activity.finish();
             } else {
-                if (exception instanceof BadResponseException) {
-                    passwordView.setError(getString(R.string.error_incorrect_password));
-                } else {
-                    passwordView.setError(getString(R.string.httpError));
-                }
 
-                passwordView.requestFocus();
+
+
             }
         }
     }

@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.Toast;
 import com.puzheng.the_genuine.netutils.WebService;
-import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
+import com.puzheng.the_genuine.util.PoliteBackgroundTask;
 
 /**
  * Created by abc549825@163.com(https://github.com/abc549825) at 11-29.

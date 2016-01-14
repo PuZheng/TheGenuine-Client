@@ -20,7 +20,7 @@ import android.annotation.TargetApi;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Process;
-import com.puzheng.the_genuine.utils.Misc;
+import com.puzheng.the_genuine.util.Misc;
 
 import java.util.ArrayDeque;
 import java.util.concurrent.*;

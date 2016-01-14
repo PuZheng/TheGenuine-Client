@@ -1,7 +1,7 @@
 package com.puzheng.the_genuine;
 
 import com.puzheng.the_genuine.data_structure.Recommendation;
-import com.puzheng.the_genuine.utils.BadResponseException;
+import com.puzheng.the_genuine.util.BadResponseException;
 
 import org.json.JSONException;
 

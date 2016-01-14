@@ -1,4 +1,4 @@
-package com.puzheng.the_genuine.utils;
+package com.puzheng.the_genuine.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -146,8 +146,8 @@ public class Misc {
         SharedPreferences preferences = context.getSharedPreferences("user", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("id", user.getId());
-        editor.putString("name", user.getName());
-        editor.putString("token", user.getToken());
+        editor.putString("name", user.getEmail());
+        editor.putString("token", user.getJwtToken());
         editor.commit();
     }
 

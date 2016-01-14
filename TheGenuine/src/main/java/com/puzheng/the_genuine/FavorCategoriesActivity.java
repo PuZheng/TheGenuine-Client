@@ -31,7 +31,7 @@ import com.puzheng.the_genuine.data_structure.Favor;
 import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.search.SearchActivity;
-import com.puzheng.the_genuine.utils.Misc;
+import com.puzheng.the_genuine.util.Misc;
 import com.puzheng.the_genuine.views.NavBar;
 
 import java.io.Serializable;

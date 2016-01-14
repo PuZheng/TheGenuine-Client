@@ -1,4 +1,4 @@
-package com.puzheng.the_genuine.utils;
+package com.puzheng.the_genuine.util;
 
 
 import com.google.gson.Gson;
@@ -13,11 +13,11 @@ import java.io.InputStreamReader;
 /**
  * Created by xc on 16-1-13.
  */
-public class ConfigUtils {
-    private static ConfigUtils instance;
+public class ConfigUtil {
+    private static ConfigUtil instance;
     private Config config;
 
-    private ConfigUtils() {
+    private ConfigUtil() {
         Gson gson = new Gson();
         try {
             StringBuilder sb = new StringBuilder();
@@ -35,9 +35,9 @@ public class ConfigUtils {
         }
     }
 
-    public static synchronized ConfigUtils getInstance() {
+    public static synchronized ConfigUtil getInstance() {
         if (instance == null) {
-            instance = new ConfigUtils();
+            instance = new ConfigUtil();
         }
 
         return instance;

@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.puzheng.the_genuine.data_structure.Comment;
 import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.netutils.WebService;
-import com.puzheng.the_genuine.utils.Misc;
+import com.puzheng.the_genuine.util.Misc;
 
 import java.text.SimpleDateFormat;
 import java.util.List;

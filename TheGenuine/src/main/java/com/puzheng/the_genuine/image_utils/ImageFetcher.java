@@ -27,7 +27,7 @@ import android.widget.Toast;
 import com.jakewharton.disklrucache.DiskLruCache;
 import com.puzheng.the_genuine.BuildConfig;
 import com.puzheng.the_genuine.R;
-import com.puzheng.the_genuine.utils.HttpUtil;
+import com.puzheng.the_genuine.util.HttpUtil;
 
 import java.io.*;
 import java.net.HttpURLConnection;

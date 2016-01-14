@@ -1,4 +1,4 @@
-package com.puzheng.the_genuine.utils;
+package com.puzheng.the_genuine.util;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
