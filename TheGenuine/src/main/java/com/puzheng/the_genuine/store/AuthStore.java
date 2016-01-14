@@ -2,7 +2,6 @@ package com.puzheng.the_genuine.store;
 
 import android.util.Pair;
 
-import com.google.gson.Gson;
 import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.util.ServiceGenerator;
 
@@ -18,9 +17,10 @@ import retrofit2.http.POST;
 /**
  * Created by xc on 16-1-14.
  */
-public class AuthStore extends Deferred<User, Pair<String, String>> {
+public class AuthStore {
     public static final String INVALID_PASSWORD_OR_EMAIL = "INVALID_PASSWORD_OR_EMAIL";
     private static volatile AuthStore instance;
+    private User user;
 
 
     private AuthStore() {
@@ -38,7 +38,8 @@ public class AuthStore extends Deferred<User, Pair<String, String>> {
         Call<User> login(@Body Map<String, String> params);
     }
 
-    public AuthStore login(String email, String password) {
+    public Deferrable<User, Pair<String, String>> login(String email, String password) {
+        final Deferrable<User, Pair<String, String>> ret = new Deferred<User, Pair<String, String>>();
         AuthService service = ServiceGenerator.createService(AuthService.class);
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("email", email);
@@ -47,12 +48,12 @@ public class AuthStore extends Deferred<User, Pair<String, String>> {
             @Override
             public void onResponse(Response<User> response) {
                 if (response.isSuccess()) {
-                    getDoneHandler().done(response.body());
+                    user = response.body();
+                    ret.resolve(user);
                 } else {
                     Pair err = response.code() == 403 ? new Pair(INVALID_PASSWORD_OR_EMAIL, "") : null;
-                    getFailHandler().fail(err);
+                    ret.reject(err);
                 }
-                getAlwaysHandler().always();
             }
 
             @Override
@@ -60,27 +61,14 @@ public class AuthStore extends Deferred<User, Pair<String, String>> {
                 // TODO
             }
         });
-        return this;
+        return ret;
+    }
 
-//                (new AsyncTask<Void, Void, Boolean>() {
-//
-//                    public User user;
-//
-//                    @Override
-//                    protected Boolean doInBackground(Void... params) {
-//
-//                        return null;
-//                    }
-//
-//                    @Override
-//                    protected void onPostExecute(final Boolean success) {
-//                        if (success) {
-//                            getDoneHandler().done(user);
-//                        } else {
-////                    getFailHandler().fail();
-//                        }
-//                    }
-//                }).execute((Void) null);
-//        return this;
+    public User getUser() {
+        return user;
+    }
+
+    public boolean isAnonymous() {
+        return user == null;
     }
 }

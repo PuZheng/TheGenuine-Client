@@ -25,15 +25,16 @@ public class Deferred<DataType, ErrorType> implements Deferrable<DataType, Error
         return this;
     }
 
-    public DoneHandler<DataType> getDoneHandler() {
-        return doneHandler;
+    @Override
+    public void resolve(DataType data) {
+        doneHandler.done(data);
+        alwaysHandler.always();
     }
 
-    public FailHandler<ErrorType> getFailHandler() {
-        return failHandler;
+    @Override
+    public void reject(ErrorType err) {
+        failHandler.fail(err);
+        alwaysHandler.always();
     }
 
-    public AlwaysHandler getAlwaysHandler() {
-        return alwaysHandler;
-    }
 }

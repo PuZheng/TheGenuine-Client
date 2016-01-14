@@ -6,12 +6,12 @@ package com.puzheng.the_genuine.data_structure;
 public class User {
     private final int id;
     private final String email;
-    private final String jwtToken;
+    private final String token;
 
-    public User(int id, String email, String jwtToken) {
+    public User(int id, String email, String token) {
         this.id = id;
         this.email = email;
-        this.jwtToken = jwtToken;
+        this.token = token;
     }
 
     public int getId() {
@@ -22,7 +22,7 @@ public class User {
         return email;
     }
 
-    public String getJwtToken() {
-        return jwtToken;
+    public String getToken() {
+        return token;
     }
 }

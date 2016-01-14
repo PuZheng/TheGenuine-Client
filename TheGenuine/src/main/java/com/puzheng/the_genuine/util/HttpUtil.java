@@ -35,7 +35,7 @@ public class HttpUtil {
         ret.append(String.format("%s/%s/%s", backend, blueprint, path));
         if (params != null) {
             if (MyApp.getCurrentUser() != null) {
-                params.put("auth_token", MyApp.getCurrentUser().getJwtToken());
+                params.put("auth_token", MyApp.getCurrentUser().getToken());
             }
             boolean first = true;
             for (Map.Entry<String, String> entry : params.entrySet()) {
@@ -49,7 +49,7 @@ public class HttpUtil {
             }
         } else {
             if (MyApp.getCurrentUser() != null) {
-                ret.append("?auth_token=").append(MyApp.getCurrentUser().getJwtToken());
+                ret.append("?auth_token=").append(MyApp.getCurrentUser().getToken());
             }
         }
         return ret.toString();

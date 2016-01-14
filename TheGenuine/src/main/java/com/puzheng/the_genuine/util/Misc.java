@@ -147,7 +147,7 @@ public class Misc {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("id", user.getId());
         editor.putString("name", user.getEmail());
-        editor.putString("token", user.getJwtToken());
+        editor.putString("token", user.getToken());
         editor.commit();
     }
 
