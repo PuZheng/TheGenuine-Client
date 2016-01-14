@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.widget.Toast;
-import com.puzheng.the_genuine.utils.Misc;
+import com.puzheng.the_genuine.util.Misc;
 
 /**
  * Created by abc549825@163.com(https://github.com/abc549825) at 01-13.

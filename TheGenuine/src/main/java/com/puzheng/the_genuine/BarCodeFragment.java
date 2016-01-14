@@ -28,8 +28,8 @@ import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.decoding.CaptureActivityHandler;
 import com.puzheng.the_genuine.decoding.InactivityTimer;
 import com.puzheng.the_genuine.netutils.WebService;
-import com.puzheng.the_genuine.utils.Misc;
-import com.puzheng.the_genuine.utils.PoliteBackgroundTask;
+import com.puzheng.the_genuine.util.Misc;
+import com.puzheng.the_genuine.util.PoliteBackgroundTask;
 import com.puzheng.the_genuine.views.ViewfinderView;
 
 import java.io.IOException;

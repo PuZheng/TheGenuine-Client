@@ -115,7 +115,7 @@ public class AccountSettingsActivity extends Activity implements BackPressedInte
         User user = MyApp.getCurrentUser();
         TextView textView = (TextView) findViewById(R.id.textViewEmail);
         if (user != null) {
-            textView.setText(user.getName());
+            textView.setText(user.getEmail());
         } else {
             textView.setText("");
         }

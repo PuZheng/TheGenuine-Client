@@ -30,7 +30,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
 import com.puzheng.the_genuine.BuildConfig;
-import com.puzheng.the_genuine.utils.Misc;
+import com.puzheng.the_genuine.util.Misc;
 
 import java.lang.ref.WeakReference;
 

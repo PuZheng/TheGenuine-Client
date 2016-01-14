@@ -1,7 +1,5 @@
-package com.puzheng.the_genuine.utils;
+package com.puzheng.the_genuine.util;
 
-import android.graphics.Bitmap;
-import android.util.Pair;
 import com.puzheng.the_genuine.MyApp;
 
 import java.io.BufferedReader;
@@ -32,12 +30,12 @@ public class HttpUtil {
     }
 
     public static String composeUrl(String blueprint, String path, Map<String, String> params) {
-        String backend = ConfigUtils.getInstance().getBackend();
+        String backend = ConfigUtil.getInstance().getBackend();
         StringBuilder ret = new StringBuilder();
         ret.append(String.format("%s/%s/%s", backend, blueprint, path));
         if (params != null) {
             if (MyApp.getCurrentUser() != null) {
-                params.put("auth_token", MyApp.getCurrentUser().getToken());
+                params.put("auth_token", MyApp.getCurrentUser().getJwtToken());
             }
             boolean first = true;
             for (Map.Entry<String, String> entry : params.entrySet()) {
@@ -51,7 +49,7 @@ public class HttpUtil {
             }
         } else {
             if (MyApp.getCurrentUser() != null) {
-                ret.append("?auth_token=").append(MyApp.getCurrentUser().getToken());
+                ret.append("?auth_token=").append(MyApp.getCurrentUser().getJwtToken());
             }
         }
         return ret.toString();
@@ -74,7 +72,7 @@ public class HttpUtil {
         if (sUrl.toLowerCase().startsWith("http") || sUrl.toLowerCase().startsWith("https")) {
             return new URL(sUrl);
         } else {
-            StringBuilder target = new StringBuilder(ConfigUtils.getInstance().getBackend());
+            StringBuilder target = new StringBuilder(ConfigUtil.getInstance().getBackend());
             if (sUrl.startsWith("/")) {
                 target.append(sUrl);
             } else {

@@ -23,7 +23,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.puzheng.the_genuine.netutils.WebService;
-import com.puzheng.the_genuine.utils.Misc;
+import com.puzheng.the_genuine.util.Misc;
 
 public class CounterfeitActivity extends Activity {
     private ProgressDialog progressDialog;

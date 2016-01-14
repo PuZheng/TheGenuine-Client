@@ -20,7 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.netutils.WebService;
-import com.puzheng.the_genuine.utils.BadResponseException;
+import com.puzheng.the_genuine.util.BadResponseException;
 
 import java.io.IOException;
 

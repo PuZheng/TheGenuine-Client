@@ -1,41 +1,28 @@
 package com.puzheng.the_genuine.data_structure;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Created by xc on 13-11-29.
  */
 public class User {
-    @SerializedName("user_id")
     private final int id;
-    private final String name;
-    @SerializedName("auth_token")
-    private final String token;
-    private String picUrl;
+    private final String email;
+    private final String jwtToken;
 
-    public User(int id, String name, String token) {
+    public User(int id, String email, String jwtToken) {
         this.id = id;
-        this.name = name;
-        this.token = token;
+        this.email = email;
+        this.jwtToken = jwtToken;
     }
 
     public int getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getEmail() {
+        return email;
     }
 
-    public String getPicUrl() {
-        return picUrl;
-    }
-
-    public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl;
-    }
-
-    public String getToken() {
-        return token;
+    public String getJwtToken() {
+        return jwtToken;
     }
 }

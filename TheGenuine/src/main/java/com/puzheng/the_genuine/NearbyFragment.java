@@ -12,7 +12,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import com.puzheng.the_genuine.data_structure.StoreResponse;
 import com.puzheng.the_genuine.image_utils.ImageFetcher;
-import com.puzheng.the_genuine.utils.Misc;
+import com.puzheng.the_genuine.util.Misc;
 
 import java.util.List;
 

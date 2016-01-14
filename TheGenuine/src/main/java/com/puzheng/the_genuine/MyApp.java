@@ -8,15 +8,16 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Pair;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.orhanobut.logger.Logger;
 import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.netutils.WebService;
-import com.puzheng.the_genuine.utils.LocateErrorException;
-import com.puzheng.the_genuine.utils.Misc;
+import com.puzheng.the_genuine.util.LocateErrorException;
+import com.puzheng.the_genuine.util.Misc;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public class MyApp extends Application {
 
     public static String SHARETEMPLATE = null;
     public static boolean SHAREMEDIA = false;
+    private Activity currentActivity;
 
     public static void doLoginIn(Activity activity) {
         doLoginIn(activity, null);
@@ -91,7 +93,43 @@ public class MyApp extends Application {
         Misc.assertDirExists(Misc.getStorageDir());
         connectLocationService();
         new GetShareTemplateClass().execute();
-        Logger.init("LEJIAN");
+        Logger.init(getString(R.string.app_name));
+        this.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+                currentActivity = activity;
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+
+            }
+        });
     }
 
     public static void unsetCurrentUser() {
@@ -116,6 +154,10 @@ public class MyApp extends Application {
         }
 
         bindService(intent, connection, BIND_AUTO_CREATE);
+    }
+
+    public Activity getCurrentActivity() {
+        return currentActivity;
     }
 
     private class GetShareTemplateClass extends AsyncTask<Void, Void, HashMap<String, Object>>{

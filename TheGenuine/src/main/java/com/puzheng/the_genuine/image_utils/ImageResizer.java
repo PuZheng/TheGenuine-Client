@@ -24,7 +24,7 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.util.Log;
 import com.puzheng.the_genuine.BuildConfig;
-import com.puzheng.the_genuine.utils.Misc;
+import com.puzheng.the_genuine.util.Misc;
 
 import java.io.FileDescriptor;
 
