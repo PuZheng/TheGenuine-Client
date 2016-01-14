@@ -2,6 +2,8 @@ package com.puzheng.the_genuine.store;
 
 import android.util.Pair;
 
+import com.puzheng.deferred.Deferrable;
+import com.puzheng.deferred.Deferred;
 import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.util.ServiceGenerator;
 

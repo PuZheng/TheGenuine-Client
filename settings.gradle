@@ -1,1 +1,1 @@
-include ':TheGenuine', ':MyLibrary'
+include ':TheGenuine', ':MyLibrary', ':deferred'

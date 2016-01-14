@@ -22,12 +22,12 @@ import android.widget.*;
 
 import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
+import com.puzheng.deferred.AlwaysHandler;
+import com.puzheng.deferred.DoneHandler;
+import com.puzheng.deferred.FailHandler;
 import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.netutils.WebService;
-import com.puzheng.the_genuine.store.AlwaysHandler;
 import com.puzheng.the_genuine.store.AuthStore;
-import com.puzheng.the_genuine.store.DoneHandler;
-import com.puzheng.the_genuine.store.FailHandler;
 
 public class LoginFragment extends Fragment {
     private EditText emailView;
