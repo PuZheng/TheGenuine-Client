@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +19,15 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
+
+import com.google.gson.Gson;
+import com.orhanobut.logger.Logger;
+import com.puzheng.deferred.AlwaysHandler;
+import com.puzheng.deferred.DoneHandler;
+import com.puzheng.deferred.FailHandler;
 import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.netutils.WebService;
+import com.puzheng.the_genuine.store.AuthStore;
 import com.puzheng.the_genuine.util.BadResponseException;
 
 import java.io.IOException;
@@ -35,8 +43,8 @@ public class RegisterFragment extends Fragment {
     private View mRegisterStatusView;
     private TextView mRegisterStatusMessageView;
     private UserRegisterTask mRegisterTask = null;
-    private String mEmail;
-    private String mPassword;
+    private String email;
+    private String password;
     private String mPasswordConfirm;
 
     @Override
@@ -93,66 +101,94 @@ public class RegisterFragment extends Fragment {
         passwordView.setError(null);
         passwordConfirmView.setError(null);
 
-        mEmail = emailView.getText().toString();
-        mPassword = passwordView.getText().toString();
+        email = emailView.getText().toString();
+        password = passwordView.getText().toString();
         mPasswordConfirm = passwordConfirmView.getText().toString();
 
-        boolean cancel = false;
+        boolean failed = false;
         View focusView = null;
 
         // Check for a valid password.
-        if (TextUtils.isEmpty(mPassword)) {
+        if (TextUtils.isEmpty(password)) {
             passwordView.setError(getString(R.string.error_field_required));
             focusView = passwordView;
-            cancel = true;
-        } else if (mPassword.length() < 4) {
+            failed = true;
+        } else if (password.length() < 4) {
             passwordView.setError(getString(R.string.error_invalid_password));
             focusView = passwordView;
-            cancel = true;
+            failed = true;
         }
 
         // Check for a valid password.
         if (TextUtils.isEmpty(mPasswordConfirm)) {
             passwordConfirmView.setError(getString(R.string.error_field_required));
             focusView = passwordConfirmView;
-            cancel = true;
+            failed = true;
         } else if (mPasswordConfirm.length() < 4) {
             passwordConfirmView.setError(getString(R.string.error_invalid_password));
             focusView = passwordConfirmView;
-            cancel = true;
+            failed = true;
         }
 
 
         // Check for a valid email address.
-        if (TextUtils.isEmpty(mEmail)) {
+        if (TextUtils.isEmpty(email)) {
             emailView.setError(getString(R.string.error_field_required));
             focusView = emailView;
-            cancel = true;
-        } else if (!mEmail.contains("@")) {
+            failed = true;
+        } else if (!email.contains("@")) {
             emailView.setError(getString(R.string.error_invalid_email));
             focusView = emailView;
-            cancel = true;
-        } else if (mEmail.length() >= Integer.parseInt(getString(R.string.email_max_length))) {
+            failed = true;
+        } else if (email.length() >= Integer.parseInt(getString(R.string.email_max_length))) {
             emailView.setError(getString(R.string.email_max_length_error));
             focusView = emailView;
-            cancel = true;
+            failed = true;
         }
 
-        if (!mPasswordConfirm.equals(mPassword)) {
+        if (!mPasswordConfirm.equals(password)) {
             passwordView.setError(getString(R.string.error_incorrect_confirm_password));
             passwordView.setText("");
             passwordConfirmView.setText("");
             focusView = passwordView;
-            cancel = true;
+            failed = true;
         }
 
-        if (cancel) {
+        if (failed) {
             focusView.requestFocus();
         } else {
             mRegisterStatusMessageView.setText(R.string.register_progressing);
             showProgress(true);
-            mRegisterTask = new UserRegisterTask();
-            mRegisterTask.execute();
+            AuthStore.getInstance().register(email, password).done(new DoneHandler<User>() {
+                @Override
+                public void done(User user) {
+                    Logger.i("user registered");
+                    Logger.json(new Gson().toJson(user));
+                    Activity activity = getActivity();
+                    Toast.makeText(activity, "注册成功", Toast.LENGTH_SHORT).show();
+                    activity.setResult(Activity.RESULT_OK);
+                    activity.finish();
+                }
+            }).fail(new FailHandler<Pair<String, String>>() {
+                @Override
+                public void fail(Pair<String, String> arg) {
+                    Logger.i("register failed");
+                    String text = arg.first == AuthStore.EMAIL_EXISTS? arg.second: "注册出错了!";
+                    Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+                    // why? since showProgress will prevent focusing
+                    emailView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            emailView.requestFocus();
+                        }
+                    }, 300);
+                }
+            }).always(new AlwaysHandler() {
+                @Override
+                public void always() {
+                    showProgress(false);
+                }
+            });
         }
     }
 
@@ -205,7 +241,7 @@ public class RegisterFragment extends Fragment {
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                User user = WebService.getInstance(RegisterFragment.this.getActivity()).register(mEmail, mPassword);
+                User user = WebService.getInstance(RegisterFragment.this.getActivity()).register(email, password);
                 if (user != null) {
                     MyApp.setCurrentUser(user);
                     return true;

@@ -1,14 +1,19 @@
 package com.puzheng.the_genuine.store;
 
+import android.os.Handler;
 import android.util.Pair;
 
 import com.puzheng.deferred.Deferrable;
 import com.puzheng.deferred.Deferred;
+import com.puzheng.the_genuine.MyApp;
+import com.puzheng.the_genuine.R;
 import com.puzheng.the_genuine.data_structure.User;
 import com.puzheng.the_genuine.util.ServiceGenerator;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,6 +26,7 @@ import retrofit2.http.POST;
  */
 public class AuthStore {
     public static final String INVALID_PASSWORD_OR_EMAIL = "INVALID_PASSWORD_OR_EMAIL";
+    public static final String EMAIL_EXISTS = "EMAIL_EXISTS";
     private static volatile AuthStore instance;
     private User user;
 
@@ -33,6 +39,23 @@ public class AuthStore {
             instance = new AuthStore();
         }
         return instance;
+    }
+
+    public Deferrable<User, Pair<String, String>> register(String email, String password) {
+        final Deferrable<User, Pair<String, String>> ret = new Deferred<User, Pair<String, String>>();
+        final Handler handler = new Handler();
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ret.resolve(new User(1, "test@lejian.com", "test token"));
+                    }
+                });
+            }
+        }, 3000);
+        return ret;
     }
 
     interface AuthService {
