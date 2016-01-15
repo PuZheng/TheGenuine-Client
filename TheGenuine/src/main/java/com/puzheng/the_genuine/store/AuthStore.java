@@ -43,24 +43,37 @@ public class AuthStore {
 
     public Deferrable<User, Pair<String, String>> register(String email, String password) {
         final Deferrable<User, Pair<String, String>> ret = new Deferred<User, Pair<String, String>>();
-        final Handler handler = new Handler();
-        new Timer().schedule(new TimerTask() {
+        AuthService service = ServiceGenerator.createService(AuthService.class);
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("email", email);
+        params.put("password", password);
+        service.register(params).enqueue(new Callback<User>() {
             @Override
-            public void run() {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        ret.resolve(new User(1, "test@lejian.com", "test token"));
-                    }
-                });
+            public void onResponse(Response<User> response) {
+                if (response.isSuccess()) {
+                    user = response.body();
+                    ret.resolve(user);
+                } else {
+                    Pair err = response.code() == 403 ? new Pair(EMAIL_EXISTS,
+                            MyApp.getContext().getString(R.string.email_exists)) : null;
+                    ret.reject(err);
+                }
             }
-        }, 3000);
+
+            @Override
+            public void onFailure(Throwable t) {
+                // TODO
+            }
+        });
         return ret;
     }
 
     interface AuthService {
         @POST("auth/login")
         Call<User> login(@Body Map<String, String> params);
+
+        @POST("auth/register")
+        Call<User> register(@Body Map<String, String> params);
     }
 
     public Deferrable<User, Pair<String, String>> login(String email, String password) {
