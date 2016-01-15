@@ -1,8 +1,4 @@
-package com.puzheng.the_genuine.store;
-
-import android.util.Pair;
-
-import com.puzheng.the_genuine.data_structure.User;
+package com.puzheng.deferred;
 
 /**
  * Created by xc on 16-1-14.

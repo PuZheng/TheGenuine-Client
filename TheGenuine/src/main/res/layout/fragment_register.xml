@@ -110,18 +110,16 @@
                         android:background="@null"
                         android:layout_centerInParent="true" />
 
-                    <Switch
-                        android:switchMinWidth="100dp"
-                        android:layout_width="100dp"
-                        android:layout_height="10dp"
-                        android:id="@+id/switch1"
+                    <ToggleButton
+                        android:id="@+id/togglePasswordVisibility"
+                        android:layout_width="wrap_content"
+                        android:layout_height="24dp"
                         android:layout_toRightOf="@id/password"
-                        android:textOn=""
                         android:textOff=""
-                        android:thumb="@drawable/apptheme_switch_inner_holo_light"
-                        android:track="@drawable/apptheme_switch_track_holo_light"
-                        android:layout_centerVertical="true"
-                        tools:ignore="NewApi" />
+                        android:textOn=""
+                        android:background="#ffffff"
+                        android:button="@drawable/password_visibility_toggle_selector"
+                        />
 
                 </RelativeLayout>
 
