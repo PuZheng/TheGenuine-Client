@@ -7,6 +7,7 @@ import com.puzheng.deferred.Deferrable;
 import com.puzheng.deferred.Deferred;
 import com.puzheng.the_genuine.model.SPUType;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,8 +27,8 @@ public class SPUTypeStore {
         return instance;
     }
 
-    public Deferrable<SPUType, Pair<String, String>> fetchList() {
-        final Deferred<SPUType, Pair<String, String>> ret = new Deferred<SPUType, Pair<String, String>>();
+    public Deferrable<List<SPUType>, Pair<String, String>> fetchList() {
+        final Deferred<List<SPUType>, Pair<String, String>> ret = new Deferred<List<SPUType>, Pair<String, String>>();
         final Handler handler = new Handler();
 
         new Timer().schedule(new TimerTask() {

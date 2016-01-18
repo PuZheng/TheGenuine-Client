@@ -7,15 +7,56 @@ import com.google.gson.annotations.SerializedName;
  */
 public class SPUType {
 
+    private final Pic pic;
     private int id;
     private String name;
-    @SerializedName("pic_url")
-    private String picUrl;
+    private int weight;
+    private boolean enabled;
+    private int spuCnt;
 
-    public SPUType(int id, String name, String picUrl) {
+    public Pic getPic() {
+        return pic;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public int getSpuCnt() {
+        return spuCnt;
+    }
+
+    public class Pic {
+        String url;
+        String path;
+
+        public Pic(String url, String path) {
+            this.url = url;
+            this.path = path;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public String getPath() {
+            return path;
+        }
+    }
+
+
+    public SPUType(int id, String name, int weight, boolean enabled,
+                   int spuCnt, Pic pic) {
         this.id = id;
         this.name = name;
-        this.picUrl = picUrl;
+        this.weight = weight;
+        this.enabled = enabled;
+        this.spuCnt = spuCnt;
+        this.pic = pic;
     }
 
     public int getId() {
@@ -26,7 +67,4 @@ public class SPUType {
         return name;
     }
 
-    public String getPicUrl() {
-        return picUrl;
-    }
 }
