@@ -8,7 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.puzheng.the_genuine.data_structure.User;
+
+import com.puzheng.the_genuine.store.AuthStore;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeEntity;
 import com.umeng.socialize.controller.RequestType;
@@ -20,11 +21,11 @@ import com.umeng.socialize.db.OauthHelper;
 import java.io.Serializable;
 import java.util.HashMap;
 
-public class AccountSettingsActivity extends Activity implements BackPressedInterface {
+public class ProfileActivity extends Activity implements BackPressedInterface {
 
     private BackPressedHandle mBackPressedHandle = new BackPressedHandle();
-    private UMSocialService mController;
-    private Button cancelButton;
+    private UMSocialService service;
+    private Button unbindButton;
 
     @Override
     public void doBackPressed() {
@@ -50,39 +51,42 @@ public class AccountSettingsActivity extends Activity implements BackPressedInte
         }
         if (resultCode == RESULT_OK) {
             if (requestCode == MyApp.LOGIN_ACTION) {
-                setUsername();
+                ((TextView) findViewById(R.id.textViewEmail)).setText(
+                        AuthStore.getInstance().getUser().getEmail());
             }
         }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mController = UMServiceFactory.getUMSocialService("com.umeng.login",
-                RequestType.SOCIAL);
+
         super.onCreate(savedInstanceState);
-        if (MyApp.getCurrentUser() == null) {
+        if (AuthStore.getInstance().getUser() == null) {
             login();
         }
 
-        setContentView(R.layout.activity_account_settings);
+        setContentView(R.layout.activity_profile);
 
-        setUsername();
+        ((TextView) findViewById(R.id.textViewEmail)).setText(
+                AuthStore.getInstance().getUser().getEmail());
 
-        Button button = (Button) findViewById(R.id.button);
+        Button button = (Button) findViewById(R.id.btnLogout);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MyApp.unsetCurrentUser();
+                AuthStore.getInstance().logout();
                 login();
             }
         });
-//        mController.openUserCenter(AccountSettingsActivity.this, SocializeConstants.FLAG_USER_CENTER_HIDE_LOGININFO);
-        cancelButton = (Button) findViewById(R.id.cancelVerify);
-        if (OauthHelper.isAuthenticated(AccountSettingsActivity.this, SHARE_MEDIA.SINA)) {
-            cancelButton.setOnClickListener(new View.OnClickListener() {
+//        service.openUserCenter(ProfileActivity.this, SocializeConstants.FLAG_USER_CENTER_HIDE_LOGININFO);
+        service = UMServiceFactory.getUMSocialService("com.umeng.login",
+                RequestType.SOCIAL);
+        unbindButton = (Button) findViewById(R.id.unbindWeibo);
+        if (OauthHelper.isAuthenticated(ProfileActivity.this, SHARE_MEDIA.SINA)) {
+            unbindButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mController.deleteOauth(AccountSettingsActivity.this, SHARE_MEDIA.SINA, new SocializeListeners.SocializeClientListener() {
+                    service.deleteOauth(ProfileActivity.this, SHARE_MEDIA.SINA, new SocializeListeners.SocializeClientListener() {
                         @Override
                         public void onStart() {
 
@@ -91,33 +95,24 @@ public class AccountSettingsActivity extends Activity implements BackPressedInte
                         @Override
                         public void onComplete(int i, SocializeEntity socializeEntity) {
                             if (i == 200 && socializeEntity != null) {
-                                Toast.makeText(AccountSettingsActivity.this, getString(R.string.unbinding_succeed), Toast.LENGTH_SHORT).show();
-                                cancelButton.setVisibility(View.GONE);
+                                Toast.makeText(ProfileActivity.this, getString(R.string.unbinding_succeed), Toast.LENGTH_SHORT).show();
+                                unbindButton.setVisibility(View.GONE);
                             } else {
-                                Toast.makeText(AccountSettingsActivity.this, getString(R.string.unbinding_failed), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ProfileActivity.this, getString(R.string.unbinding_failed), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
                 }
             });
         } else {
-            cancelButton.setVisibility(View.GONE);
+            unbindButton.setVisibility(View.GONE);
         }
     }
 
     private void login() {
         HashMap<String, Serializable> map = new HashMap<String, Serializable>();
         map.put("ISTOPACTIVITY", true);
-        MyApp.doLoginIn(AccountSettingsActivity.this, map);
+        MyApp.doLoginIn(ProfileActivity.this, map);
     }
 
-    private void setUsername() {
-        User user = MyApp.getCurrentUser();
-        TextView textView = (TextView) findViewById(R.id.textViewEmail);
-        if (user != null) {
-            textView.setText(user.getEmail());
-        } else {
-            textView.setText("");
-        }
-    }
 }

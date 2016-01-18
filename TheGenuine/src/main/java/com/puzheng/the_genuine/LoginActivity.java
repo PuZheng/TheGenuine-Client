@@ -14,15 +14,13 @@ import android.view.Menu;
 public class LoginActivity extends Activity implements BackPressedInterface {
     private BackPressedHandle mBackPressedHandle = new BackPressedHandle();
 
+    // TODO what is this method for?
     @Override
     public void doBackPressed() {
         super.onBackPressed();
     }
 
-    /**
-     * Shows the progress UI and hides the register_or_login form.
-     */
-
+    // TODO
     @Override
     public void onBackPressed() {
         setResult(RESULT_CANCELED);

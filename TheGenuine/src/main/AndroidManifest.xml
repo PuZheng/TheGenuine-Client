@@ -138,7 +138,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.puzheng.the_genuine.AccountSettingsActivity"
+            android:name=".ProfileActivity"
             android:launchMode="singleTask"
             android:label="@string/title_activity_account_settings"
             android:screenOrientation="portrait" />

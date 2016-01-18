@@ -42,7 +42,6 @@ public class RegisterFragment extends Fragment {
     private View mRegisterForm;
     private View mRegisterStatusView;
     private TextView mRegisterStatusMessageView;
-    private UserRegisterTask mRegisterTask = null;
     private String email;
     private String password;
     private String mPasswordConfirm;
@@ -92,9 +91,6 @@ public class RegisterFragment extends Fragment {
     private void attemptRegister() {
         hideKeyboard();
 
-        if (mRegisterTask != null) {
-            return;
-        }
 
         // Reset errors.
         emailView.setError(null);
@@ -232,53 +228,6 @@ public class RegisterFragment extends Fragment {
             // and hide the relevant UI components.
             mRegisterStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
             mRegisterForm.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
-    }
-
-    public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
-        private BadResponseException exception;
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            try {
-                User user = WebService.getInstance(RegisterFragment.this.getActivity()).register(email, password);
-                if (user != null) {
-                    MyApp.setCurrentUser(user);
-                    return true;
-                }
-            } catch (BadResponseException e) {
-                exception = e;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return false;
-        }
-
-        @Override
-        protected void onCancelled() {
-            mRegisterTask = null;
-            showProgress(false);
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mRegisterTask = null;
-            showProgress(false);
-            if (success) {
-                Activity activity = getActivity();
-                Toast.makeText(activity, "注册成功", Toast.LENGTH_SHORT).show();
-                activity.setResult(Activity.RESULT_OK);
-                activity.finish();
-            } else {
-                if (exception != null) {
-                    emailView.setError(exception.getMessage());
-                } else {
-                    emailView.setError(getString(R.string.action_register_fail));
-                }
-                passwordView.setText("");
-                passwordConfirmView.setText("");
-                emailView.requestFocus();
-            }
         }
     }
 }

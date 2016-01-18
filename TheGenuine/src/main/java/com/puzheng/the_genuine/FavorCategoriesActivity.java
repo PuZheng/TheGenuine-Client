@@ -31,6 +31,7 @@ import com.puzheng.the_genuine.data_structure.Favor;
 import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.search.SearchActivity;
+import com.puzheng.the_genuine.store.AuthStore;
 import com.puzheng.the_genuine.util.Misc;
 import com.puzheng.the_genuine.views.NavBar;
 
@@ -163,7 +164,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        if (MyApp.getCurrentUser() == null) {
+        if (AuthStore.getInstance().getUser() == null) {
             HashMap<String, Serializable> map = new HashMap<String, Serializable>();
             map.put("ISTOPACTIVITY", true);
             MyApp.doLoginIn(FavorCategoriesActivity.this, map);
@@ -335,7 +336,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
                         (TextView) convertView.findViewById(R.id.textViewProductName),
                         (TextView) convertView.findViewById(R.id.textViewFavorCnt),
                         (TextView) convertView.findViewById(R.id.textViewPrice),
-                        (Button) convertView.findViewById(R.id.button),
+                        (Button) convertView.findViewById(R.id.btnLogout),
                         (RatingBar) convertView.findViewById(R.id.ratingBar));
                 convertView.setTag(viewHolder);
             } else {

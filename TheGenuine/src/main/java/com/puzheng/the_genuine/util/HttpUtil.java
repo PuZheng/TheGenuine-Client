@@ -1,6 +1,7 @@
 package com.puzheng.the_genuine.util;
 
-import com.puzheng.the_genuine.MyApp;
+import com.puzheng.the_genuine.data_structure.User;
+import com.puzheng.the_genuine.store.AuthStore;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -34,9 +35,6 @@ public class HttpUtil {
         StringBuilder ret = new StringBuilder();
         ret.append(String.format("%s/%s/%s", backend, blueprint, path));
         if (params != null) {
-            if (MyApp.getCurrentUser() != null) {
-                params.put("auth_token", MyApp.getCurrentUser().getToken());
-            }
             boolean first = true;
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 try {
@@ -46,10 +44,6 @@ public class HttpUtil {
                     e.printStackTrace();
                 }
                 first = false;
-            }
-        } else {
-            if (MyApp.getCurrentUser() != null) {
-                ret.append("?auth_token=").append(MyApp.getCurrentUser().getToken());
             }
         }
         return ret.toString();
