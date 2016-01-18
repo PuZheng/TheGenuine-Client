@@ -14,7 +14,7 @@ import android.os.IBinder;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.orhanobut.logger.Logger;
-import com.puzheng.the_genuine.data_structure.User;
+import com.puzheng.the_genuine.model.User;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.util.LocateErrorException;
 import com.puzheng.the_genuine.util.Misc;

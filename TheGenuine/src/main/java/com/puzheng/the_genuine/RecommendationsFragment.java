@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
-import com.puzheng.the_genuine.data_structure.Recommendation;
+import com.puzheng.the_genuine.model.Recommendation;
 import com.puzheng.the_genuine.netutils.WebService;
 
 import java.util.List;

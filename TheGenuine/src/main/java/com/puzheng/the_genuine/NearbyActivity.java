@@ -9,7 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import com.puzheng.the_genuine.data_structure.StoreResponse;
+import com.puzheng.the_genuine.model.StoreResponse;
 import com.puzheng.the_genuine.netutils.WebService;
 
 import java.util.ArrayList;

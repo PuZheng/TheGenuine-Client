@@ -14,8 +14,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.puzheng.the_genuine.data_structure.Store;
-import com.puzheng.the_genuine.data_structure.StoreResponse;
+import com.puzheng.the_genuine.model.Store;
+import com.puzheng.the_genuine.model.StoreResponse;
 import com.puzheng.the_genuine.util.LocateErrorException;
 import com.puzheng.the_genuine.util.Misc;
 

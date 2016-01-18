@@ -24,7 +24,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.puzheng.the_genuine.camera.AmbientLightManager;
 import com.puzheng.the_genuine.camera.CameraManager;
-import com.puzheng.the_genuine.data_structure.VerificationInfo;
+import com.puzheng.the_genuine.model.VerificationInfo;
 import com.puzheng.the_genuine.decoding.CaptureActivityHandler;
 import com.puzheng.the_genuine.decoding.InactivityTimer;
 import com.puzheng.the_genuine.netutils.WebService;

@@ -9,14 +9,14 @@ import com.orhanobut.logger.Logger;
 import com.puzheng.the_genuine.Constants;
 import com.puzheng.the_genuine.MyApp;
 import com.puzheng.the_genuine.R;
-import com.puzheng.the_genuine.data_structure.Category;
-import com.puzheng.the_genuine.data_structure.Comment;
-import com.puzheng.the_genuine.data_structure.Favor;
-import com.puzheng.the_genuine.data_structure.Recommendation;
-import com.puzheng.the_genuine.data_structure.SPUResponse;
-import com.puzheng.the_genuine.data_structure.StoreResponse;
-import com.puzheng.the_genuine.data_structure.User;
-import com.puzheng.the_genuine.data_structure.VerificationInfo;
+import com.puzheng.the_genuine.model.SPUType;
+import com.puzheng.the_genuine.model.Comment;
+import com.puzheng.the_genuine.model.Favor;
+import com.puzheng.the_genuine.model.Recommendation;
+import com.puzheng.the_genuine.model.SPUResponse;
+import com.puzheng.the_genuine.model.StoreResponse;
+import com.puzheng.the_genuine.model.User;
+import com.puzheng.the_genuine.model.VerificationInfo;
 import com.puzheng.the_genuine.util.BadResponseException;
 import com.puzheng.the_genuine.util.HttpUtil;
 import com.puzheng.the_genuine.util.LocateErrorException;
@@ -73,11 +73,11 @@ public class WebService {
         return true;
     }
 
-    public List<Category> getCategories() throws IOException, JSONException, BadResponseException {
+    public List<SPUType> getCategories() throws IOException, JSONException, BadResponseException {
         String url = HttpUtil.composeUrl("spu-ws", "spu-type-list");
         String result = HttpUtil.getStringResult(url);
         JSONObject object = new JSONObject(result);
-        Type type = new TypeToken<List<Category>>() {
+        Type type = new TypeToken<List<SPUType>>() {
         }.getType();
         Gson gson = new Gson();
         return gson.fromJson(object.getString("data"), type);

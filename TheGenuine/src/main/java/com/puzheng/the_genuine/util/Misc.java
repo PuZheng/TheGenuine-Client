@@ -11,7 +11,6 @@ import android.util.Log;
 import android.util.Pair;
 import com.google.gson.Gson;
 import com.puzheng.the_genuine.R;
-import com.puzheng.the_genuine.data_structure.User;
 
 import java.io.File;
 import java.io.IOException;

@@ -27,7 +27,7 @@ import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.puzheng.the_genuine.data_structure.Favor;
+import com.puzheng.the_genuine.model.Favor;
 import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.search.SearchActivity;

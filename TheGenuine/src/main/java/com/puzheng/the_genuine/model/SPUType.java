@@ -1,18 +1,18 @@
-package com.puzheng.the_genuine.data_structure;
+package com.puzheng.the_genuine.model;
 
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by xc on 13-11-28.
  */
-public class Category {
+public class SPUType {
 
     private int id;
     private String name;
     @SerializedName("pic_url")
     private String picUrl;
 
-    public Category(int id, String name, String picUrl) {
+    public SPUType(int id, String name, String picUrl) {
         this.id = id;
         this.name = name;
         this.picUrl = picUrl;

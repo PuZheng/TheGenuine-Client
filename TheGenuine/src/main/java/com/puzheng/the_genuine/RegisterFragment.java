@@ -6,7 +6,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
@@ -25,12 +24,8 @@ import com.orhanobut.logger.Logger;
 import com.puzheng.deferred.AlwaysHandler;
 import com.puzheng.deferred.DoneHandler;
 import com.puzheng.deferred.FailHandler;
-import com.puzheng.the_genuine.data_structure.User;
-import com.puzheng.the_genuine.netutils.WebService;
+import com.puzheng.the_genuine.model.User;
 import com.puzheng.the_genuine.store.AuthStore;
-import com.puzheng.the_genuine.util.BadResponseException;
-
-import java.io.IOException;
 
 /**
  * Created by abc549825@163.com(https://github.com/abc549825) at 12-17.

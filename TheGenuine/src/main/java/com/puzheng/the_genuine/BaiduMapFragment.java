@@ -24,7 +24,7 @@ import com.baidu.mapapi.map.OverlayItem;
 import com.baidu.mapapi.map.PopupClickListener;
 import com.baidu.mapapi.map.PopupOverlay;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
-import com.puzheng.the_genuine.data_structure.StoreResponse;
+import com.puzheng.the_genuine.model.StoreResponse;
 import com.puzheng.the_genuine.util.LocateErrorException;
 import com.puzheng.the_genuine.util.Misc;
 

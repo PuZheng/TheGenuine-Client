@@ -10,7 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import com.puzheng.the_genuine.data_structure.StoreResponse;
+import com.puzheng.the_genuine.model.StoreResponse;
 import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.util.Misc;
 

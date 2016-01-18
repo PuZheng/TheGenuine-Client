@@ -1,6 +1,4 @@
-package com.puzheng.the_genuine.data_structure;
-
-import com.google.gson.annotations.SerializedName;
+package com.puzheng.the_genuine.model;
 
 /**
  * Created by abc549825@163.com(https://github.com/abc549825) at 11-27.

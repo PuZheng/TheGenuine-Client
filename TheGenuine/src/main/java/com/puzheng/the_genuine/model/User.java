@@ -1,4 +1,4 @@
-package com.puzheng.the_genuine.data_structure;
+package com.puzheng.the_genuine.model;
 
 /**
  * Created by xc on 13-11-29.

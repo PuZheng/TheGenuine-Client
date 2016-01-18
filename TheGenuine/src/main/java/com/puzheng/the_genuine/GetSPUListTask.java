@@ -3,7 +3,7 @@ package com.puzheng.the_genuine;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.puzheng.the_genuine.data_structure.Recommendation;
+import com.puzheng.the_genuine.model.Recommendation;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.util.BadResponseException;
 

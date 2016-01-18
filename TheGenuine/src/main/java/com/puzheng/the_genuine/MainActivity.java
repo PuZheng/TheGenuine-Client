@@ -22,7 +22,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.Window;
 import android.widget.Toast;
-import com.puzheng.the_genuine.data_structure.VerificationInfo;
+import com.puzheng.the_genuine.model.VerificationInfo;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.util.Misc;
 import com.puzheng.the_genuine.util.PoliteBackgroundTask;

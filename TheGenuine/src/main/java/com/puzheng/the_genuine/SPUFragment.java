@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.puzheng.the_genuine.data_structure.SPU;
+import com.puzheng.the_genuine.model.SPU;
 import com.umeng.socialize.bean.MultiStatus;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeEntity;
