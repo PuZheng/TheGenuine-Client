@@ -35,7 +35,6 @@ public class LoginFragment extends Fragment {
     private View mLoginFormView;
     private View mLoginStatusView;
     private TextView loginStatusMessageView;
-    private UserLoginTask mAuthTask = null;
     private String email;
     private String password;
 
@@ -206,46 +205,6 @@ public class LoginFragment extends Fragment {
             // and hide the relevant UI components.
             mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
-    }
-
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-        private Exception exception;
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            try {
-                User user = WebService.getInstance(LoginFragment.this.getActivity()).login(email, password);
-                if (user != null) {
-                    MyApp.setCurrentUser(user);
-                    return true;
-                }
-            } catch (Exception e) {
-                exception = e;
-            }
-            return false;
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-            if (success) {
-                Activity activity = getActivity();
-                Toast.makeText(activity, activity.getString(R.string.logined), Toast.LENGTH_SHORT).show();
-                activity.setResult(Activity.RESULT_OK);
-                activity.finish();
-            } else {
-
-
-
-            }
         }
     }
 

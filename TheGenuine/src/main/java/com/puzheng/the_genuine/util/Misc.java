@@ -34,12 +34,6 @@ public class Misc {
         }
     }
 
-    public static void clearUserPrefs(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences("user", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.clear();
-        editor.commit();
-    }
 
     public static File getExternalCacheDir(Context context) {
         if (hasExternalCacheDir()) {
@@ -131,25 +125,6 @@ public class Misc {
         return Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD || Environment.isExternalStorageRemovable();
     }
 
-    public static User readUserPrefs(Context c) {
-        SharedPreferences preferences = c.getSharedPreferences("user", Context.MODE_PRIVATE);
-        int id = preferences.getInt("id", -1);
-        String username = preferences.getString("name", null);
-        String token = preferences.getString("token", null);
-        if (id == -1 || username == null || token == null) {
-            return null;
-        }
-        return new User(id, username, token);
-    }
-
-    public static void storeUserPrefs(User user, Context context) {
-        SharedPreferences preferences = context.getSharedPreferences("user", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("id", user.getId());
-        editor.putString("name", user.getEmail());
-        editor.putString("token", user.getToken());
-        editor.commit();
-    }
 
     public static String truncate(String s, int maxSize) {
         if (s.length() <= maxSize) {

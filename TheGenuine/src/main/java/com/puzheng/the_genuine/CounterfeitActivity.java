@@ -35,7 +35,7 @@ public class CounterfeitActivity extends Activity {
         setContentView(R.layout.activity_counterfeit);
         mTag = getIntent().getStringExtra(MainActivity.TAG_TAG_ID);
 
-        Button button = (Button) findViewById(R.id.button);
+        Button button = (Button) findViewById(R.id.btnLogout);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

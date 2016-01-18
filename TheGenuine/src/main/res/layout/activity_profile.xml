@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".AccountSettingsActivity">
+    tools:context=".ProfileActivity">
 
 
     <TableLayout
@@ -56,7 +56,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/unbinding"
-        android:id="@+id/cancelVerify"
+        android:id="@+id/unbindWeibo"
         android:textSize="16dp"
         android:layout_margin="16dp"
         android:layout_below="@+id/tableLayout"
@@ -67,11 +67,11 @@
         android:layout_height="wrap_content"
         android:background="@drawable/apptheme_btn_default_holo_light"
         android:text="@string/logout"
-        android:id="@+id/button"
+        android:id="@+id/btnLogout"
         android:textSize="16dp"
         android:textColor="@android:color/white"
         android:layout_margin="16dp"
-        android:layout_below="@+id/cancelVerify"
+        android:layout_below="@+id/unbindWeibo"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

@@ -56,7 +56,7 @@ public class RecommendationListAdapter extends BaseAdapter {
                     (TextView) convertView.findViewById(R.id.textViewProductName),
                     (TextView) convertView.findViewById(R.id.textViewFavorCnt),
                     (TextView) convertView.findViewById(R.id.textViewPrice),
-                    (Button) convertView.findViewById(R.id.button),
+                    (Button) convertView.findViewById(R.id.btnLogout),
                     (RatingBar) convertView.findViewById(R.id.ratingBar));
             convertView.setTag(viewHolder);
         } else {

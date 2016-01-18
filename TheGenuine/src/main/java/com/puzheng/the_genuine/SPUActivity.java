@@ -33,6 +33,7 @@ import com.puzheng.the_genuine.data_structure.SPUResponse;
 import com.puzheng.the_genuine.data_structure.VerificationInfo;
 import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.netutils.WebService;
+import com.puzheng.the_genuine.store.AuthStore;
 import com.puzheng.the_genuine.util.BadResponseException;
 import com.puzheng.the_genuine.util.HttpUtil;
 import com.puzheng.the_genuine.util.Misc;
@@ -445,7 +446,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (MyApp.getCurrentUser() == null) {
+                    if (AuthStore.getInstance().getUser() == null) {
                         MyApp.doLoginIn(SPUActivity.this);
                     } else {
                         doAddFavor();

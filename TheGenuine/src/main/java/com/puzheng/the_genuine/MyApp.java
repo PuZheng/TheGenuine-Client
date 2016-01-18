@@ -58,17 +58,6 @@ public class MyApp extends Application {
         return MyApp.context;
     }
 
-    public static User getCurrentUser() {
-        if (user == null) {
-            user = Misc.readUserPrefs(context);
-        }
-        return user;
-    }
-
-    public static void setCurrentUser(User user) {
-        MyApp.user = user;
-        Misc.storeUserPrefs(user, context);
-    }
 
     public static Location getLocation() throws LocateErrorException {
         if (mLocationService != null) {
@@ -132,10 +121,6 @@ public class MyApp extends Application {
         });
     }
 
-    public static void unsetCurrentUser() {
-        MyApp.user = null;
-        Misc.clearUserPrefs(MyApp.context);
-    }
 
     private void connectLocationService() {
         Intent intent = new Intent(context, LocationService.class);
