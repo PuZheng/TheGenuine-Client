@@ -155,7 +155,6 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
                 query.put("spu_type_id", String.valueOf(spuType.getId()));
                 query.put("sort_by", orderByStrs[i]);
                 return new SPUListFragment.Builder().src(SPUStore.getInstance().fetchList(query)).build();
-//                return SPUListFragmentByCategory.newInstance(orderByStrs[i], spuType.getId());
             }
         }
 

@@ -61,8 +61,9 @@ class SPUListFragment extends ListFragment {
 
         }
 
-        public void src(Deferrable<List<SPU>, Pair<String, String>> src) {
+        public Builder src(Deferrable<List<SPU>, Pair<String, String>> src) {
             this.src = src;
+            return this;
         }
 
         public SPUListFragment build() {
