@@ -19,6 +19,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.orhanobut.logger.Logger;
 import com.puzheng.deferred.AlwaysHandler;
 import com.puzheng.deferred.DoneHandler;
 import com.puzheng.deferred.FailHandler;
@@ -77,7 +79,7 @@ public class SPUTypeListActivity extends ActionBarActivity implements BackPresse
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_categories);
+        setContentView(R.layout.activity_spu_type_list);
 
         int imageThumbSize = getResources().getDimensionPixelSize(R.dimen.categories_grid_item_width);
 
@@ -117,11 +119,13 @@ public class SPUTypeListActivity extends ActionBarActivity implements BackPresse
 
         maskableManager = new MaskableManager(gridView, this);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(R.string.categories);
+        actionBar.setTitle(R.string.spu_types);
         maskableManager.mask();
         SPUTypeStore.getInstance().fetchList().done(new DoneHandler<List<SPUType>>() {
             @Override
             public void done(List<SPUType> spuTypes) {
+                Logger.i("spu types fetched");
+                Logger.json(new Gson().toJson(spuTypes));
                 mAdapter = new MySPUTypesAdapter(spuTypes);
                 gridView.setAdapter(mAdapter);
             }

@@ -68,7 +68,7 @@
     <string name="unbinding_succeed">取消绑定成功</string>
     <string name="unbinding_failed">取消绑定失败</string>
     <string name="verifying">已读取条码信息，正在验证真伪</string>
-    <string name="categories">360真品列表</string>
+    <string name="spu_types">360真品分类列表</string>
     <string name="committing">正在提交</string>
     <string name="loading_failed">加载评论失败</string>
     <string name="taxonomy">选择分类</string>

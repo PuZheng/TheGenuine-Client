@@ -39,7 +39,7 @@ public class SPUType {
             this.path = path;
         }
 
-        public String getUrl() {
+        public String getURL() {
             return url;
         }
 

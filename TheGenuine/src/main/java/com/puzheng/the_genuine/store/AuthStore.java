@@ -43,7 +43,7 @@ public class AuthStore {
 
     public Deferrable<User, Pair<String, String>> register(String email, String password) {
         final Deferrable<User, Pair<String, String>> ret = new Deferred<User, Pair<String, String>>();
-        AuthService service = ServiceGenerator.createService(AuthService.class);
+        Service service = ServiceGenerator.createService(Service.class);
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("email", email);
         params.put("password", password);
@@ -83,7 +83,7 @@ public class AuthStore {
 
     public Deferrable<User, Pair<String, String>> login(String email, String password) {
         final Deferrable<User, Pair<String, String>> ret = new Deferred<User, Pair<String, String>>();
-        AuthService service = ServiceGenerator.createService(AuthService.class);
+        Service service = ServiceGenerator.createService(Service.class);
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("email", email);
         params.put("password", password);
@@ -136,7 +136,7 @@ public class AuthStore {
         editor.commit();
     }
 
-    interface AuthService {
+    interface Service {
         @POST("auth/login")
         Call<User> login(@Body Map<String, String> params);
 
