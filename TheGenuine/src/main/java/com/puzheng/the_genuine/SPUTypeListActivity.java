@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,21 +17,28 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
-import com.puzheng.the_genuine.data_structure.Category;
+import com.google.gson.Gson;
+import com.orhanobut.logger.Logger;
+import com.puzheng.deferred.AlwaysHandler;
+import com.puzheng.deferred.DoneHandler;
+import com.puzheng.deferred.FailHandler;
+import com.puzheng.the_genuine.model.SPUType;
 import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.search.SearchActivity;
+import com.puzheng.the_genuine.store.SPUTypeStore;
 import com.puzheng.the_genuine.util.Misc;
 
 import java.util.List;
 
-public class CategoriesActivity extends ActionBarActivity implements BackPressedInterface, RefreshInterface {
+public class SPUTypeListActivity extends ActionBarActivity implements BackPressedInterface, RefreshInterface {
     private GridView gridView;
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
     private MaskableManager maskableManager;
-    private ImageFetcher mImageFetcher;
-    private MyCategoriesAdapter mAdapter;
+    private ImageFetcher imageFetcher;
+    private MySPUTypesAdapter mAdapter;
 
     @Override
     public void doBackPressed() {
@@ -46,7 +54,7 @@ public class CategoriesActivity extends ActionBarActivity implements BackPressed
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.categories, menu);
+        getMenuInflater().inflate(R.menu.spu_types, menu);
         return true;
     }
 
@@ -71,18 +79,18 @@ public class CategoriesActivity extends ActionBarActivity implements BackPressed
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_categories);
+        setContentView(R.layout.activity_spu_type_list);
 
         int imageThumbSize = getResources().getDimensionPixelSize(R.dimen.categories_grid_item_width);
 
-        mImageFetcher = ImageFetcher.getImageFetcher(this, imageThumbSize, 0.25f);
+        imageFetcher = ImageFetcher.getImageFetcher(this, imageThumbSize, 0.25f);
         gridView = (GridView) findViewById(R.id.gridView);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Category category = (Category) gridView.getAdapter().getItem(position);
-                Intent intent = new Intent(CategoriesActivity.this, SPUListActivity.class);
+                SPUType category = (SPUType) gridView.getAdapter().getItem(position);
+                Intent intent = new Intent(SPUTypeListActivity.this, SPUListActivity.class);
                 intent.putExtra("category_id", category.getId());
                 intent.putExtra("categoryName", category.getName());
                 startActivity(intent);
@@ -96,10 +104,10 @@ public class CategoriesActivity extends ActionBarActivity implements BackPressed
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
                     // Before Honeycomb pause image loading on scroll to help with performance
                     if (!Misc.hasHoneycomb()) {
-                        mImageFetcher.setPauseWork(true);
+                        imageFetcher.setPauseWork(true);
                     }
                 } else {
-                    mImageFetcher.setPauseWork(false);
+                    imageFetcher.setPauseWork(false);
                 }
             }
 
@@ -111,22 +119,42 @@ public class CategoriesActivity extends ActionBarActivity implements BackPressed
 
         maskableManager = new MaskableManager(gridView, this);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(R.string.categories);
-        new GetCategoriesTask(gridView).execute();
+        actionBar.setTitle(R.string.spu_types);
+        maskableManager.mask();
+        SPUTypeStore.getInstance().fetchList().done(new DoneHandler<List<SPUType>>() {
+            @Override
+            public void done(List<SPUType> spuTypes) {
+                Logger.i("spu types fetched");
+                Logger.json(new Gson().toJson(spuTypes));
+                mAdapter = new MySPUTypesAdapter(spuTypes);
+                gridView.setAdapter(mAdapter);
+            }
+        }).fail(new FailHandler<Pair<String, String>>() {
+            @Override
+            public void fail(Pair<String, String> err) {
+                Toast.makeText(SPUTypeListActivity.this, R.string.data_load_failed,
+                        Toast.LENGTH_SHORT).show();
+            }
+        }).always(new AlwaysHandler() {
+            @Override
+            public void always() {
+                maskableManager.unmask(null);
+            }
+        });
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mImageFetcher.setPauseWork(false);
-        mImageFetcher.setExitTasksEarly(true);
-        mImageFetcher.flushCache();
+        imageFetcher.setPauseWork(false);
+        imageFetcher.setExitTasksEarly(true);
+        imageFetcher.flushCache();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mImageFetcher.setExitTasksEarly(false);
+        imageFetcher.setExitTasksEarly(false);
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
@@ -135,10 +163,10 @@ public class CategoriesActivity extends ActionBarActivity implements BackPressed
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mImageFetcher.closeCache();
+        imageFetcher.closeCache();
     }
 
-    private class GetCategoriesTask extends AsyncTask<Void, Void, List<Category>> {
+    private class GetCategoriesTask extends AsyncTask<Void, Void, List<SPUType>> {
         private final GridView gridView;
         private Exception exception;
 
@@ -147,7 +175,7 @@ public class CategoriesActivity extends ActionBarActivity implements BackPressed
         }
 
         @Override
-        protected List<Category> doInBackground(Void... params) {
+        protected List<SPUType> doInBackground(Void... params) {
             try {
                 return WebService.getInstance(gridView.getContext()).getCategories();
             } catch (Exception e) {
@@ -157,9 +185,9 @@ public class CategoriesActivity extends ActionBarActivity implements BackPressed
         }
 
         @Override
-        protected void onPostExecute(List<Category> list) {
+        protected void onPostExecute(List<SPUType> list) {
             if (maskableManager.unmask(exception)) {
-                mAdapter = new MyCategoriesAdapter(list);
+                mAdapter = new MySPUTypesAdapter(list);
                 gridView.setAdapter(mAdapter);
             }
         }
@@ -170,35 +198,35 @@ public class CategoriesActivity extends ActionBarActivity implements BackPressed
         }
     }
 
-    private class MyCategoriesAdapter extends BaseAdapter {
+    private class MySPUTypesAdapter extends BaseAdapter {
 
-        private final List<Category> categories;
+        private final List<SPUType> spuTypes;
         private final LayoutInflater inflater;
 
-        public MyCategoriesAdapter(List<Category> categories) {
-            this.categories = categories;
-            inflater = (LayoutInflater) CategoriesActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        public MySPUTypesAdapter(List<SPUType> spuTypes) {
+            this.spuTypes = spuTypes;
+            inflater = (LayoutInflater) SPUTypeListActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         @Override
         public int getCount() {
-            return categories.size();
+            return spuTypes.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return categories.get(position);
+            return spuTypes.get(position);
         }
 
         @Override
         public long getItemId(int position) {
-            return categories.get(position).getId();
+            return spuTypes.get(position).getId();
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.categories_grid_item, null);
+                convertView = inflater.inflate(R.layout.spu_type_grid_item, null);
             }
             ViewHolder viewHolder;
             if (convertView.getTag() == null) {
@@ -207,9 +235,9 @@ public class CategoriesActivity extends ActionBarActivity implements BackPressed
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            final Category category = (Category) getItem(position);
+            final SPUType spuType = (SPUType) getItem(position);
 
-            mImageFetcher.loadImage(category.getPicUrl(), viewHolder.imageView);
+            imageFetcher.loadImage(spuType.getPic().getURL(), viewHolder.imageView);
             return convertView;
         }
 

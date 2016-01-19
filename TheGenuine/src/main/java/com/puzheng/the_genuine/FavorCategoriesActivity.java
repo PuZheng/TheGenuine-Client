@@ -27,7 +27,7 @@ import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.puzheng.the_genuine.data_structure.Favor;
+import com.puzheng.the_genuine.model.Favor;
 import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.search.SearchActivity;
@@ -73,7 +73,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.categories, menu);
+        getMenuInflater().inflate(R.menu.spu_types, menu);
         return true;
     }
 

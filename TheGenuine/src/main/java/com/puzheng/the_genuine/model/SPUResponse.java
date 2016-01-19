@@ -1,28 +1,27 @@
-package com.puzheng.the_genuine.data_structure;
+package com.puzheng.the_genuine.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
-
 /**
- * Created by xc on 13-11-19.
+ * Created by xc on 13-12-4.
  */
-public class VerificationInfo implements Parcelable {
+public class SPUResponse implements Parcelable {
 
-    public static final Creator<VerificationInfo> CREATOR = new Creator<VerificationInfo>() {
+    public static final Creator<SPUResponse> CREATOR = new Creator<SPUResponse>() {
         @Override
-        public VerificationInfo createFromParcel(Parcel source) {
-            return new VerificationInfo(source);
+        public SPUResponse createFromParcel(Parcel source) {
+            return new SPUResponse(source);
         }
 
         @Override
-        public VerificationInfo[] newArray(int size) {
-            return new VerificationInfo[0];
+        public SPUResponse[] newArray(int size) {
+            return new SPUResponse[0];
         }
     };
-    private SKU sku;
+    private SPU spu;
     @SerializedName("same_type_recommendations_cnt")
     private int sameTypeRecommendationsCnt;
     @SerializedName("same_vendor_recommendations_cnt")
@@ -30,15 +29,10 @@ public class VerificationInfo implements Parcelable {
     @SerializedName("comments_cnt")
     private int commentsCnt;
     private boolean favored;
-    @SerializedName("verify_cnt")
-    private int verifyCnt;
-
-    @SerializedName("last_verify_time")
-    private Date lastVerifyTime;
-
     private int distance;
-    public VerificationInfo(SKU sku, int sameTypeRecommendationsCnt, int sameVendorRecommendationsCnt, int commentsCnt, boolean favored, int distance) {
-        this.sku = sku;
+
+    public SPUResponse(SPU spu, int sameTypeRecommendationsCnt, int sameVendorRecommendationsCnt, int commentsCnt, boolean favored, int distance) {
+        this.spu = spu;
         this.sameTypeRecommendationsCnt = sameTypeRecommendationsCnt;
         this.sameVendorRecommendationsCnt = sameVendorRecommendationsCnt;
         this.commentsCnt = commentsCnt;
@@ -46,14 +40,12 @@ public class VerificationInfo implements Parcelable {
         this.distance = distance;
     }
 
-    public VerificationInfo(Parcel source) {
-        sku = source.readParcelable(SKU.class.getClassLoader());
+    public SPUResponse(Parcel source) {
+        spu = new SPU(source);
         sameTypeRecommendationsCnt = source.readInt();
         sameVendorRecommendationsCnt = source.readInt();
         commentsCnt = source.readInt();
         favored = Boolean.parseBoolean(source.readString());
-        verifyCnt = source.readInt();
-        lastVerifyTime = (Date) source.readSerializable();
         distance = source.readInt();
     }
 
@@ -70,24 +62,16 @@ public class VerificationInfo implements Parcelable {
         return distance;
     }
 
-    public Date getLastVerifyTime() {
-        return lastVerifyTime;
-    }
-
     public int getSameTypeRecommendationsCnt() {
         return sameTypeRecommendationsCnt;
     }
 
-    public SKU getSKU() {
-        return sku;
+    public SPU getSPU() {
+        return spu;
     }
 
     public int getSameVendorRecommendationsCnt() {
         return sameVendorRecommendationsCnt;
-    }
-
-    public int getVerifyCnt() {
-        return verifyCnt;
     }
 
     public boolean isFavored() {
@@ -100,13 +84,12 @@ public class VerificationInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(sku, flags);
+        spu.writeToParcel(dest, flags);
         dest.writeInt(sameTypeRecommendationsCnt);
         dest.writeInt(sameVendorRecommendationsCnt);
         dest.writeInt(commentsCnt);
         dest.writeString(String.valueOf(favored));
-        dest.writeInt(verifyCnt);
-        dest.writeSerializable(lastVerifyTime);
         dest.writeInt(distance);
     }
+
 }

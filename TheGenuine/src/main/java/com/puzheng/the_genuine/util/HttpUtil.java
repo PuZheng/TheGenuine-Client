@@ -1,8 +1,5 @@
 package com.puzheng.the_genuine.util;
 
-import com.puzheng.the_genuine.data_structure.User;
-import com.puzheng.the_genuine.store.AuthStore;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;

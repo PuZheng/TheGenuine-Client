@@ -12,7 +12,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.puzheng.the_genuine.ProfileActivity;
-import com.puzheng.the_genuine.CategoriesActivity;
+import com.puzheng.the_genuine.SPUTypeListActivity;
 import com.puzheng.the_genuine.FavorCategoriesActivity;
 import com.puzheng.the_genuine.MainActivity;
 import com.puzheng.the_genuine.NearbyActivity;
@@ -47,7 +47,7 @@ public class NavBar extends LinearLayout {
         enableTab(tab, false);
 
         initTab(R.id.go_home, MainActivity.class);
-        initTab(R.id.genuines, CategoriesActivity.class);
+        initTab(R.id.genuines, SPUTypeListActivity.class);
         initTab(R.id.nearby, NearbyActivity.class);
         initTab(R.id.favor, FavorCategoriesActivity.class);
         initTab(R.id.account, ProfileActivity.class);

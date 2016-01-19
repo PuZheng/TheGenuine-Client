@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Paint;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
@@ -25,8 +24,7 @@ import com.orhanobut.logger.Logger;
 import com.puzheng.deferred.AlwaysHandler;
 import com.puzheng.deferred.DoneHandler;
 import com.puzheng.deferred.FailHandler;
-import com.puzheng.the_genuine.data_structure.User;
-import com.puzheng.the_genuine.netutils.WebService;
+import com.puzheng.the_genuine.model.User;
 import com.puzheng.the_genuine.store.AuthStore;
 
 public class LoginFragment extends Fragment {

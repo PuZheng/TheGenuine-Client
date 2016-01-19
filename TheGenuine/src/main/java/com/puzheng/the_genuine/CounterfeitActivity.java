@@ -39,7 +39,7 @@ public class CounterfeitActivity extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CounterfeitActivity.this, CategoriesActivity.class);
+                Intent intent = new Intent(CounterfeitActivity.this, SPUTypeListActivity.class);
                 startActivity(intent);
             }
         });

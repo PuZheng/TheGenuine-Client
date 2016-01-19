@@ -2,21 +2,17 @@ package com.puzheng.the_genuine.store;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Handler;
 import android.util.Pair;
 
 import com.puzheng.deferred.Deferrable;
 import com.puzheng.deferred.Deferred;
 import com.puzheng.the_genuine.MyApp;
 import com.puzheng.the_genuine.R;
-import com.puzheng.the_genuine.data_structure.User;
-import com.puzheng.the_genuine.util.Misc;
+import com.puzheng.the_genuine.model.User;
 import com.puzheng.the_genuine.util.ServiceGenerator;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,7 +43,7 @@ public class AuthStore {
 
     public Deferrable<User, Pair<String, String>> register(String email, String password) {
         final Deferrable<User, Pair<String, String>> ret = new Deferred<User, Pair<String, String>>();
-        AuthService service = ServiceGenerator.createService(AuthService.class);
+        Service service = ServiceGenerator.createService(Service.class);
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("email", email);
         params.put("password", password);
@@ -87,7 +83,7 @@ public class AuthStore {
 
     public Deferrable<User, Pair<String, String>> login(String email, String password) {
         final Deferrable<User, Pair<String, String>> ret = new Deferred<User, Pair<String, String>>();
-        AuthService service = ServiceGenerator.createService(AuthService.class);
+        Service service = ServiceGenerator.createService(Service.class);
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("email", email);
         params.put("password", password);
@@ -140,7 +136,7 @@ public class AuthStore {
         editor.commit();
     }
 
-    interface AuthService {
+    interface Service {
         @POST("auth/login")
         Call<User> login(@Body Map<String, String> params);
 

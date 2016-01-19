@@ -1,4 +1,4 @@
-package com.puzheng.the_genuine.data_structure;
+package com.puzheng.the_genuine.model;
 
 import com.google.gson.annotations.SerializedName;
 

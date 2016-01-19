@@ -5,7 +5,7 @@ import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
 
-import com.puzheng.the_genuine.data_structure.Recommendation;
+import com.puzheng.the_genuine.model.Recommendation;
 
 abstract class ProductListFragment extends ListFragment {
     private String orderBy;

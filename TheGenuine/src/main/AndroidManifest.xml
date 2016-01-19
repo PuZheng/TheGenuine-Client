@@ -121,7 +121,7 @@
             android:value="AIzaSyCeZ87Ep2QXIHE898Stwv-FxzCE0hf3i9c" />
 
         <activity
-            android:name="com.puzheng.the_genuine.CategoriesActivity"
+            android:name=".SPUTypeListActivity"
             android:launchMode="singleTask"
             android:label="@string/title_activity_categories"
             android:screenOrientation="portrait" />
