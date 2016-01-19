@@ -2,20 +2,20 @@ package com.puzheng.the_genuine;
 
 import android.os.Bundle;
 
-public class ProductListFragmentByCategory extends ProductListFragment {
+public class SPUListFragmentByCategory extends SPUListFragment {
     private int categoryId;
 
-    public ProductListFragmentByCategory() {
+    public SPUListFragmentByCategory() {
 
     }
 
-    public ProductListFragmentByCategory setCatetoryId(int catetoryId) {
+    public SPUListFragmentByCategory setCatetoryId(int catetoryId) {
         this.categoryId = catetoryId;
         return this;
     }
 
-    public static ProductListFragment newInstance(String orderBy, int categoryId) {
-        return new ProductListFragmentByCategory().setCatetoryId(categoryId).setOrderBy(orderBy);
+    public static SPUListFragment newInstance(String orderBy, int categoryId) {
+        return new SPUListFragmentByCategory().setCatetoryId(categoryId).setOrderBy(orderBy);
     }
 
     @Override

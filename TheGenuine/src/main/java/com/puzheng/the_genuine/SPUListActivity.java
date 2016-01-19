@@ -14,28 +14,33 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.puzheng.the_genuine.image_utils.ImageFetcher;
+import com.puzheng.the_genuine.model.SPUType;
 import com.puzheng.the_genuine.search.SearchActivity;
+import com.puzheng.the_genuine.store.SPUStore;
+import com.puzheng.the_genuine.store.SPUTypeStore;
 
-/**
- * Created by abc549825@163.com(https://github.com/abc549825) at 12-03.
- */
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.puzheng.the_genuine.SPUListFragment.*;
+
 public class SPUListActivity extends ActionBarActivity implements ActionBar.TabListener, ImageFetcherInteface {
-    private int mCategoryId;
+    private SPUType spuType;
     private String[] orderByDescs;
     private String[] orderByStrs;
-    private ProductListFragmentPageAdapter mPageAdapter;
-    private ViewPager mViewPager;
+    private SPUListFragmentPageAdapter pageAdapter;
+    private ViewPager viewPager;
     private boolean inSearchMode;
-    private String mQuery;
-    private ImageFetcher mImageFetcher;
+    private String query;
+    private ImageFetcher imageFetcher;
 
     public ImageFetcher getImageFetcher() {
-        return mImageFetcher;
+        return imageFetcher;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.product_list, menu);
+        getMenuInflater().inflate(R.menu.spu_list, menu);
         return true;
     }
 
@@ -62,7 +67,7 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-        mViewPager.setCurrentItem(tab.getPosition());
+        viewPager.setCurrentItem(tab.getPosition());
     }
 
     @Override
@@ -74,65 +79,65 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        mImageFetcher = ImageFetcher.getImageFetcher(this, this.getResources().getDimensionPixelSize(R.dimen
+        imageFetcher = ImageFetcher.getImageFetcher(this, this.getResources().getDimensionPixelSize(R.dimen
                 .image_view_list_item_width), 0.25f);
 
-        mCategoryId = getIntent().getIntExtra("category_id", Constants.INVALID_ARGUMENT);
-        mQuery = getIntent().getStringExtra(SearchManager.QUERY);
-        inSearchMode = mCategoryId == Constants.INVALID_ARGUMENT;
-        setContentView(R.layout.activity_product_list);
+        spuType = getIntent().getParcelableExtra(SPUTypeListActivity.SPU_TYPE);
+        query = getIntent().getStringExtra(SearchManager.QUERY);
+        inSearchMode = spuType == null;
+        setContentView(R.layout.activity_spu_list);
         orderByDescs = getResources().getStringArray(R.array.order_by_list);
         orderByStrs = getResources().getStringArray(R.array.order_by_str_list);
-        mViewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager = (ViewPager) findViewById(R.id.pager);
         addTabs();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mImageFetcher.closeCache();
+        imageFetcher.closeCache();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mImageFetcher.setPauseWork(false);
-        mImageFetcher.setExitTasksEarly(true);
-        mImageFetcher.flushCache();
+        imageFetcher.setPauseWork(false);
+        imageFetcher.setExitTasksEarly(true);
+        imageFetcher.flushCache();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mImageFetcher.setExitTasksEarly(false);
+        imageFetcher.setExitTasksEarly(false);
     }
 
     private void addTabs() {
         final ActionBar actionBar = getActionBar();
-        mPageAdapter = new ProductListFragmentPageAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mPageAdapter);
-        mViewPager.setOffscreenPageLimit(mPageAdapter.getCount());
+        pageAdapter = new SPUListFragmentPageAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(pageAdapter);
+        viewPager.setOffscreenPageLimit(pageAdapter.getCount());
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 actionBar.setSelectedNavigationItem(position);
             }
         });
-        for (int i = 0; i < mPageAdapter.getCount(); i++) {
-            actionBar.addTab(actionBar.newTab().setText(mPageAdapter.getPageTitle(i)).setTabListener(this));
+        for (int i = 0; i < pageAdapter.getCount(); i++) {
+            actionBar.addTab(actionBar.newTab().setText(pageAdapter.getPageTitle(i)).setTabListener(this));
         }
         if (inSearchMode) {
-            actionBar.setTitle(mQuery);
+            actionBar.setTitle(query);
             actionBar.setSubtitle(R.string.search_result);
         } else {
             actionBar.setTitle(R.string.app_name);
-            actionBar.setSubtitle(getIntent().getStringExtra("categoryName"));
+            actionBar.setSubtitle(spuType.getName());
         }
     }
 
-    public class ProductListFragmentPageAdapter extends FragmentPagerAdapter {
-        public ProductListFragmentPageAdapter(FragmentManager fm) {
+    public class SPUListFragmentPageAdapter extends FragmentPagerAdapter {
+        public SPUListFragmentPageAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -144,9 +149,13 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
         @Override
         public Fragment getItem(int i) {
             if (inSearchMode) {
-                return ProductListFragmentByName.newInstance(orderByStrs[i], mQuery);
+                return SPUListFragmentByName.newInstance(orderByStrs[i], query);
             } else {
-                return ProductListFragmentByCategory.newInstance(orderByStrs[i], mCategoryId);
+                Map<String, String> query = new HashMap<String, String>();
+                query.put("spu_type_id", String.valueOf(spuType.getId()));
+                query.put("sort_by", orderByStrs[i]);
+                return new SPUListFragment.Builder().src(SPUStore.getInstance().fetchList(query)).build();
+//                return SPUListFragmentByCategory.newInstance(orderByStrs[i], spuType.getId());
             }
         }
 

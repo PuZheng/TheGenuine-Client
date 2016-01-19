@@ -46,10 +46,10 @@ class GetSPUListByCategory implements GetSPUListInterface {
 }
 
 public class GetSPUListTask extends AsyncTask<Void, Void, List<Recommendation>> {
-    private ProductListFragment mFragment;
+    private SPUListFragment mFragment;
     private GetSPUListInterface mGetProductListClass;
 
-    public GetSPUListTask(ProductListFragment fragment, GetSPUListInterface queryClass) {
+    public GetSPUListTask(SPUListFragment fragment, GetSPUListInterface queryClass) {
         this.mFragment = fragment;
         this.mGetProductListClass = queryClass;
     }
