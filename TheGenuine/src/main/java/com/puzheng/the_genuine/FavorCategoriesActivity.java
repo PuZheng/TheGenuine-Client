@@ -328,7 +328,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.recommendation_list_item, null);
+                convertView = inflater.inflate(R.layout.spu_list_item, null);
             }
             RecommendationListAdapter.ViewHolder viewHolder;
             if (convertView.getTag() == null) {
@@ -336,7 +336,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
                         (TextView) convertView.findViewById(R.id.textViewProductName),
                         (TextView) convertView.findViewById(R.id.textViewFavorCnt),
                         (TextView) convertView.findViewById(R.id.textViewPrice),
-                        (Button) convertView.findViewById(R.id.btnLogout),
+                        (Button) convertView.findViewById(R.id.btnNearby),
                         (RatingBar) convertView.findViewById(R.id.ratingBar));
                 convertView.setTag(viewHolder);
             } else {
@@ -344,7 +344,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
             }
 
             final Favor favor = (Favor) getItem(position);
-            mImageFetcher.loadImage(favor.getSPU().getIcon(), viewHolder.imageView);
+            mImageFetcher.loadImage(favor.getSPU().getIcon().getURL(), viewHolder.imageView);
 
             viewHolder.textViewProductName.setText(favor.getSPU().getName());
             viewHolder.textViewPrice.setText("￥" + favor.getSPU().getMsrp());

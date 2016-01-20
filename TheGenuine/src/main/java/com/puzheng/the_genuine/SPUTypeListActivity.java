@@ -34,6 +34,7 @@ import com.puzheng.the_genuine.util.Misc;
 import java.util.List;
 
 public class SPUTypeListActivity extends ActionBarActivity implements BackPressedInterface, RefreshInterface {
+    static final String SPU_TYPE = "SPU_TYPE_ID";
     private GridView gridView;
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
     private MaskableManager maskableManager;
@@ -72,7 +73,8 @@ public class SPUTypeListActivity extends ActionBarActivity implements BackPresse
 
     @Override
     public void refresh() {
-        new GetCategoriesTask(gridView).execute();
+
+        //new GetCategoriesTask(gridView).execute();
     }
 
 
@@ -89,10 +91,9 @@ public class SPUTypeListActivity extends ActionBarActivity implements BackPresse
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SPUType category = (SPUType) gridView.getAdapter().getItem(position);
+                SPUType spuType = (SPUType) gridView.getAdapter().getItem(position);
                 Intent intent = new Intent(SPUTypeListActivity.this, SPUListActivity.class);
-                intent.putExtra("category_id", category.getId());
-                intent.putExtra("categoryName", category.getName());
+                intent.putExtra(SPU_TYPE, spuType);
                 startActivity(intent);
             }
         });
@@ -166,37 +167,6 @@ public class SPUTypeListActivity extends ActionBarActivity implements BackPresse
         imageFetcher.closeCache();
     }
 
-    private class GetCategoriesTask extends AsyncTask<Void, Void, List<SPUType>> {
-        private final GridView gridView;
-        private Exception exception;
-
-        public GetCategoriesTask(GridView gridView) {
-            this.gridView = gridView;
-        }
-
-        @Override
-        protected List<SPUType> doInBackground(Void... params) {
-            try {
-                return WebService.getInstance(gridView.getContext()).getCategories();
-            } catch (Exception e) {
-                exception = e;
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(List<SPUType> list) {
-            if (maskableManager.unmask(exception)) {
-                mAdapter = new MySPUTypesAdapter(list);
-                gridView.setAdapter(mAdapter);
-            }
-        }
-
-        @Override
-        protected void onPreExecute() {
-            maskableManager.mask();
-        }
-    }
 
     private class MySPUTypesAdapter extends BaseAdapter {
 

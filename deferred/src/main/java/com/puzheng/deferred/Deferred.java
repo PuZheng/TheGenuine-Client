@@ -28,13 +28,17 @@ public class Deferred<DataType, ErrorType> implements Deferrable<DataType, Error
     @Override
     public void resolve(DataType data) {
         doneHandler.done(data);
-        alwaysHandler.always();
+        if (alwaysHandler != null) {
+            alwaysHandler.always();
+        }
     }
 
     @Override
     public void reject(ErrorType err) {
         failHandler.fail(err);
-        alwaysHandler.always();
+        if (alwaysHandler != null) {
+            alwaysHandler.always();
+        }
     }
 
 }

@@ -70,7 +70,7 @@ public class ProfileActivity extends Activity implements BackPressedInterface {
         ((TextView) findViewById(R.id.textViewEmail)).setText(
                 AuthStore.getInstance().getUser().getEmail());
 
-        Button button = (Button) findViewById(R.id.btnLogout);
+        Button button = (Button) findViewById(R.id.btnNearby);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

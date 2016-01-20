@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/visit_nearby"
-            android:id="@+id/btnLogout"
+            android:id="@+id/btnNearby"
             style="@style/ButtonAppTheme"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp" />

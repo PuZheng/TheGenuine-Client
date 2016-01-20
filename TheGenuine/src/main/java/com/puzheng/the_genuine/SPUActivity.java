@@ -64,7 +64,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     private int spu_id;
     private MaskableManager maskableManager;
     private FavorTask mTask;
-    private MyCoverAdapter mAdapter;
+    private MyCoverAdapter adapter;
     private ImageFetcher mImageFetcher;
     private UMSocialService mController;
 
@@ -188,8 +188,8 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     protected void onResume() {
         super.onResume();
         mImageFetcher.setExitTasksEarly(false);
-        if (mAdapter != null) {
-            mAdapter.notifyDataSetChanged();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -208,8 +208,8 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         return verificationInfo != null ? verificationInfo.getDistance() : spuResponse.getDistance();
     }
 
-    private List<String> getPicUrlList() {
-        return verificationInfo != null ? verificationInfo.getSKU().getSPU().getPicUrlList() : spuResponse.getSPU().getPicUrlList();
+    private List<SPU.Pic> getPics() {
+        return verificationInfo != null ? verificationInfo.getSKU().getSPU().getPics() : spuResponse.getSPU().getPics();
     }
 
     private float getRating() {
@@ -271,9 +271,12 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             }
         });
 
-
-        mAdapter = new MyCoverAdapter(getSupportFragmentManager(), getPicUrlList());
-        viewPagerCover.setAdapter(mAdapter);
+        List<String> urls = new ArrayList<String>();
+        for (SPU.Pic pic: getPics()) {
+            urls.add(pic.getURL());
+        }
+        adapter = new MyCoverAdapter(getSupportFragmentManager(), urls);
+        viewPagerCover.setAdapter(adapter);
         CirclePageIndicator titleIndicator = (CirclePageIndicator) findViewById(R.id.titles);
         titleIndicator.setViewPager(viewPagerCover);
 
@@ -399,10 +402,10 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 
     private void shareInit() {
         String contentUrl = getShareURL();
-        List<String> picUrlList = getPicUrlList();
-        if (MyApp.SHAREMEDIA && picUrlList != null && picUrlList.size() > 1) {
+        List<SPU.Pic> pics = getPics();
+        if (MyApp.SHAREMEDIA && pics != null && pics.size() > 1) {
             try {
-                mController.setShareMedia(new UMImage(SPUActivity.this, HttpUtil.getURL(picUrlList.get(0)).toString()));
+                mController.setShareMedia(new UMImage(SPUActivity.this, HttpUtil.getURL(pics.get(0).getURL()).toString()));
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }

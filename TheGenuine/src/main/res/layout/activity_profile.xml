@@ -67,7 +67,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/apptheme_btn_default_holo_light"
         android:text="@string/logout"
-        android:id="@+id/btnLogout"
+        android:id="@+id/btnNearby"
         android:textSize="16dp"
         android:textColor="@android:color/white"
         android:layout_margin="16dp"
