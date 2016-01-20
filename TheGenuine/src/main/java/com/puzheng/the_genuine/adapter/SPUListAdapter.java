@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.puzheng.the_genuine.R;
 import com.puzheng.the_genuine.model.SPU;
 
@@ -58,7 +59,7 @@ public class SPUListAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         SPU spu = (SPU) getItem(position);
-//        mImageFetcherInteface.getImageFetcher().loadImage(recommendation.getPicUrl(), viewHolder.imageView);
+        Glide.with(context).load(spu.getIcon().getURL()).into(viewHolder.imageView);
 
         viewHolder.textViewProductName.setText(spu.getName());
 //        viewHolder.textViewFavorCnt.setText(context.getString(R.string.popularity, Misc.humanizeNum(recommendation.getFavorCnt(), mActivity)));
