@@ -28,6 +28,8 @@ import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.puzheng.humanize.Humanize;
 import com.puzheng.the_genuine.model.SPU;
 import com.puzheng.the_genuine.model.SPUResponse;
 import com.puzheng.the_genuine.model.VerificationInfo;
@@ -260,7 +262,8 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 
         Button button = (Button) findViewById(R.id.buttonComment);
 
-        button.setText(getString(R.string.comment_number,  Misc.humanizeNum(getCommentsCnt(), SPUActivity.this)));
+        button.setText(getString(R.string.comment_number,
+                Humanize.with(this).num(getCommentsCnt())));
         button.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -291,11 +294,13 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         TabHost.TabSpec tabSpec = tabHost.newTabSpec("tab1").setIndicator(s);
         tabSpec.setContent(new MyTabFactory(this));
         tabHost.addTab(tabSpec);
-        s = getString(R.string.sameType, Misc.humanizeNum(getSameTypeRecommendationsCnt(), SPUActivity.this));
+        s = getString(R.string.sameType,
+                Humanize.with(this).num(getSameTypeRecommendationsCnt()));
         tabSpec = tabHost.newTabSpec("tab2").setIndicator(s);
         tabSpec.setContent(new MyTabFactory(this));
         tabHost.addTab(tabSpec);
-        s = getString(R.string.sameVendor, Misc.humanizeNum(getSameVendorRecommendationsCnt(), SPUActivity.this));
+        s = getString(R.string.sameVendor,
+                Humanize.with(this).num(getSameVendorRecommendationsCnt()));
         tabSpec = tabHost.newTabSpec("tab3").setIndicator(s);
         tabSpec.setContent(new MyTabFactory(this));
         tabHost.addTab(tabSpec);
@@ -334,7 +339,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             button.setText(getString(R.string.nearest, ""));
             button.setClickable(false);
         } else {
-            button.setText(getString(R.string.nearest, Misc.humanizeDistance(distance, SPUActivity.this)));
+            button.setText(getString(R.string.nearest, Humanize.with(this).distance(distance)));
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

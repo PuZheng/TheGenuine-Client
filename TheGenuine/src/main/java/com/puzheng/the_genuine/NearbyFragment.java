@@ -108,7 +108,7 @@ public class NearbyFragment extends ListFragment {
             mImageFetcher.loadImage(response.getStore().getIcon(), viewHolder.mImageView);
 
             viewHolder.mStoreName.setText(response.getStore().getName());
-            viewHolder.mDistance.setText(Misc.humanizeDistance(response.getDistance(), getActivity()));
+//            viewHolder.mDistance.setText(Misc.humanizeDistance(response.getDistance(), getActivity()));
             viewHolder.mAddress.setText(response.getStore().getAddress());
             viewHolder.mRating.setRating(response.getStore().getRating());
             viewHolder.mMarkView.setText(String.valueOf(position + 1));

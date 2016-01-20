@@ -46,6 +46,7 @@ dependencies {
     compile fileTree(include: '*.jar', dir: 'libs')
     compile project(':MyLibrary')
     compile project(':deferred')
+    compile project(':humanize')
 }
 
 preBuild.doFirst {

@@ -106,20 +106,6 @@ public class Misc {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     }
 
-    public static String humanizeDistance(int distance, Context context) {
-        if (distance < 1000) {
-            return String.valueOf(distance) + context.getString(R.string.meter);
-        }
-        return String.valueOf(distance / 1000) + context.getString(R.string.kilometers);
-    }
-
-    public static String humanizeNum(int favorCnt, Context context) {
-        if (favorCnt < 1000) {
-            return String.valueOf(favorCnt);
-        }
-        return String.valueOf(favorCnt / 1000) + context.getString(R.string.thousand);
-    }
-
     public static boolean isExternalStorageRemovable() {
         return Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD || Environment.isExternalStorageRemovable();
     }
