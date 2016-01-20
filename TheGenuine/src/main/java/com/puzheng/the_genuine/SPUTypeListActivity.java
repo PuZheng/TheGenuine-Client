@@ -2,7 +2,6 @@ package com.puzheng.the_genuine;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -19,14 +18,13 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
 import com.puzheng.deferred.AlwaysHandler;
 import com.puzheng.deferred.DoneHandler;
 import com.puzheng.deferred.FailHandler;
 import com.puzheng.the_genuine.model.SPUType;
-import com.puzheng.the_genuine.image_utils.ImageFetcher;
-import com.puzheng.the_genuine.netutils.WebService;
 import com.puzheng.the_genuine.search.SearchActivity;
 import com.puzheng.the_genuine.store.SPUTypeStore;
 import com.puzheng.the_genuine.util.Misc;
@@ -38,8 +36,7 @@ public class SPUTypeListActivity extends ActionBarActivity implements BackPresse
     private GridView gridView;
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
     private MaskableManager maskableManager;
-    private ImageFetcher imageFetcher;
-    private MySPUTypesAdapter mAdapter;
+    private MySPUTypesAdapter adapter;
 
     @Override
     public void doBackPressed() {
@@ -83,9 +80,7 @@ public class SPUTypeListActivity extends ActionBarActivity implements BackPresse
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spu_type_list);
 
-        int imageThumbSize = getResources().getDimensionPixelSize(R.dimen.categories_grid_item_width);
 
-        imageFetcher = ImageFetcher.getImageFetcher(this, imageThumbSize, 0.25f);
         gridView = (GridView) findViewById(R.id.gridView);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -105,10 +100,8 @@ public class SPUTypeListActivity extends ActionBarActivity implements BackPresse
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
                     // Before Honeycomb pause image loading on scroll to help with performance
                     if (!Misc.hasHoneycomb()) {
-                        imageFetcher.setPauseWork(true);
                     }
                 } else {
-                    imageFetcher.setPauseWork(false);
                 }
             }
 
@@ -127,8 +120,8 @@ public class SPUTypeListActivity extends ActionBarActivity implements BackPresse
             public void done(List<SPUType> spuTypes) {
                 Logger.i("spu types fetched");
                 Logger.json(new Gson().toJson(spuTypes));
-                mAdapter = new MySPUTypesAdapter(spuTypes);
-                gridView.setAdapter(mAdapter);
+                adapter = new MySPUTypesAdapter(spuTypes);
+                gridView.setAdapter(adapter);
             }
         }).fail(new FailHandler<Pair<String, String>>() {
             @Override
@@ -142,29 +135,6 @@ public class SPUTypeListActivity extends ActionBarActivity implements BackPresse
                 maskableManager.unmask(null);
             }
         });
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        imageFetcher.setPauseWork(false);
-        imageFetcher.setExitTasksEarly(true);
-        imageFetcher.flushCache();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        imageFetcher.setExitTasksEarly(false);
-        if (mAdapter != null) {
-            mAdapter.notifyDataSetChanged();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        imageFetcher.closeCache();
     }
 
 
@@ -207,7 +177,7 @@ public class SPUTypeListActivity extends ActionBarActivity implements BackPresse
             }
             final SPUType spuType = (SPUType) getItem(position);
 
-            imageFetcher.loadImage(spuType.getPic().getURL(), viewHolder.imageView);
+            Glide.with(SPUTypeListActivity.this).load(spuType.getPic().getURL()).into(viewHolder.imageView);
             return convertView;
         }
 

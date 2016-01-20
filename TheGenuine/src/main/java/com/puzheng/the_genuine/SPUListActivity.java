@@ -22,7 +22,7 @@ import com.puzheng.the_genuine.store.SPUStore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SPUListActivity extends ActionBarActivity implements ActionBar.TabListener, ImageFetcherInteface {
+public class SPUListActivity extends ActionBarActivity implements ActionBar.TabListener {
     private SPUType spuType;
     private String[] orderByDescs;
     private String[] orderByStrs;
@@ -30,11 +30,6 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
     private ViewPager viewPager;
     private boolean inSearchMode;
     private String query;
-    private ImageFetcher imageFetcher;
-
-    public ImageFetcher getImageFetcher() {
-        return imageFetcher;
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -77,8 +72,6 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        imageFetcher = ImageFetcher.getImageFetcher(this, this.getResources().getDimensionPixelSize(R.dimen
-                .image_view_list_item_width), 0.25f);
 
         spuType = getIntent().getParcelableExtra(SPUTypeListActivity.SPU_TYPE);
         query = getIntent().getStringExtra(SearchManager.QUERY);
@@ -88,26 +81,6 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
         orderByStrs = getResources().getStringArray(R.array.order_by_str_list);
         viewPager = (ViewPager) findViewById(R.id.pager);
         addTabs();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        imageFetcher.closeCache();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        imageFetcher.setPauseWork(false);
-        imageFetcher.setExitTasksEarly(true);
-        imageFetcher.flushCache();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        imageFetcher.setExitTasksEarly(false);
     }
 
     private void addTabs() {

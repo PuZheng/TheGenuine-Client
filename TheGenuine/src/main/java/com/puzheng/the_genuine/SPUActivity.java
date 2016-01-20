@@ -65,11 +65,11 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     private MaskableManager maskableManager;
     private FavorTask mTask;
     private MyCoverAdapter adapter;
-    private ImageFetcher mImageFetcher;
+    private ImageFetcher imageFetcher;
     private UMSocialService mController;
 
     public ImageFetcher getImageFetcher() {
-        return mImageFetcher;
+        return imageFetcher;
     }
 
     @Override
@@ -153,7 +153,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         display.getSize(point);
 
-        mImageFetcher = ImageFetcher.getImageFetcher(this, point.x, point.y / 2, 0.25f);
+        imageFetcher = ImageFetcher.getImageFetcher(this, point.x, point.y / 2, 0.25f);
         mController = UMServiceFactory.getUMSocialService("com.umeng.share",
                 RequestType.SOCIAL);
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -173,21 +173,21 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mImageFetcher.closeCache();
+        imageFetcher.closeCache();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mImageFetcher.setPauseWork(false);
-        mImageFetcher.setExitTasksEarly(true);
-        mImageFetcher.flushCache();
+        imageFetcher.setPauseWork(false);
+        imageFetcher.setExitTasksEarly(true);
+        imageFetcher.flushCache();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mImageFetcher.setExitTasksEarly(false);
+        imageFetcher.setExitTasksEarly(false);
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
