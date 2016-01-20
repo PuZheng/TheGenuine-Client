@@ -67,7 +67,7 @@ public class SPUType implements Parcelable {
         dest.writeParcelable(pic, 0);
     }
 
-    private static class Pic implements Parcelable{
+    public static class Pic implements Parcelable{
         String url;
         String path;
 

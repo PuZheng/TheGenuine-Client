@@ -13,22 +13,20 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.orhanobut.logger.Logger;
 import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.model.SPUType;
 import com.puzheng.the_genuine.search.SearchActivity;
 import com.puzheng.the_genuine.store.SPUStore;
-import com.puzheng.the_genuine.store.SPUTypeStore;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.puzheng.the_genuine.SPUListFragment.*;
 
 public class SPUListActivity extends ActionBarActivity implements ActionBar.TabListener, ImageFetcherInteface {
     private SPUType spuType;
     private String[] orderByDescs;
     private String[] orderByStrs;
-    private SPUListFragmentPageAdapter pageAdapter;
+    private MyPageAdapter pageAdapter;
     private ViewPager viewPager;
     private boolean inSearchMode;
     private String query;
@@ -114,16 +112,21 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
 
     private void addTabs() {
         final ActionBar actionBar = getActionBar();
-        pageAdapter = new SPUListFragmentPageAdapter(getSupportFragmentManager());
+        pageAdapter = new MyPageAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pageAdapter);
         viewPager.setOffscreenPageLimit(pageAdapter.getCount());
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+
             @Override
             public void onPageSelected(int position) {
                 actionBar.setSelectedNavigationItem(position);
+                ((SPUListFragment)pageAdapter.getItem(position)).init();
             }
+
+
         });
+
         for (int i = 0; i < pageAdapter.getCount(); i++) {
             actionBar.addTab(actionBar.newTab().setText(pageAdapter.getPageTitle(i)).setTabListener(this));
         }
@@ -134,11 +137,17 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
             actionBar.setTitle(R.string.app_name);
             actionBar.setSubtitle(spuType.getName());
         }
+        // init the first page
+        ((SPUListFragment)pageAdapter.getItem(0)).init();
     }
 
-    public class SPUListFragmentPageAdapter extends FragmentPagerAdapter {
-        public SPUListFragmentPageAdapter(FragmentManager fm) {
+    public class MyPageAdapter extends FragmentPagerAdapter {
+
+        private Map<Integer, Fragment> fragments;
+
+        public MyPageAdapter(FragmentManager fm) {
             super(fm);
+            fragments = new HashMap<Integer, Fragment>();
         }
 
         @Override
@@ -149,12 +158,16 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
         @Override
         public Fragment getItem(int i) {
             if (inSearchMode) {
-                return SPUListFragmentByName.newInstance(orderByStrs[i], query);
+                return null;
+//                return SPUListFragmentByName.newInstance(orderByStrs[i], query);
             } else {
-                Map<String, String> query = new HashMap<String, String>();
-                query.put("spu_type_id", String.valueOf(spuType.getId()));
-                query.put("sort_by", orderByStrs[i]);
-                return new SPUListFragment.Builder().src(SPUStore.getInstance().fetchList(query)).build();
+                if (fragments.get(i) == null) {
+                    Map<String, String> query = new HashMap<String, String>();
+                    query.put("spu_type_id", String.valueOf(spuType.getId()));
+                    query.put("sort_by", orderByStrs[i]);
+                    fragments.put(i, new SPUListFragment.Builder().deferred(SPUStore.getInstance().fetchList(query)).build());
+                }
+                return fragments.get(i);
             }
         }
 

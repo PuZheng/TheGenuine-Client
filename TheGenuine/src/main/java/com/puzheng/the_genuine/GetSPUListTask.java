@@ -56,13 +56,14 @@ public class GetSPUListTask extends AsyncTask<Void, Void, List<Recommendation>> 
 
     @Override
     protected List<Recommendation> doInBackground(Void... params) {
-        String sortIdx = mFragment.getOrderBy();
-        try {
-            return this.mGetProductListClass.getSPUList(sortIdx);
-        } catch (Exception e){
-            e.printStackTrace();
-            return null;
-        }
+//        String sortIdx = mFragment.getOrderBy();
+//        try {
+//            return this.mGetProductListClass.getSPUList(sortIdx);
+//        } catch (Exception e){
+//            e.printStackTrace();
+//            return null;
+//        }
+        return null;
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.ListView;
 
+import com.orhanobut.logger.Logger;
 import com.puzheng.deferred.Deferrable;
 import com.puzheng.deferred.DoneHandler;
 import com.puzheng.the_genuine.adapter.SPUListAdapter;
@@ -15,23 +16,12 @@ import com.puzheng.the_genuine.model.SPU;
 import java.util.List;
 
 class SPUListFragment extends ListFragment {
-    private Deferrable<List<SPU>, Pair<String, String>> src;
-
-//    private String orderBy;
+    private Deferrable<List<SPU>, Pair<String, String>> deferrable;
+    private boolean inited;
 
     private SPUListFragment() {
 
     }
-
-
-//    public SPUListFragment setOrderBy(String orderBy) {
-//        this.orderBy = orderBy;
-//        return this;
-//    }
-//
-//    public String getOrderBy() {
-//        return orderBy;
-//    }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
@@ -42,32 +32,38 @@ class SPUListFragment extends ListFragment {
         getActivity().startActivity(intent);
     }
 
-    public SPUListFragment setSrc(Deferrable<List<SPU>,Pair<String,String>> src) {
-        this.src = src;
-        src.done(new DoneHandler<List<SPU>>() {
-            @Override
-            public void done(List<SPU> spus) {
-                setListAdapter(new SPUListAdapter(spus));
-            }
-        });
+    public SPUListFragment setDeferrable(Deferrable<List<SPU>, Pair<String, String>> deferrable) {
+        this.deferrable = deferrable;
+
         return this;
     }
 
+    public void init() {
+        if (!inited) {
+            deferrable.done(new DoneHandler<List<SPU>>() {
+                @Override
+                public void done(List<SPU> spus) {
+                    setListAdapter(new SPUListAdapter(getActivity(), spus));
+                }
+            });
+            inited = true;
+        }
+    }
+
     static class Builder {
-        private SPUListFragment spuListFragment;
-        private Deferrable<List<SPU>, Pair<String, String>> src;
+        private Deferrable<List<SPU>, Pair<String, String>> deferrable;
 
         public Builder() {
 
         }
 
-        public Builder src(Deferrable<List<SPU>, Pair<String, String>> src) {
-            this.src = src;
+        public Builder deferred(Deferrable<List<SPU>, Pair<String, String>> deferrable) {
+            this.deferrable = deferrable;
             return this;
         }
 
         public SPUListFragment build() {
-            return new SPUListFragment().setSrc(src);
+            return new SPUListFragment().setDeferrable(deferrable);
         }
     }
 }

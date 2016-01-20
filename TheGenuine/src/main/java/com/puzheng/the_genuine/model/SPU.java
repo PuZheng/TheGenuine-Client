@@ -76,7 +76,7 @@ public class SPU implements Parcelable {
         dest.writeFloat(rating);
         dest.writeFloat(msrp);
         dest.writeString(desc);
-        dest.writeParcelableArray(pics, 0);
+        dest.writeList(pics);
         dest.writeParcelable(icon, 0);
     }
 
@@ -132,7 +132,7 @@ public class SPU implements Parcelable {
         return pics;
     }
 
-    private static class Pic implements Parcelable {
+    public static class Pic implements Parcelable {
         private String path;
         private String url;
 
@@ -162,7 +162,7 @@ public class SPU implements Parcelable {
             return path;
         }
 
-        public String getUrl() {
+        public String getURL() {
             return url;
         }
 

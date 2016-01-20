@@ -344,7 +344,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
             }
 
             final Favor favor = (Favor) getItem(position);
-            mImageFetcher.loadImage(favor.getSPU().getIcon(), viewHolder.imageView);
+            mImageFetcher.loadImage(favor.getSPU().getIcon().getURL(), viewHolder.imageView);
 
             viewHolder.textViewProductName.setText(favor.getSPU().getName());
             viewHolder.textViewPrice.setText("￥" + favor.getSPU().getMsrp());
