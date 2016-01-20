@@ -11,6 +11,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.puzheng.humanize.Humanize;
 import com.puzheng.the_genuine.R;
 import com.puzheng.the_genuine.model.SPU;
 
@@ -62,7 +63,7 @@ public class SPUListAdapter extends BaseAdapter {
         Glide.with(context).load(spu.getIcon().getURL()).into(viewHolder.imageView);
 
         viewHolder.textViewProductName.setText(spu.getName());
-//        viewHolder.textViewFavorCnt.setText(context.getString(R.string.popularity, Misc.humanizeNum(recommendation.getFavorCnt(), mActivity)));
+        viewHolder.textViewFavorCnt.setText(context.getString(R.string.popularity, Humanize.with(context).num(1200)));
         viewHolder.textViewPrice.setText(String.valueOf(spu.getMsrp()) + "元");
         viewHolder.ratingBar.setRating(spu.getRating());
 //        viewHolder.button.setText(context.getString(R.string.nearest, Misc.humanizeDistance(recommendation.getDistance(), mActivity)));

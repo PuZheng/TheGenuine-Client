@@ -64,10 +64,10 @@ public class RecommendationListAdapter extends BaseAdapter {
         mImageFetcherInteface.getImageFetcher().loadImage(recommendation.getPicUrl(), viewHolder.imageView);
 
         viewHolder.textViewProductName.setText(recommendation.getProductName());
-        viewHolder.textViewFavorCnt.setText(mActivity.getString(R.string.popularity, Misc.humanizeNum(recommendation.getFavorCnt(), mActivity)));
+//        viewHolder.textViewFavorCnt.setText(mActivity.getString(R.string.popularity, Misc.humanizeNum(recommendation.getFavorCnt(), mActivity)));
         viewHolder.textViewPrice.setText(String.valueOf(recommendation.getPriceInYuan()));
         viewHolder.ratingBar.setRating(recommendation.getRating());
-        viewHolder.button.setText(mActivity.getString(R.string.nearest, Misc.humanizeDistance(recommendation.getDistance(), mActivity)));
+//        viewHolder.button.setText(mActivity.getString(R.string.nearest, Misc.humanizeDistance(recommendation.getDistance(), mActivity)));
         viewHolder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

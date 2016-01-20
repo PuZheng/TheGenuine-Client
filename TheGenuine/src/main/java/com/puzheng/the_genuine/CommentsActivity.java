@@ -10,6 +10,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.puzheng.humanize.Humanize;
 import com.puzheng.the_genuine.model.Comment;
 import com.puzheng.the_genuine.image_utils.ImageFetcher;
 import com.puzheng.the_genuine.netutils.WebService;
@@ -143,7 +145,8 @@ public class CommentsActivity extends ListActivity implements RefreshInterface {
                 if (commentList.size() == 0) {
                     mEmptyView.setVisibility(View.VISIBLE);
                 }
-                text = getString(R.string.comment) + "(" + Misc.humanizeNum(commentList.size(), CommentsActivity.this) + ")";
+                text = getString(R.string.comment) + "(" +
+                        Humanize.with(CommentsActivity.this).num(commentList.size()) + ")";
             }
             getActionBar().setTitle(text);
             task = null;

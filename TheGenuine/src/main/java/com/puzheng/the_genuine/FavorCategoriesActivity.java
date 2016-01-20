@@ -348,9 +348,9 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
 
             viewHolder.textViewProductName.setText(favor.getSPU().getName());
             viewHolder.textViewPrice.setText("￥" + favor.getSPU().getMsrp());
-            viewHolder.textViewFavorCnt.setText(getString(R.string.popularity , Misc.humanizeNum(favor.getFavorCnt(), mActivity)));
+//            viewHolder.textViewFavorCnt.setText(getString(R.string.popularity , Misc.humanizeNum(favor.getFavorCnt(), mActivity)));
             viewHolder.ratingBar.setRating(favor.getSPU().getRating());
-            viewHolder.button.setText(getString(R.string.nearest, Misc.humanizeDistance(favor.getDistance(), FavorCategoriesActivity.this)) );
+//            viewHolder.button.setText(getString(R.string.nearest, Misc.humanizeDistance(favor.getDistance(), FavorCategoriesActivity.this)) );
             viewHolder.button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -364,7 +364,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
                 viewHolder.button.setVisibility(View.INVISIBLE);
             }
 
-            viewHolder.button.setText(Misc.humanizeDistance(favor.getDistance(), FavorCategoriesActivity.this));
+//            viewHolder.button.setText(Misc.humanizeDistance(favor.getDistance(), FavorCategoriesActivity.this));
             viewHolder.textViewPrice.setText(String.valueOf(favor.getSPU().getMsrp()));
             return convertView;
         }
