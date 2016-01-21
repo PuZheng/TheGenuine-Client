@@ -1,62 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.puzheng.the_genuine"
-    android:versionCode="1"
-    android:versionName="1.0">
+<manifest package="com.puzheng.lejian"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          android:versionCode="1"
+          android:versionName="1.0">
 
     <uses-sdk
         android:minSdkVersion="11"
-        android:targetSdkVersion="16" />
+        android:targetSdkVersion="16"/>
 
-    <uses-permission android:name="android.permission.NFC" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.FLASHLIGHT" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.NFC"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
 
-    <permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
+    <permission android:name="android.permission.BAIDU_LOCATION_SERVICE"/>
 
-    <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_GPS" />
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_GPS"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
 
     <uses-feature
         android:name="android.hardware.nfc"
-        android:required="true" />
+        android:required="true"/>
     <uses-feature
         android:glEsVersion="0x00020000"
-        android:required="true" />
+        android:required="true"/>
 
     <application
-        android:name="com.puzheng.the_genuine.MyApp"
+        android:name="com.puzheng.lejian.MyApp"
         android:allowBackup="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+        <service android:name="com.amap.api.location.APSService"></service>
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="515fa60008ddebec68e8e055e76708c3">
+
+        </meta-data>
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote" />
-        <service android:name=".LocationService" />
+            android:process=":remote"/>
+        <service android:name="com.puzheng.lejian.LocationService"/>
 
         <activity
-            android:name="com.puzheng.the_genuine.MainActivity"
+            android:name="com.puzheng.lejian.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
             <!--
@@ -68,126 +76,126 @@
             -->
 
             <intent-filter>
-                <action android:name="android.nfc.action.TECH_DISCOVERED" />
+                <action android:name="android.nfc.action.TECH_DISCOVERED"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.nfc.action.TECH_DISCOVERED"
-                android:resource="@xml/nfc_tech_filter" />
+                android:resource="@xml/nfc_tech_filter"/>
 
             <intent-filter>
-                <action android:name="android.nfc.action.TAG_DISCOVERED" />
+                <action android:name="android.nfc.action.TAG_DISCOVERED"/>
             </intent-filter>
         </activity>
         <activity
-            android:name=".SPUActivity"
-            android:theme="@style/WithUpIndicatorTheme"
+            android:name="com.puzheng.lejian.SPUActivity"
             android:label="@string/title_activity_spu"
-            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"
-            android:uiOptions="splitActionBarWhenNarrow">
+            android:theme="@style/WithUpIndicatorTheme"
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.UI_OPTIONS"
-                android:value="splitActionBarWhenNarrow" />
+                android:value="splitActionBarWhenNarrow"/>
         </activity>
         <activity
-            android:name="com.puzheng.the_genuine.CounterfeitActivity"
-            android:theme="@style/WithUpIndicatorTheme"
-            android:windowSoftInputMode="adjustPan"
+            android:name="com.puzheng.lejian.CounterfeitActivity"
             android:label="@string/title_activity_counterfeit"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.puzheng.the_genuine.NearbyActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:label="NeighborhoodActivity" />
+            android:theme="@style/WithUpIndicatorTheme"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="com.puzheng.lejian.NearbyActivity"
+            android:label="NeighborhoodActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.umeng.socialize.view.ShareActivity"
             android:configChanges="orientation|keyboard"
             android:launchMode="singleTask"
             android:noHistory="true"
             android:theme="@style/Theme.UMDialog"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
-        <activity android:name="com.tencent.tauth.AuthActivity" />
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
+        <activity android:name="com.tencent.tauth.AuthActivity"/>
 
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="5295e18156240b7c6f01eadb" />
+            android:value="5295e18156240b7c6f01eadb"/>
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version"/>
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCeZ87Ep2QXIHE898Stwv-FxzCE0hf3i9c" />
+            android:value="AIzaSyCeZ87Ep2QXIHE898Stwv-FxzCE0hf3i9c"/>
 
         <activity
-            android:name=".SPUTypeListActivity"
-            android:launchMode="singleTask"
+            android:name="com.puzheng.lejian.SPUTypeListActivity"
             android:label="@string/title_activity_categories"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.puzheng.the_genuine.CommentsActivity"
-            android:theme="@style/WithUpIndicatorTheme"
-            android:label="@string/title_activity_comments"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".CommentActivity"
-            android:windowSoftInputMode="adjustResize|stateVisible"
-            android:theme="@style/WithUpIndicatorTheme"
-            android:label="@string/CommentActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".ProfileActivity"
             android:launchMode="singleTask"
-            android:label="@string/title_activity_account_settings"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
-            android:windowSoftInputMode="adjustPan|adjustResize|stateVisible"
-            android:name="com.puzheng.the_genuine.LoginActivity"
-            android:label="@string/title_activity_login"
-            android:screenOrientation="portrait" />
-
+            android:name="com.puzheng.lejian.CommentsActivity"
+            android:label="@string/title_activity_comments"
+            android:screenOrientation="portrait"
+            android:theme="@style/WithUpIndicatorTheme"/>
         <activity
-            android:windowSoftInputMode="adjustPan|adjustResize|stateVisible"
-            android:name="com.puzheng.the_genuine.RegisterActivity"
-            android:label="@string/title_activity_register"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".search.SearchActivity"
-            android:label="@string/search_product"
+            android:name="com.puzheng.lejian.CommentActivity"
+            android:label="@string/CommentActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/WithUpIndicatorTheme"
-            android:windowSoftInputMode="adjustPan"
+            android:windowSoftInputMode="adjustResize|stateVisible"/>
+
+        <activity
+            android:name="com.puzheng.lejian.ProfileActivity"
+            android:label="@string/title_activity_account_settings"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.puzheng.lejian.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|adjustResize|stateVisible"/>
+
+        <activity
+            android:name="com.puzheng.lejian.RegisterActivity"
+            android:label="@string/title_activity_register"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|adjustResize|stateVisible"/>
+
+        <activity
+            android:name="com.puzheng.lejian.search.SearchActivity"
+            android:label="@string/search_product"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/WithUpIndicatorTheme"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+                android:resource="@xml/searchable"/>
         </activity>
 
         <activity
-            android:name=".SPUListActivity"
-            android:theme="@style/WithUpIndicatorTheme"
+            android:name="com.puzheng.lejian.SPUListActivity"
             android:label="@string/ProductListActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/WithUpIndicatorTheme"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name="com.puzheng.the_genuine.FavorCategoriesActivity"
-            android:launchMode="singleTask"
+            android:name="com.puzheng.lejian.FavorCategoriesActivity"
             android:label="@string/title_activity_favor"
-            android:screenOrientation="portrait" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="android.app.default_searchable"
-            android:value="com.puzheng.the_genuine.search.SearchActivity" />
+            android:value="com.puzheng.lejian.search.SearchActivity"/>
 
         <provider
-            android:authorities="com.puzheng.the_genuine.search.RecentSearchSuggestionProvider"
-            android:name=".search.SearchSuggestionsProvider" />
+            android:name="com.puzheng.lejian.search.SearchSuggestionsProvider"
+            android:authorities="com.puzheng.lejian.search.RecentSearchSuggestionProvider"/>
     </application>
 
 </manifest>

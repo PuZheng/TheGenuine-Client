@@ -19,14 +19,21 @@ repositories {
 }
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'lejiankey'
+            keyPassword 'l19820211'
+            storeFile file('/home/xc/keystores/mykey.jks')
+            storePassword '13321244'
+        }
+    }
     compileSdkVersion 19
     buildToolsVersion '19.1.0'
-
     defaultConfig {
+        applicationId "com.puzheng.lejian"
         minSdkVersion 16
         targetSdkVersion 16
     }
-
     lintOptions {
         disable 'MissingTranslation'
     }
@@ -47,6 +54,7 @@ dependencies {
     compile project(':MyLibrary')
     compile project(':deferred')
     compile project(':humanize')
+    compile files('libs/AMap_Location_v2.3.0_20160112.jar')
 }
 
 preBuild.doFirst {

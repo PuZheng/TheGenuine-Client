@@ -31,9 +31,9 @@
         <item>按星级排序</item>
     </string-array>
     <string-array name="order_by_str_list">
-        <item>price</item>
-        <item>distance</item>
-        <item>rating</item>
+        <item>msrp.asc</item>
+        <item>distance.asc</item>
+        <item>rating.desc</item>
     </string-array>
     <string name="title_activity_account_settings">账户管理</string>
     <string name="action_search">搜索</string>
