@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context=".ProductActivity">
 
-    <com.puzheng.the_genuine.views.NavBar
+    <com.puzheng.lejian.views.NavBar
         android:layout_width="fill_parent"
         android:layout_height="@dimen/nav_bar_height"
         android:background="#3c3c3c"
