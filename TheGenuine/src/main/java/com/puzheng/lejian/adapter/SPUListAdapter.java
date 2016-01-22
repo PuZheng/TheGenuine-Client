@@ -60,7 +60,8 @@ public class SPUListAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         SPU spu = (SPU) getItem(position);
-        Glide.with(context).load(spu.getIcon().getURL()).into(viewHolder.imageView);
+        Glide.with(context).load(spu.getIcon().getURL())
+                .error(R.drawable.ic_broken_image_black_24dp).into(viewHolder.imageView);
 
         viewHolder.textViewProductName.setText(spu.getName());
         viewHolder.textViewFavorCnt.setText(context.getString(R.string.popularity, Humanize.with(context).num(1200)));
