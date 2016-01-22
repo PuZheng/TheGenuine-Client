@@ -99,8 +99,8 @@
     <string name="verify_number">验证码\n %s</string>
     <string name="verify_info">验证信息</string>
     <string name="product_info">产品信息</string>
-    <string name="sameType">同类推荐（%s）</string>
-    <string name="sameVendor">同厂推荐(%s)</string>
+    <string name="sameType">同类推荐</string>
+    <string name="sameVendor">同厂推荐</string>
     <string name="counterfeit">举报</string>
     <string name="enter_reason">请输入理由</string>
     <string name="verify_number_info">请刮开图层\n查看验证码</string>

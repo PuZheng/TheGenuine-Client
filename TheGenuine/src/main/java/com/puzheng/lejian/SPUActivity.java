@@ -32,7 +32,6 @@ import com.puzheng.lejian.adapter.SPUCoverAdapter;
 import com.puzheng.lejian.model.SPU;
 import com.puzheng.lejian.model.SPUResponse;
 import com.puzheng.lejian.model.Verification;
-import com.puzheng.lejian.image_utils.ImageFetcher;
 import com.puzheng.lejian.netutils.WebService;
 import com.puzheng.lejian.util.BadResponseException;
 import com.puzheng.lejian.util.ConfigUtil;
@@ -46,12 +45,11 @@ import org.stringtemplate.v4.ST;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SPUActivity extends FragmentActivity implements ViewPager.OnPageChangeListener,
-        TabHost.OnTabChangeListener, RefreshInterface {
+public class SPUActivity extends FragmentActivity implements ViewPager.OnPageChangeListener, RefreshInterface {
 
     private static final String TAG = "SPUActivity";
     private ViewPager viewPager;
-    private Verification verification;
+    private Verification authentication;
 
     //只有二维码验证才需要展示 验证码
     private boolean verificationFinished;
@@ -94,30 +92,16 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     }
 
     @Override
-    public void onTabChanged(String s) {
-        int pos = tabHost.getCurrentTab();
-        for (int i = 0; i < tabHost.getTabWidget().getChildCount(); ++i) {
-            int color = getResources().getColor(android.R.color.darker_gray);
-            if (i == pos) {
-                color = getResources().getColor(R.color.base_color1);
-            }
-            TextView title = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-            title.setTextColor(color);
-        }
-        viewPager.setCurrentItem(pos);
-    }
-
-    @Override
     public void refresh() {
         //new GetSPUTask().execute(spu);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        UMSsoHandler ssoHandler = umSocialService.getConfig().getSsoHandler(requestCode);
-        if (ssoHandler != null) {
-            ssoHandler.authorizeCallBack(requestCode, resultCode, data);
-        }
+//        UMSsoHandler ssoHandler = umSocialService.getConfig().getSsoHandler(requestCode);
+//        if (ssoHandler != null) {
+//            ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+//        }
         if (resultCode == RESULT_OK) {
             if (requestCode == MyApp.LOGIN_ACTION) {
                 doAddFavor();
@@ -134,7 +118,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         retrieveExtra();
 
 
-        if (verification == null && spu == null) {
+        if (authentication == null && spu == null) {
             throw new IllegalArgumentException("必须传入产品信息或者验证信息");
         }
 
@@ -145,7 +129,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         display.getSize(point);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        if (verification != null) {
+        if (authentication != null) {
             initViews();
             MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.good);
             mediaPlayer.setLooping(false);
@@ -163,13 +147,13 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             rb.setRating(spu.getRating());
 
             ImageView imageView = (ImageView) findViewById(R.id.imageView);
-            if (verification == null) {
+            if (authentication == null) {
                 imageView.setVisibility(View.GONE);
             } else {
                 if (!verificationFinished) {
                     // 二维码验证不提示真品伪品
                     findViewById(R.id.checksumLayout).setVisibility(View.VISIBLE);
-                    ((TextView) findViewById(R.id.textViewChecksum)).setText(getString(R.string.verify_number, verification.getSKU().getChecksum()));
+                    ((TextView) findViewById(R.id.textViewChecksum)).setText(getString(R.string.verify_number, authentication.getSKU().getChecksum()));
                     imageView.setVisibility(View.GONE);
                 }
             }
@@ -180,16 +164,49 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             }
             adapter = new SPUCoverAdapter(getSupportFragmentManager(), urls);
             viewPagerCover.setAdapter(adapter);
-            CirclePageIndicator titleIndicator = (CirclePageIndicator) findViewById(R.id.titles);
-            titleIndicator.setViewPager(viewPagerCover);
+            CirclePageIndicator circlePageIndicator = (CirclePageIndicator) findViewById(R.id.circlePageIndicator);
+            circlePageIndicator.setViewPager(viewPagerCover);
 
+//            tabHost = (TabHost) findViewById(R.id.tabHost);
+//            tabHost.setup();
+
+//            TabHost.TabSpec tabSpec = tabHost.newTabSpec("tab1").setIndicator(authentication == null? "产品信息": "验证信息");
+//            tabSpec.setContent(new MyTabFactory(this));
+//            tabHost.addTab(tabSpec);
+//            tabSpec = tabHost.newTabSpec("tab2").setIndicator(getString(R.string.sameType));
+//            tabSpec.setContent(new MyTabFactory(this));
+//            tabHost.addTab(tabSpec);
+//            tabSpec = tabHost.newTabSpec("tab3").setIndicator(getString(R.string.sameVendor));
+//            tabSpec.setContent(new MyTabFactory(this));
+//            tabHost.addTab(tabSpec);
+//            tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+//                @Override
+//                public void onTabChanged(String tabId) {
+//                    int pos = tabHost.getCurrentTab();
+//                    for (int i = 0; i < tabHost.getTabWidget().getChildCount(); ++i) {
+//                        int color = getResources().getColor(android.R.color.darker_gray);
+//                        if (i == pos) {
+//                            color = getResources().getColor(R.color.base_color1);
+//                        }
+//                        TextView title = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+//                        title.setTextColor(color);
+//                    }
+//                    //        viewPager.setCurrentItem(pos);
+//
+//                }
+//            });
+//
+//            setBottomTabs();
+//            viewPager = (ViewPager) findViewById(R.id.viewPagerBottom);
+//            viewPager.setAdapter(new MyPageAdapter(getSupportFragmentManager()));
+//            viewPager.setOnPageChangeListener(this);
         }
 
     }
 
 
     private void retrieveExtra() {
-        verification = getIntent().getParcelableExtra(MainActivity.TAG_VERIFICATION_INFO);
+        authentication = getIntent().getParcelableExtra(MainActivity.TAG_VERIFICATION_INFO);
         verificationFinished = getIntent().getBooleanExtra(MainActivity.TAG_VERIFICATION_FINISHED, false);
         spu = getIntent().getParcelableExtra(Const.TAG_SPU);
         if (BuildConfig.DEBUG) {
@@ -221,39 +238,39 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     }
 
     private int getCommentsCnt() {
-        return verification != null ? verification.getCommentsCnt() : spuResponse.getCommentsCnt();
+        return authentication != null ? authentication.getCommentsCnt() : spuResponse.getCommentsCnt();
     }
 
     private int getDistance() {
-        return verification != null ? verification.getDistance() : spuResponse.getDistance();
+        return authentication != null ? authentication.getDistance() : spuResponse.getDistance();
     }
 
     private List<SPU.Pic> getPics() {
-        return verification != null ? verification.getSKU().getSPU().getPics() : spuResponse.getSPU().getPics();
+        return authentication != null ? authentication.getSKU().getSPU().getPics() : spuResponse.getSPU().getPics();
     }
 
     private float getRating() {
-        return verification != null ? verification.getSKU().getSPU().getRating() : spuResponse.getSPU().getRating();
+        return authentication != null ? authentication.getSKU().getSPU().getRating() : spuResponse.getSPU().getRating();
     }
 
     private int getSPUId() {
-        return verification != null ? verification.getSKU().getSPU().getId() : spuResponse.getSPU().getId();
+        return authentication != null ? authentication.getSKU().getSPU().getId() : spuResponse.getSPU().getId();
     }
 
     private int getSameTypeRecommendationsCnt() {
-        return verification != null ? verification.getSameTypeRecommendationsCnt() : spuResponse.getSameTypeRecommendationsCnt();
+        return authentication != null ? authentication.getSameTypeRecommendationsCnt() : spuResponse.getSameTypeRecommendationsCnt();
     }
 
     private int getSameVendorRecommendationsCnt() {
-        return verification != null ? verification.getSameVendorRecommendationsCnt() : spuResponse.getSameVendorRecommendationsCnt();
+        return authentication != null ? authentication.getSameVendorRecommendationsCnt() : spuResponse.getSameVendorRecommendationsCnt();
     }
 
     private SPU getSPU() {
-        return verification != null ? verification.getSKU().getSPU() : spuResponse.getSPU();
+        return authentication != null ? authentication.getSKU().getSPU() : spuResponse.getSPU();
     }
 
     private int getVendorId() {
-        return verification != null ? verification.getSKU().getSPU().getVendorId() :
+        return authentication != null ? authentication.getSKU().getSPU().getVendorId() :
                 spuResponse.getSPU().getVendorId();
     }
 
@@ -263,13 +280,13 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 //        setupNearbyButton();
 //        updateFavorView(isFavored());
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
-        if (verification == null) {
+        if (authentication == null) {
             imageView.setVisibility(View.GONE);
         } else {
             if (!verificationFinished) {
                 // 二维码验证不提示真品伪品
                 findViewById(R.id.checksumLayout).setVisibility(View.VISIBLE);
-                ((TextView) findViewById(R.id.textViewChecksum)).setText(getString(R.string.verify_number, verification.getSKU().getChecksum()));
+                ((TextView) findViewById(R.id.textViewChecksum)).setText(getString(R.string.verify_number, authentication.getSKU().getChecksum()));
                 imageView.setVisibility(View.GONE);
             }
         }
@@ -286,7 +303,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         }
         adapter = new SPUCoverAdapter(getSupportFragmentManager(), urls);
         viewPagerCover.setAdapter(adapter);
-        CirclePageIndicator titleIndicator = (CirclePageIndicator) findViewById(R.id.titles);
+        CirclePageIndicator titleIndicator = (CirclePageIndicator) findViewById(R.id.circlePageIndicator);
         titleIndicator.setViewPager(viewPagerCover);
 
 
@@ -310,7 +327,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         tabSpec = tabHost.newTabSpec("tab3").setIndicator(s);
         tabSpec.setContent(new MyTabFactory(this));
         tabHost.addTab(tabSpec);
-        tabHost.setOnTabChangedListener(this);
+//        tabHost.setOnTabChangedListener(this);
 
         TabWidget tabWidget = tabHost.getTabWidget();
         int tabCounts = tabHost.getTabWidget().getTabCount();
@@ -421,8 +438,8 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         public MyPageAdapter(FragmentManager fm) {
             super(fm);
             fragments = new ArrayList<Fragment>();
-            if (verification != null) {
-                fragments.add(new VerificationInfoFragment().setVerificationInfo(verification));
+            if (authentication != null) {
+                fragments.add(new VerificationInfoFragment().setVerificationInfo(authentication));
             } else {
                 fragments.add(new SPUFragment().setSPU(spuResponse.getSPU()));
             }

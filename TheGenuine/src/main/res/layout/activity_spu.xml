@@ -47,7 +47,7 @@
                     android:layout_gravity="center" />
 
                 <com.viewpagerindicator.CirclePageIndicator
-                    android:id="@+id/titles"
+                    android:id="@+id/circlePageIndicator"
                     android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
                     android:layout_marginBottom="10dp"
