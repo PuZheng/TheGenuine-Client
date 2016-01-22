@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -31,8 +32,7 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
     private String[] orderByStrs;
     private MyPageAdapter pageAdapter;
     private ViewPager viewPager;
-    private boolean inSearchMode;
-    private String query;
+    private String kw;
     private AMapLocationClient locationClient;
     private double lat;
     private double lng;
@@ -104,8 +104,7 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
         locationClient.startLocation();
 
         spuType = getIntent().getParcelableExtra(SPUTypeListActivity.SPU_TYPE);
-        query = getIntent().getStringExtra(SearchManager.QUERY);
-        inSearchMode = spuType == null;
+        kw = getIntent().getStringExtra(SearchManager.QUERY);
         setContentView(R.layout.activity_spu_list);
         orderByDescs = getResources().getStringArray(R.array.order_by_list);
         orderByStrs = getResources().getStringArray(R.array.order_by_str_list);
@@ -124,7 +123,7 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
             @Override
             public void onPageSelected(int position) {
                 actionBar.setSelectedNavigationItem(position);
-                ((SPUListFragment)pageAdapter.getItem(position)).init();
+                ((SPUListFragment) pageAdapter.getItem(position)).init();
             }
 
 
@@ -133,15 +132,15 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
         for (int i = 0; i < pageAdapter.getCount(); i++) {
             actionBar.addTab(actionBar.newTab().setText(pageAdapter.getPageTitle(i)).setTabListener(this));
         }
-        if (inSearchMode) {
-            actionBar.setTitle(query);
+        if (!TextUtils.isEmpty(kw)) {
+            actionBar.setTitle(kw);
             actionBar.setSubtitle(R.string.search_result);
         } else {
             actionBar.setTitle(R.string.app_name);
             actionBar.setSubtitle(spuType.getName());
         }
         // init the first page
-        ((SPUListFragment)pageAdapter.getItem(0)).init();
+        ((SPUListFragment) pageAdapter.getItem(0)).init();
     }
 
     public class MyPageAdapter extends FragmentPagerAdapter {
@@ -160,25 +159,31 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
 
         @Override
         public Fragment getItem(int i) {
-            if (inSearchMode) {
-                return null;
-//                return SPUListFragmentByName.newInstance(orderByStrs[i], query);
-            } else {
-                if (fragments.get(i) == null) {
-                    Map<String, String> query = new HashMap<String, String>();
-                    query.put("spu_type_id", String.valueOf(spuType.getId()));
-                    query.put("sort_by", orderByStrs[i]);
-                    query.put("lnglat", String.format("%f,%f", lng, lat));
-                    fragments.put(i, new SPUListFragment.Builder().deferred(SPUStore.getInstance().fetchList(query)).build());
-                }
-                return fragments.get(i);
+            if (fragments.get(i) == null) {
+
+                fragments.put(i, new SPUListFragment.Builder().deferred(
+                        SPUStore.getInstance().fetchList(setupQuery(orderByStrs[i]))).build());
             }
+            return fragments.get(i);
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             return orderByDescs[position];
         }
+    }
+
+    private Map<String, String> setupQuery(String sortBy) {
+        Map<String, String> query = new HashMap<String, String>();
+        if (spuType != null) {
+            query.put("spu_type_id", String.valueOf(spuType.getId()));
+        }
+        if (!TextUtils.isEmpty(kw)) {
+            query.put("kw", kw);
+        }
+        query.put("lnglat", String.format("%f,%f", lng, lat));
+        query.put("sort_by", sortBy);
+        return query;
     }
 }
 

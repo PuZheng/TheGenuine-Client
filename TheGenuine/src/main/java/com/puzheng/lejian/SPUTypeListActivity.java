@@ -145,7 +145,8 @@ public class SPUTypeListActivity extends ActionBarActivity implements BackPresse
 
         public MySPUTypesAdapter(List<SPUType> spuTypes) {
             this.spuTypes = spuTypes;
-            inflater = (LayoutInflater) SPUTypeListActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            inflater = LayoutInflater.from(getApplicationContext());
+//            inflater = (LayoutInflater) SPUTypeListActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         @Override
@@ -176,8 +177,10 @@ public class SPUTypeListActivity extends ActionBarActivity implements BackPresse
                 viewHolder = (ViewHolder) convertView.getTag();
             }
             final SPUType spuType = (SPUType) getItem(position);
+            Logger.d(new Gson().toJson(spuType));
 
-            Glide.with(SPUTypeListActivity.this).load(spuType.getPic().getURL()).into(viewHolder.imageView);
+            Glide.with(SPUTypeListActivity.this).load(spuType.getPic().getURL())
+                    .error(R.drawable.ic_broken_image_black_24dp).into(viewHolder.imageView);
             return convertView;
         }
 
