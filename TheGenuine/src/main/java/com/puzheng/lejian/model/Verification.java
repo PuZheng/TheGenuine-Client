@@ -9,17 +9,17 @@ import java.util.Date;
 /**
  * Created by xc on 13-11-19.
  */
-public class VerificationInfo implements Parcelable {
+public class Verification implements Parcelable {
 
-    public static final Creator<VerificationInfo> CREATOR = new Creator<VerificationInfo>() {
+    public static final Creator<Verification> CREATOR = new Creator<Verification>() {
         @Override
-        public VerificationInfo createFromParcel(Parcel source) {
-            return new VerificationInfo(source);
+        public Verification createFromParcel(Parcel source) {
+            return new Verification(source);
         }
 
         @Override
-        public VerificationInfo[] newArray(int size) {
-            return new VerificationInfo[0];
+        public Verification[] newArray(int size) {
+            return new Verification[0];
         }
     };
     private SKU sku;
@@ -37,7 +37,7 @@ public class VerificationInfo implements Parcelable {
     private Date lastVerifyTime;
 
     private int distance;
-    public VerificationInfo(SKU sku, int sameTypeRecommendationsCnt, int sameVendorRecommendationsCnt, int commentsCnt, boolean favored, int distance) {
+    public Verification(SKU sku, int sameTypeRecommendationsCnt, int sameVendorRecommendationsCnt, int commentsCnt, boolean favored, int distance) {
         this.sku = sku;
         this.sameTypeRecommendationsCnt = sameTypeRecommendationsCnt;
         this.sameVendorRecommendationsCnt = sameVendorRecommendationsCnt;
@@ -46,7 +46,7 @@ public class VerificationInfo implements Parcelable {
         this.distance = distance;
     }
 
-    public VerificationInfo(Parcel source) {
+    public Verification(Parcel source) {
         sku = source.readParcelable(SKU.class.getClassLoader());
         sameTypeRecommendationsCnt = source.readInt();
         sameVendorRecommendationsCnt = source.readInt();

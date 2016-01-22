@@ -1,4 +1,4 @@
-package com.puzheng.lejian.views;
+package com.puzheng.lejian.view;
 
 import android.app.Activity;
 import android.content.Context;

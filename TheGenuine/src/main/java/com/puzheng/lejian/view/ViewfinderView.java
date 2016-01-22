@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.puzheng.lejian.views;
+package com.puzheng.lejian.view;
 
 import android.content.Context;
 import android.content.res.Resources;

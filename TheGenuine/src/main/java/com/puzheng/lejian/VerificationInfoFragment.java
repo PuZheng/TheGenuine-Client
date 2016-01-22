@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.puzheng.lejian.model.VerificationInfo;
+import com.puzheng.lejian.model.Verification;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,15 +20,15 @@ import java.util.Date;
  * Created by xc on 13-11-21.
  */
 public class VerificationInfoFragment extends Fragment {
-    private VerificationInfo verificationInfo;
+    private Verification verification;
     private View rootView;
 
     public VerificationInfoFragment() {
 
     }
 
-    public VerificationInfoFragment setVerificationInfo(VerificationInfo verificationInfo) {
-        this.verificationInfo = verificationInfo;
+    public VerificationInfoFragment setVerificationInfo(Verification verification) {
+        this.verification = verification;
         return this;
     }
 
@@ -37,36 +37,36 @@ public class VerificationInfoFragment extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_verification_info, container, false);
         TextView textView = (TextView) rootView.findViewById(R.id.textViewCode);
-        textView.setText(verificationInfo.getSKU().getSPU().getCode());
+        textView.setText(verification.getSKU().getSPU().getCode());
         textView = (TextView) rootView.findViewById(R.id.textViewName);
-        textView.setText(verificationInfo.getSKU().getSPU().getName());
+        textView.setText(verification.getSKU().getSPU().getName());
         textView = (TextView) rootView.findViewById(R.id.textViewVendorName);
-        textView.setText(verificationInfo.getSKU().getSPU().getVendorName());
+        textView.setText(verification.getSKU().getSPU().getVendorName());
         textView = (TextView) rootView.findViewById(R.id.textViewManufactureDate);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.DATE_FORMAT);
-        textView.setText(simpleDateFormat.format(verificationInfo.getSKU().getManufactureDate()));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Const.DATE_FORMAT);
+        textView.setText(simpleDateFormat.format(verification.getSKU().getManufactureDate()));
         textView = (TextView) rootView.findViewById(R.id.textViewExpiredDate);
-        textView.setText(simpleDateFormat.format(verificationInfo.getSKU().getExpireDate()));
+        textView.setText(simpleDateFormat.format(verification.getSKU().getExpireDate()));
 
         Date now = new Date();
         // expried
-        if (now.after(verificationInfo.getSKU().getExpireDate())) {
+        if (now.after(verification.getSKU().getExpireDate())) {
             textView.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
         }
 
         textView = (TextView) rootView.findViewById(R.id.verifyCnt);
-        textView.setText(String.valueOf(verificationInfo.getVerifyCnt()));
+        textView.setText(String.valueOf(verification.getVerifyCnt()));
 
         textView = (TextView) rootView.findViewById(R.id.lastVerifyTime);
-        simpleDateFormat = new SimpleDateFormat(Constants.TIME_FORMAT);
-        Date lastVerifyDate = verificationInfo.getLastVerifyTime();
+        simpleDateFormat = new SimpleDateFormat(Const.TIME_FORMAT);
+        Date lastVerifyDate = verification.getLastVerifyTime();
         textView.setText(lastVerifyDate != null ? simpleDateFormat.format(lastVerifyDate) : "--");
 
         textView = (TextView) rootView.findViewById(R.id.textViewVendorAddress);
-        textView.setText(verificationInfo.getSKU().getSPU().getVendor().getAddress());
+        textView.setText(verification.getSKU().getSPU().getVendor().getAddr());
 
         textView = (TextView) rootView.findViewById(R.id.textViewVendorWebsite);
-        final String website = verificationInfo.getSKU().getSPU().getVendor().getWebsite();
+        final String website = verification.getSKU().getSPU().getVendor().getWebsite();
         textView.setText(website);
         if (!TextUtils.isEmpty(website)) {
             textView.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //下划线
@@ -80,7 +80,7 @@ public class VerificationInfoFragment extends Fragment {
             });
         }
 
-        final String telephone = verificationInfo.getSKU().getSPU().getVendor().getTel();
+        final String telephone = verification.getSKU().getSPU().getVendor().getTel();
         textView = (TextView) rootView.findViewById(R.id.textViewVendorTel);
         textView.setText(telephone);
         if (!TextUtils.isEmpty(telephone)) {

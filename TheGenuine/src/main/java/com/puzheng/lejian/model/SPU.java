@@ -20,21 +20,125 @@ public class SPU implements Parcelable {
     private List<Pic> pics;
     private Pic icon;
     private int distance;
+    private boolean favored;
+    private int commentCnt;
 
     public SPU(int id, String name, String code, Vendor vendor,
                SPUType spuType, float rating, float msrp, String desc,
-               List<Pic> pics, Pic icon, int distance) {
+               List<Pic> pics, Pic icon, int distance, boolean favored,
+               int commentCnt) {
         this.id = id;
         this.name = name;
         this.code = code;
         this.vendor = vendor;
-        this.icon = icon;
-        this.msrp = msrp;
-        this.rating = rating;
         this.spuType = spuType;
-        this.pics = pics;
+        this.rating = rating;
+        this.msrp = msrp;
         this.desc = desc;
+        this.pics = pics;
+        this.icon = icon;
         this.distance = distance;
+        this.favored = favored;
+        this.commentCnt = commentCnt;
+    }
+
+    public boolean isFavored() {
+        return favored;
+    }
+
+    public int getCommentCnt() {
+        return commentCnt;
+    }
+
+
+    public static class Builder {
+
+        private Vendor vendor;
+        private int id;
+        private String name;
+        private String code;
+        private SPUType spuType;
+        private float rating;
+        private float msrp;
+        private String desc;
+        private List<Pic> pics;
+        private Pic icon;
+        private int distance;
+        private boolean favored;
+        private int commentCnt;
+
+        public Builder id(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder code(String code) {
+            this.code = code;
+            return this;
+        }
+
+        public Builder vendor(Vendor vendor) {
+            this.vendor = vendor;
+            return this;
+        }
+
+        public Builder spuType(SPUType spuType) {
+            this.spuType = spuType;
+            return this;
+        }
+
+        public Builder rating(float rating) {
+            this.rating = rating;
+            return this;
+
+        }
+
+        public Builder msrp(float msrp) {
+            this.msrp = msrp;
+            return this;
+
+        }
+
+        public Builder desc(String desc) {
+            this.desc = desc;
+            return this;
+        }
+
+        public Builder pics(List<Pic> pics) {
+            this.pics = pics;
+            return this;
+        }
+
+        public Builder icon(Pic icon) {
+            this.icon = icon;
+            return this;
+
+        }
+
+        public Builder distance(int distance) {
+            this.distance = distance;
+            return this;
+        }
+
+        public Builder favored(boolean favored) {
+            this.favored = favored;
+            return this;
+        }
+
+        public Builder commentCnt(int commentCnt) {
+            this.commentCnt = commentCnt;
+            return this;
+        }
+
+        public SPU build() {
+            return new SPU(id, name, code, vendor, spuType, rating, msrp, desc,
+                    pics, icon, distance, favored, commentCnt);
+        }
     }
 
     protected SPU(Parcel in) {
@@ -49,6 +153,8 @@ public class SPU implements Parcelable {
         pics = in.createTypedArrayList(Pic.CREATOR);
         icon = in.readParcelable(Pic.class.getClassLoader());
         distance = in.readInt();
+        favored = in.readInt() == 1;
+        commentCnt = in.readInt();
     }
 
     public static final Creator<SPU> CREATOR = new Creator<SPU>() {
@@ -81,6 +187,8 @@ public class SPU implements Parcelable {
         dest.writeList(pics);
         dest.writeParcelable(icon, 0);
         dest.writeInt(distance);
+        dest.writeInt(favored ? 1 : 0);
+        dest.writeInt(commentCnt);
     }
 
     public String getCode() {
@@ -143,7 +251,7 @@ public class SPU implements Parcelable {
         private String path;
         private String url;
 
-        private Pic(String path, String url) {
+        public Pic(String path, String url) {
             this.path = path;
             this.url = url;
         }

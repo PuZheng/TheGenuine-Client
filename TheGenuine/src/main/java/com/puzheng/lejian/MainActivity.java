@@ -22,7 +22,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.Window;
 import android.widget.Toast;
-import com.puzheng.lejian.model.VerificationInfo;
+import com.puzheng.lejian.model.Verification;
 import com.puzheng.lejian.netutils.WebService;
 import com.puzheng.lejian.util.Misc;
 import com.puzheng.lejian.util.PoliteBackgroundTask;
@@ -206,22 +206,22 @@ public class MainActivity extends Activity implements BackPressedInterface {
     private void handleIntent(Intent intent) {
         final String code = extractCode(intent);
         if (!TextUtils.isEmpty(code)) {
-            PoliteBackgroundTask.Builder<VerificationInfo> builder = new PoliteBackgroundTask.Builder<VerificationInfo>(this);
+            PoliteBackgroundTask.Builder<Verification> builder = new PoliteBackgroundTask.Builder<Verification>(this);
             builder.msg(getString(R.string.verifying));
-            builder.run(new PoliteBackgroundTask.XRunnable<VerificationInfo>() {
+            builder.run(new PoliteBackgroundTask.XRunnable<Verification>() {
                 @Override
-                public VerificationInfo run() throws Exception {
+                public Verification run() throws Exception {
                     return WebService.getInstance(MainActivity.this).verify(code);
                 }
             });
-            builder.after(new PoliteBackgroundTask.OnAfter<VerificationInfo>() {
+            builder.after(new PoliteBackgroundTask.OnAfter<Verification>() {
 
                 @Override
-                public void onAfter(VerificationInfo verificationInfo) {
+                public void onAfter(Verification verification) {
                     Intent intent;
-                    if (verificationInfo != null) {
+                    if (verification != null) {
                         intent = new Intent(MainActivity.this, SPUActivity.class);
-                        intent.putExtra(TAG_VERIFICATION_INFO, verificationInfo);
+                        intent.putExtra(TAG_VERIFICATION_INFO, verification);
                         intent.putExtra(TAG_VERIFICATION_FINISHED, true);
                     } else {
                         intent = new Intent(MainActivity.this, CounterfeitActivity.class);

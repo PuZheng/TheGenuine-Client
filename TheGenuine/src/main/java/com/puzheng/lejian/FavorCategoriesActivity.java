@@ -32,7 +32,7 @@ import com.puzheng.lejian.image_utils.ImageFetcher;
 import com.puzheng.lejian.netutils.WebService;
 import com.puzheng.lejian.search.SearchActivity;
 import com.puzheng.lejian.store.AuthStore;
-import com.puzheng.lejian.views.NavBar;
+import com.puzheng.lejian.view.NavBar;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -241,7 +241,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
         public void onListItemClick(ListView l, View v, int position, long id) {
             Favor favor = (Favor) getListAdapter().getItem(position);
             Intent intent = new Intent(mActivity, SPUActivity.class);
-            intent.putExtra(Constants.TAG_SPU_ID, favor.getSPU().getId());
+            intent.putExtra(Const.TAG_SPU_ID, favor.getSPU().getId());
             startActivity(intent);
         }
     }
@@ -355,7 +355,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
                 public void onClick(View v) {
                     Intent intent = new Intent(mActivity, NearbyActivity.class);
                     intent.putExtra("current", NearbyActivity.NEARBY_LIST);
-                    intent.putExtra(Constants.TAG_SPU_ID, favor.getSPU().getId());
+                    intent.putExtra(Const.TAG_SPU_ID, favor.getSPU().getId());
                     mActivity.startActivity(intent);
                 }
             });

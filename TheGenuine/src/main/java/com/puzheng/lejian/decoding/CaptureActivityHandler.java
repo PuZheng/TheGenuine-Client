@@ -32,7 +32,7 @@ import com.google.zxing.Result;
 import com.puzheng.lejian.BarCodeFragment;
 import com.puzheng.lejian.R;
 import com.puzheng.lejian.camera.CameraManager;
-import com.puzheng.lejian.views.ViewfinderResultPointCallback;
+import com.puzheng.lejian.view.ViewfinderResultPointCallback;
 
 /**
  * This class handles all the messaging which comprises the state machine for capture.

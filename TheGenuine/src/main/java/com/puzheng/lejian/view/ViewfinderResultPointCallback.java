@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.puzheng.lejian.views;
+package com.puzheng.lejian.view;
 
 import com.google.zxing.ResultPoint;
 import com.google.zxing.ResultPointCallback;

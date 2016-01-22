@@ -15,7 +15,7 @@
             android:layout_height="fill_parent"
             android:layout_gravity="center" />
 
-        <com.puzheng.lejian.views.ViewfinderView
+        <com.puzheng.lejian.view.ViewfinderView
             android:id="@+id/viewfinder_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -61,7 +61,7 @@
     </LinearLayout>
 
 
-    <com.puzheng.lejian.views.NavBar
+    <com.puzheng.lejian.view.NavBar
         android:id="@+id/navBar"
         android:layout_toEndOf="@id/surface_view"
         android:layout_width="fill_parent"

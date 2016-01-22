@@ -1,29 +1,24 @@
 package com.puzheng.lejian;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Pair;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
 import com.puzheng.deferred.AlwaysHandler;
 import com.puzheng.deferred.DoneHandler;
 import com.puzheng.deferred.FailHandler;
+import com.puzheng.lejian.adapter.SPUTypeListAdapter;
 import com.puzheng.lejian.model.SPUType;
 import com.puzheng.lejian.search.SearchActivity;
 import com.puzheng.lejian.store.SPUTypeStore;
@@ -36,7 +31,7 @@ public class SPUTypeListActivity extends ActionBarActivity implements BackPresse
     private GridView gridView;
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
     private MaskableManager maskableManager;
-    private MySPUTypesAdapter adapter;
+    private SPUTypeListAdapter adapter;
 
     @Override
     public void doBackPressed() {
@@ -120,7 +115,7 @@ public class SPUTypeListActivity extends ActionBarActivity implements BackPresse
             public void done(List<SPUType> spuTypes) {
                 Logger.i("spu types fetched");
                 Logger.json(new Gson().toJson(spuTypes));
-                adapter = new MySPUTypesAdapter(spuTypes);
+                adapter = new SPUTypeListAdapter(spuTypes);
                 gridView.setAdapter(adapter);
             }
         }).fail(new FailHandler<Pair<String, String>>() {
@@ -138,59 +133,4 @@ public class SPUTypeListActivity extends ActionBarActivity implements BackPresse
     }
 
 
-    private class MySPUTypesAdapter extends BaseAdapter {
-
-        private final List<SPUType> spuTypes;
-        private final LayoutInflater inflater;
-
-        public MySPUTypesAdapter(List<SPUType> spuTypes) {
-            this.spuTypes = spuTypes;
-            inflater = LayoutInflater.from(getApplicationContext());
-//            inflater = (LayoutInflater) SPUTypeListActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
-
-        @Override
-        public int getCount() {
-            return spuTypes.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return spuTypes.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return spuTypes.get(position).getId();
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = inflater.inflate(R.layout.spu_type_grid_item, null);
-            }
-            ViewHolder viewHolder;
-            if (convertView.getTag() == null) {
-                viewHolder = new ViewHolder((ImageView) convertView.findViewById(R.id.imageView));
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-            final SPUType spuType = (SPUType) getItem(position);
-            Logger.d(new Gson().toJson(spuType));
-
-            Glide.with(SPUTypeListActivity.this).load(spuType.getPic().getURL())
-                    .error(R.drawable.ic_broken_image_black_24dp).into(viewHolder.imageView);
-            return convertView;
-        }
-
-        private class ViewHolder {
-            ImageView imageView;
-
-            ViewHolder(ImageView imageView) {
-                this.imageView = imageView;
-            }
-
-        }
-    }
 }

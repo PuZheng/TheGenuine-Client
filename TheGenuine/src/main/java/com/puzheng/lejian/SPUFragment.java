@@ -63,7 +63,7 @@ public class SPUFragment extends Fragment {
         textView = (TextView) mView.findViewById(R.id.textViewVendorName);
         textView.setText(spu.getVendorName());
         textView = (TextView) mView.findViewById(R.id.textViewVendorAddress);
-        textView.setText(spu.getVendor().getAddress());
+        textView.setText(spu.getVendor().getAddr());
 
         textView = (TextView) mView.findViewById(R.id.textViewVendorWebsite);
         final String website = spu.getVendor().getWebsite();
@@ -93,20 +93,20 @@ public class SPUFragment extends Fragment {
             });
         }
 
-        final String weiXin = spu.getVendor().getWeixin();
-        textView = (TextView) mView.findViewById(R.id.textViewWeixin);
-        textView.setText(weiXin);
+        final String weixinAccount = spu.getVendor().getWeixinAccount();
+        textView = (TextView) mView.findViewById(R.id.textViewWeixinAccount);
+        textView.setText(weixinAccount);
 
-        textView = (TextView) mView.findViewById(R.id.textViewWeibo);
-        final String weiboLink = spu.getVendor().getWeiboLink();
-        textView.setText(weiboLink);
-        if (!TextUtils.isEmpty(weiboLink)) {
+        textView = (TextView) mView.findViewById(R.id.textViewWeiboHomepage);
+        final String weiboHomepage = spu.getVendor().getWeiboHomepage();
+        textView.setText(weiboHomepage);
+        if (!TextUtils.isEmpty(weiboHomepage)) {
             textView.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //下划线
             textView.setTextColor(Color.BLUE);
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(weiboLink));
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(weiboHomepage));
                     getActivity().startActivity(Intent.createChooser(browserIntent, getString(R.string.choose_browser)));
                 }
             });
@@ -174,7 +174,7 @@ public class SPUFragment extends Fragment {
                     if (i == 200 && umFriends != null) {
                         final boolean followed = isFollowed(umFriends);
                         if (!followed && doFollow) {
-                            follow(getWeibo());
+                            follow(getWeiboAccount());
                         } else {
                             updateFollowedView(followed);
                         }
@@ -187,15 +187,15 @@ public class SPUFragment extends Fragment {
         }
     }
 
-    private String getWeibo() {
-        return spu.getVendor().getWeibo();
+    private String getWeiboAccount() {
+        return spu.getVendor().getWeiboUserId();
     }
 
     private boolean isFollowed(List<UMFriend> umFriends) {
         if (umFriends != null) {
-            final String weibo = getWeibo();
+            final String weiboAccount = getWeiboAccount();
             for (UMFriend umFriend : umFriends) {
-                if (umFriend.getFid().equals(weibo)) {
+                if (umFriend.getFid().equals(weiboAccount)) {
                     return true;
                 }
             }
@@ -204,7 +204,7 @@ public class SPUFragment extends Fragment {
     }
 
     private void updateFollowedView(boolean isFollowed) {
-        final String weibo = getWeibo();
+        final String weibo = getWeiboAccount();
         Button addFocus = (Button) mView.findViewById(R.id.btnAddFocus);
         mView.findViewById(R.id.layoutAddFocus).setOnClickListener(null);
         if (!TextUtils.isEmpty(weibo)) {

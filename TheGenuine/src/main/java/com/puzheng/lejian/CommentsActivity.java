@@ -74,7 +74,7 @@ public class CommentsActivity extends ListActivity implements RefreshInterface {
         setContentView(R.layout.activity_comments);
         maskableManager = new MaskableManager(getListView(), this);
         // Show the Up button in the action bar.
-        spuId = getIntent().getIntExtra(Constants.TAG_SPU_ID, 0);
+        spuId = getIntent().getIntExtra(Const.TAG_SPU_ID, 0);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         mEmptyView = getListView().getEmptyView();
         mEmptyView.setVisibility(View.GONE);
@@ -108,7 +108,7 @@ public class CommentsActivity extends ListActivity implements RefreshInterface {
 
     private void addComment() {
         Intent intent = new Intent(this, CommentActivity.class);
-        intent.putExtra(Constants.TAG_SPU_ID, spuId);
+        intent.putExtra(Const.TAG_SPU_ID, spuId);
         startActivity(intent);
     }
 
@@ -204,7 +204,7 @@ public class CommentsActivity extends ListActivity implements RefreshInterface {
             viewHolder.textViewUserName.setText(comment.getUserName());
             viewHolder.ratingBar.setRating(comment.getRating());
             viewHolder.textViewContent.setText(comment.getContent());
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.DATE_FORMAT);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Const.DATE_FORMAT);
             viewHolder.textViewDate.setText(simpleDateFormat.format(comment.getDate()));
             return convertView;
         }
