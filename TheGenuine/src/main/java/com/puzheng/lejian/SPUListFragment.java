@@ -6,28 +6,29 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+import com.orhanobut.logger.Logger;
 import com.puzheng.deferred.Deferrable;
 import com.puzheng.deferred.DoneHandler;
 import com.puzheng.lejian.adapter.SPUListAdapter;
-import com.puzheng.lejian.model.Recommendation;
 import com.puzheng.lejian.model.SPU;
 
 import java.util.List;
 
-class SPUListFragment extends ListFragment {
+public class SPUListFragment extends ListFragment {
     private Deferrable<List<SPU>, Pair<String, String>> deferrable;
     private boolean inited;
 
-    private SPUListFragment() {
+    public SPUListFragment() {
 
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Recommendation recommendation = (Recommendation) getListAdapter().getItem(position);
+        SPU spu = (SPU) getListAdapter().getItem(position);
+        Logger.json(new Gson().toJson(spu));
         Intent intent = new Intent(getActivity(), SPUActivity.class);
-        intent.putExtra(Constants.TAG_SPU_ID, recommendation.getSPUId());
-        intent.putExtra(Constants.TAG_SPU_NAME, recommendation.getProductName());
+        intent.putExtra(Const.TAG_SPU, spu);
         getActivity().startActivity(intent);
     }
 

@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.orhanobut.logger.Logger;
-import com.puzheng.lejian.Constants;
+import com.puzheng.lejian.Const;
 import com.puzheng.lejian.MyApp;
 import com.puzheng.lejian.R;
 import com.puzheng.lejian.model.SPUType;
@@ -16,7 +16,7 @@ import com.puzheng.lejian.model.Recommendation;
 import com.puzheng.lejian.model.SPUResponse;
 import com.puzheng.lejian.model.StoreResponse;
 import com.puzheng.lejian.model.User;
-import com.puzheng.lejian.model.VerificationInfo;
+import com.puzheng.lejian.model.Verification;
 import com.puzheng.lejian.util.BadResponseException;
 import com.puzheng.lejian.util.HttpUtil;
 import com.puzheng.lejian.util.LocateErrorException;
@@ -107,7 +107,7 @@ public class WebService {
         HashMap<String, List<Favor>> ret = new HashMap<String, List<Favor>>();
         Type type = new TypeToken<List<Favor>>() {
         }.getType();
-        Gson gson = new GsonBuilder().setDateFormat(Constants.DATE_FORMAT).create();
+        Gson gson = new GsonBuilder().setDateFormat(Const.DATE_FORMAT).create();
 
         JSONObject jsonObject = new JSONObject(result);
         Iterator iter = jsonObject.keys();
@@ -128,7 +128,7 @@ public class WebService {
 
     public List<StoreResponse> getNearbyStoreList(int spu_id) throws IOException, JSONException, BadResponseException, LocateErrorException {
         HashMap<String, String> params = getCurrentLocation();
-        if (spu_id != Constants.INVALID_ARGUMENT) {
+        if (spu_id != Const.INVALID_ARGUMENT) {
             params.put("spu_id", String.valueOf(spu_id));
         }
         String url = HttpUtil.composeUrl("retailer-ws", "retailer-list", params);
@@ -192,7 +192,7 @@ public class WebService {
         }
         String url = HttpUtil.composeUrl("spu-ws", "spu/" + spu_id, currentLocation);
         String result = HttpUtil.getStringResult(url);
-        Gson gson = new GsonBuilder().setDateFormat(Constants.DATE_FORMAT).create();
+        Gson gson = new GsonBuilder().setDateFormat(Const.DATE_FORMAT).create();
         return gson.fromJson(result, SPUResponse.class);
     }
 
@@ -255,7 +255,7 @@ public class WebService {
         return gson.fromJson(result, User.class);
     }
 
-    public VerificationInfo verify(String code) throws IOException, BadResponseException, JSONException {
+    public Verification verify(String code) throws IOException, BadResponseException, JSONException {
         String tag = getTag(code);
         HashMap<String, String> params = null;
         try {
@@ -266,8 +266,8 @@ public class WebService {
         String url = HttpUtil.composeUrl("tag-ws", "tag/" + tag, params);
         try {
             String result = HttpUtil.getStringResult(url);
-            Gson gson = new GsonBuilder().setDateFormat(Constants.TIME_FORMAT).create();
-            return gson.fromJson(result, VerificationInfo.class);
+            Gson gson = new GsonBuilder().setDateFormat(Const.TIME_FORMAT).create();
+            return gson.fromJson(result, Verification.class);
         } catch (BadResponseException e) {
             if (e.getStatusCode() == HttpURLConnection.HTTP_NOT_FOUND) {
                 return null;

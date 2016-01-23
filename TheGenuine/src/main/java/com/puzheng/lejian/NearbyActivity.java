@@ -22,7 +22,7 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
     public static final int NEARBY_LIST = 1;
     private ViewPager mViewPager;
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
-    private int mSpuId = Constants.INVALID_ARGUMENT;
+    private int mSpuId = Const.INVALID_ARGUMENT;
     private MaskableManager maskableManager;
     private GetNearbyListTask task;
     private List<StoreResponse> mStoreList;
@@ -35,7 +35,7 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
 
     @Override
     public void onBackPressed() {
-        if (mSpuId == Constants.INVALID_ARGUMENT) {
+        if (mSpuId == Const.INVALID_ARGUMENT) {
             backPressedHandle.doBackPressed(this, this);
         } else {
             super.onBackPressed();
@@ -55,7 +55,7 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby);
 
-        mSpuId = getIntent().getIntExtra(Constants.TAG_SPU_ID, Constants.INVALID_ARGUMENT);
+        mSpuId = getIntent().getIntExtra(Const.TAG_SPU_ID, Const.INVALID_ARGUMENT);
         mViewPager = (ViewPager) findViewById(R.id.pager);
         maskableManager = new MaskableManager(mViewPager, NearbyActivity.this);
         ActionBar actionBar = getActionBar();

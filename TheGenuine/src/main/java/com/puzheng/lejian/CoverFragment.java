@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
 import com.puzheng.lejian.image_utils.ImageWorker;
 
 /**
@@ -13,7 +15,6 @@ import com.puzheng.lejian.image_utils.ImageWorker;
  */
 public class CoverFragment extends Fragment {
     private String url;
-    private ImageFetcherInteface mImageFetcherInteface;
     private ImageView imageView;
 
     public CoverFragment() {
@@ -24,10 +25,6 @@ public class CoverFragment extends Fragment {
         this.url = url;
     }
 
-    public void setmImageFetcherInteface(ImageFetcherInteface imageFetcherInteface) {
-        this.mImageFetcherInteface = imageFetcherInteface;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,16 +33,8 @@ public class CoverFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         imageView = (ImageView) inflater.inflate(R.layout.fragment_cover, container, false);
-        mImageFetcherInteface.getImageFetcher().loadImage(url, imageView);
+        Glide.with(getActivity()).load(url).into(imageView);
         return imageView;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (imageView != null) {
-            ImageWorker.cancelWork(imageView);
-            imageView.setImageDrawable(null);
-        }
-    }
 }

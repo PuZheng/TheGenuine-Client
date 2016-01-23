@@ -1,4 +1,4 @@
-package com.puzheng.lejian.views;
+package com.puzheng.lejian.view;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import com.puzheng.lejian.ProfileActivity;
 import com.puzheng.lejian.SPUTypeListActivity;
 import com.puzheng.lejian.FavorCategoriesActivity;
-import com.puzheng.lejian.MainActivity;
+import com.puzheng.lejian.NFCAuthenticationActivity;
 import com.puzheng.lejian.NearbyActivity;
 import com.puzheng.lejian.R;
 
@@ -46,7 +46,7 @@ public class NavBar extends LinearLayout {
         int tab = a.getInteger(R.styleable.NavBar_enabledTab, GO_HOME);
         enableTab(tab, false);
 
-        initTab(R.id.go_home, MainActivity.class);
+        initTab(R.id.go_home, NFCAuthenticationActivity.class);
         initTab(R.id.genuines, SPUTypeListActivity.class);
         initTab(R.id.nearby, NearbyActivity.class);
         initTab(R.id.favor, FavorCategoriesActivity.class);

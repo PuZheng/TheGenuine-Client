@@ -54,7 +54,7 @@ public class BaiduMapFragment extends Fragment {
         popupText = (TextView) viewCache.findViewById(R.id.textcache);
 
         mBMapManager = new BMapManager(this.getActivity());
-        mBMapManager.init(Constants.BAIDU_MAP_KEY, null);
+        mBMapManager.init(Const.BAIDU_MAP_KEY, null);
 
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         mMapView = (MapView) rootView.findViewById(R.id.bmapsView);
@@ -135,8 +135,8 @@ public class BaiduMapFragment extends Fragment {
                 StoreResponse storeResponse = storeList.get(i);
                 GeoPoint p = new GeoPoint((int) (storeResponse.getStore().getLatitude() * 1E6), ((int) (storeResponse.getStore().getLongitude() * 1E6)));
                 OverlayItem item = new OverlayItem(p, storeResponse.getStore().getName(), storeResponse.getStore().getDesc());
-                if (i < Constants.MARKS.size()) {
-                    item.setMarker(getResources().getDrawable(Constants.MARKS.get(i)));
+                if (i < Const.MARKS.size()) {
+                    item.setMarker(getResources().getDrawable(Const.MARKS.get(i)));
                 }
                 mOverlay.addItem(item);
             }
@@ -225,7 +225,7 @@ public class BaiduMapFragment extends Fragment {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Location data = intent.getParcelableExtra(Constants.TAG_LOCATION_DATA);
+            Location data = intent.getParcelableExtra(Const.TAG_LOCATION_DATA);
             if (data != null) {
                 mLocationData = parseData(data);
                 //更新定位数据

@@ -24,13 +24,13 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.puzheng.lejian.camera.AmbientLightManager;
 import com.puzheng.lejian.camera.CameraManager;
-import com.puzheng.lejian.model.VerificationInfo;
+import com.puzheng.lejian.model.Verification;
 import com.puzheng.lejian.decoding.CaptureActivityHandler;
 import com.puzheng.lejian.decoding.InactivityTimer;
 import com.puzheng.lejian.netutils.WebService;
 import com.puzheng.lejian.util.Misc;
 import com.puzheng.lejian.util.PoliteBackgroundTask;
-import com.puzheng.lejian.views.ViewfinderView;
+import com.puzheng.lejian.view.ViewfinderView;
 
 import java.io.IOException;
 import java.util.Vector;
@@ -83,26 +83,26 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
         } else {
             //显示
             onPause();
-            PoliteBackgroundTask.Builder<VerificationInfo> builder = new PoliteBackgroundTask.Builder<VerificationInfo>(this.getActivity());
+            PoliteBackgroundTask.Builder<Verification> builder = new PoliteBackgroundTask.Builder<Verification>(this.getActivity());
             builder.msg(getString(R.string.verifying));
-            builder.run(new PoliteBackgroundTask.XRunnable<VerificationInfo>() {
+            builder.run(new PoliteBackgroundTask.XRunnable<Verification>() {
                 @Override
-                public VerificationInfo run() throws Exception {
+                public Verification run() throws Exception {
                     return WebService.getInstance(BarCodeFragment.this.getActivity()).verify(resultString);
                 }
             });
-            builder.after(new PoliteBackgroundTask.OnAfter<VerificationInfo>() {
+            builder.after(new PoliteBackgroundTask.OnAfter<Verification>() {
 
                 @Override
-                public void onAfter(VerificationInfo verificationInfo) {
+                public void onAfter(Verification verification) {
                     Intent intent;
-                    if (verificationInfo != null) {
+                    if (verification != null) {
                         intent = new Intent(BarCodeFragment.this.getActivity(), SPUActivity.class);
-                        intent.putExtra(MainActivity.TAG_VERIFICATION_INFO, verificationInfo);
-                        intent.putExtra(MainActivity.TAG_VERIFICATION_FINISHED, false);
+                        intent.putExtra(NFCAuthenticationActivity.TAG_VERIFICATION_INFO, verification);
+                        intent.putExtra(NFCAuthenticationActivity.TAG_VERIFICATION_FINISHED, false);
                     } else {
                         intent = new Intent(BarCodeFragment.this.getActivity(), CounterfeitActivity.class);
-                        intent.putExtra(MainActivity.TAG_TAG_ID, resultString);
+                        intent.putExtra(NFCAuthenticationActivity.TAG_TAG_ID, resultString);
                     }
                     startActivity(intent);
                 }
@@ -132,7 +132,7 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
         inactivityTimer = new InactivityTimer(this.getActivity());
 
         ImageButton imageButton = (ImageButton) mRootView.findViewById(R.id.imageButton);
-        if (!MainActivity.isNfcEnabled) {
+        if (!NFCAuthenticationActivity.isNfcEnabled) {
             mRootView.findViewById(R.id.imageButtonLayout).setVisibility(View.GONE);
         } else {
             mRootView.findViewById(R.id.imageButtonLayout).setVisibility(View.VISIBLE);

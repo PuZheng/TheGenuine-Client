@@ -60,8 +60,8 @@ public class GoogleMapFragment extends SupportMapFragment {
                 Store store = stores.get(i).getStore();
                 MarkerOptions marker = new MarkerOptions().position(new LatLng(store.getLatitude(),
                         store.getLongitude())).title(store.getName());
-                if (i < Constants.MARKS.size()) {
-                    marker.icon(BitmapDescriptorFactory.fromResource(Constants.MARKS.get(i)));
+                if (i < Const.MARKS.size()) {
+                    marker.icon(BitmapDescriptorFactory.fromResource(Const.MARKS.get(i)));
                 } else {
                     marker.icon(BitmapDescriptorFactory.defaultMarker());
                 }
@@ -90,7 +90,7 @@ public class GoogleMapFragment extends SupportMapFragment {
     private class LocationBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Location data = intent.getParcelableExtra(Constants.TAG_LOCATION_DATA);
+            Location data = intent.getParcelableExtra(Const.TAG_LOCATION_DATA);
             if (data != null) {
                 getMap().animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(data.getLatitude(),
                         data.getLongitude()), zoom));

@@ -24,7 +24,7 @@ public class CommentActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
-        mSpuId = getIntent().getIntExtra(Constants.TAG_SPU_ID, 0);
+        mSpuId = getIntent().getIntExtra(Const.TAG_SPU_ID, 0);
         mEditText = (EditText) findViewById(R.id.editText);
         mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
         try {

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by abc549825@163.com(https://github.com/abc549825) at 12-05.
  */
-public interface Constants {
+public interface Const {
     public static final String BAIDU_MAP_KEY = "UTW8RC2pRPD9oGrGn8jXgcnO";
     public static final String DATE_FORMAT = "yyyy-MM-dd";
     public static final int INVALID_ARGUMENT = Integer.MIN_VALUE;
@@ -34,4 +34,5 @@ public interface Constants {
     public static final String TAG_SPU_NAME = "SPU_NAME";
     public static final String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
+    String TAG_SPU = "SPU";
 }

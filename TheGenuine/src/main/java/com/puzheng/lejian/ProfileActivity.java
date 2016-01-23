@@ -63,6 +63,7 @@ public class ProfileActivity extends Activity implements BackPressedInterface {
         super.onCreate(savedInstanceState);
         if (AuthStore.getInstance().getUser() == null) {
             login();
+            return;
         }
 
         setContentView(R.layout.activity_profile);

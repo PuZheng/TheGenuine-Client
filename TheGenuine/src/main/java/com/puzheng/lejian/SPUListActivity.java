@@ -90,7 +90,7 @@ public class SPUListActivity extends ActionBarActivity implements ActionBar.TabL
                         addTabs();
                     } else {
                         //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
-                        Logger.e("AmapError", "location Error, ErrCode:"
+                        Logger.e("AmapError" + "location Error, ErrCode:"
                                 + location.getErrorCode() + ", errInfo:"
                                 + location.getErrorInfo());
                     }

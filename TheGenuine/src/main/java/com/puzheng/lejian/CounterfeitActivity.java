@@ -33,7 +33,7 @@ public class CounterfeitActivity extends Activity {
         super.onCreate(savedInstanceState);
         initActionBar();
         setContentView(R.layout.activity_counterfeit);
-        mTag = getIntent().getStringExtra(MainActivity.TAG_TAG_ID);
+        mTag = getIntent().getStringExtra(NFCAuthenticationActivity.TAG_TAG_ID);
 
         Button button = (Button) findViewById(R.id.btnNearby);
         button.setOnClickListener(new View.OnClickListener() {

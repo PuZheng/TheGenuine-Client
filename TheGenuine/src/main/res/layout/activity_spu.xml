@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context=".ProductActivity">
 
-    <com.puzheng.lejian.views.NavBar
+    <com.puzheng.lejian.view.NavBar
         android:layout_width="fill_parent"
         android:layout_height="@dimen/nav_bar_height"
         android:background="#3c3c3c"
@@ -47,7 +47,7 @@
                     android:layout_gravity="center" />
 
                 <com.viewpagerindicator.CirclePageIndicator
-                    android:id="@+id/titles"
+                    android:id="@+id/circlePageIndicator"
                     android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
                     android:layout_marginBottom="10dp"
@@ -122,10 +122,10 @@
                     android:layout_weight="1"
                     android:layout_width="wrap_content">
 
-                    <ImageButton
+                    <com.puzheng.lejian.view.ShareButton
                         android:layout_width="@dimen/spu_button_width"
                         android:layout_height="@dimen/spu_button_height"
-                        android:id="@+id/imageButtonShare"
+                        android:id="@+id/shareButton"
                         android:background="@drawable/product_small_button"
                         android:src="@drawable/social_share_light" />
                 </LinearLayout>
@@ -137,11 +137,11 @@
                     android:layout_weight="1"
                     android:layout_width="wrap_content">
 
-                    <ImageButton
+                    <com.puzheng.lejian.view.FavorButton
                         android:layout_width="@dimen/spu_button_width"
                         android:layout_height="@dimen/spu_button_height"
                         android:adjustViewBounds="true"
-                        android:id="@+id/imageButtonFavor"
+                        android:id="@+id/favorButton"
                         android:src="@drawable/ic_action_not_important"
                         android:background="@drawable/product_small_button" />
                 </LinearLayout>
@@ -153,10 +153,10 @@
                     android:layout_weight="1"
                     android:layout_width="wrap_content">
 
-                    <Button
+                    <com.puzheng.lejian.CommentButton
                         android:layout_width="@dimen/spu_button_width"
                         android:layout_height="@dimen/spu_button_height"
-                        android:id="@+id/buttonComment"
+                        android:id="@+id/commentButton"
                         android:textSize="8dp"
                         android:textColor="@android:color/white"
                         android:background="@drawable/product_small_button" />
@@ -164,15 +164,16 @@
 
 
                 <LinearLayout
+                    xmlns:android="http://schemas.android.com/apk/res/android"
                     android:orientation="vertical"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:layout_width="wrap_content">
 
-                    <Button
+                    <com.puzheng.lejian.view.NearbyButton
                         android:layout_width="@dimen/spu_button_width"
                         android:layout_height="@dimen/spu_button_height"
-                        android:id="@+id/buttonNearby"
+                        android:id="@+id/nearbyButton"
                         android:text="5米"
                         android:textSize="8dp"
                         android:textColor="@android:color/white"
@@ -183,10 +184,10 @@
 
         </FrameLayout>
 
-        <TabHost
+        <com.puzheng.lejian.view.SPUTabHost
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:id="@+id/tabHost"
+            android:id="@+id/spuTabHost"
             android:layout_weight="1"
             android:layout_gravity="center">
 
@@ -206,14 +207,10 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent">
 
-                    <android.support.v4.view.ViewPager
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/viewPagerBottom" />
                 </FrameLayout>
 
             </LinearLayout>
-        </TabHost>
+        </com.puzheng.lejian.view.SPUTabHost>
     </LinearLayout>
 
 </RelativeLayout>

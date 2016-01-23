@@ -72,7 +72,7 @@ public class RecommendationListAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Intent intent = new Intent(mActivity, NearbyActivity.class);
                 intent.putExtra("current", NearbyActivity.NEARBY_LIST);
-                intent.putExtra(Constants.TAG_SPU_ID, recommendation.getSPUId());
+                intent.putExtra(Const.TAG_SPU_ID, recommendation.getSPUId());
                 mActivity.startActivity(intent);
             }
         });
