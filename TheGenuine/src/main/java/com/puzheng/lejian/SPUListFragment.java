@@ -6,6 +6,8 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+import com.orhanobut.logger.Logger;
 import com.puzheng.deferred.Deferrable;
 import com.puzheng.deferred.DoneHandler;
 import com.puzheng.lejian.adapter.SPUListAdapter;
@@ -24,6 +26,7 @@ public class SPUListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         SPU spu = (SPU) getListAdapter().getItem(position);
+        Logger.json(new Gson().toJson(spu));
         Intent intent = new Intent(getActivity(), SPUActivity.class);
         intent.putExtra(Const.TAG_SPU, spu);
         getActivity().startActivity(intent);

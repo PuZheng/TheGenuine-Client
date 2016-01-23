@@ -1,18 +1,23 @@
 package com.puzheng.lejian.view;
 
 import android.content.Context;
-import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTabHost;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.puzheng.lejian.Const;
 import com.puzheng.lejian.R;
+import com.puzheng.lejian.RecommendationFragment;
+import com.puzheng.lejian.SPUFragment;
+import com.puzheng.lejian.model.SPU;
 
 /**
  * Created by xc on 16-1-22.
  */
-public class SPUTabHost extends TabHost {
+public class SPUTabHost extends FragmentTabHost {
     public SPUTabHost(Context context) {
         super(context);
     }
@@ -22,45 +27,41 @@ public class SPUTabHost extends TabHost {
     }
 
     @Override
-    public void setup() {
-        super.setup();
-        TabHost.TabSpec tabSpec = newTabSpec("tab1").setIndicator("基本信息");
-//        tabSpec.setContent(new MyTabFactory(this));
-        addTab(tabSpec);
-        tabSpec = tabHost.newTabSpec("tab2").setIndicator(getString(R.string.sameType));
-        tabSpec.setContent(new MyTabFactory(this));
-        tabHost.addTab(tabSpec);
-        tabSpec = tabHost.newTabSpec("tab3").setIndicator(getString(R.string.sameVendor));
-        tabSpec.setContent(new MyTabFactory(this));
-        tabHost.addTab(tabSpec);
-        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+    public void setup(Context context, FragmentManager manager, int containerId) {
+        super.setup(context, manager, containerId);
+    }
+
+    public void setSPU(SPU spu) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Const.TAG_SPU, spu);
+        addTab(newTabSpec("basic").setIndicator("基本信息"), SPUFragment.class, bundle);
+        addTab(newTabSpec("sameType").setIndicator(getContext().getString(R.string.sameType)),
+                RecommendationFragment.class, bundle);
+        addTab(newTabSpec("sameType").setIndicator(getContext().getString(R.string.sameVendor)),
+                RecommendationFragment.class, bundle);
+
+        setOnTabChangedListener(new OnTabChangeListener() {
             @Override
             public void onTabChanged(String tabId) {
-                int pos = tabHost.getCurrentTab();
-                for (int i = 0; i < tabHost.getTabWidget().getChildCount(); ++i) {
+                int pos = getCurrentTab();
+                for (int i = 0; i < getTabWidget().getChildCount(); ++i) {
                     int color = getResources().getColor(android.R.color.darker_gray);
                     if (i == pos) {
                         color = getResources().getColor(R.color.base_color1);
                     }
-                    TextView title = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-                    title.setTextColor(color);
+                    ((TextView) getTabWidget().getChildAt(i).findViewById(android.R.id.title)).setTextColor(color);
                 }
-                //        viewPager.setCurrentItem(pos);
-
             }
         });
-        for (int i = 0; i < tabHost.getTabWidget().getChildCount(); ++i) {
-            View v = tabHost.getTabWidget().getChildTabViewAt(i);
+        for (int i = 0; i < getTabWidget().getChildCount(); ++i) {
+            View v = getTabWidget().getChildTabViewAt(i);
             v.setBackground(getResources().getDrawable(R.drawable.tab_indicator_holo));
-            TextView title = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
             int color = getResources().getColor(android.R.color.darker_gray);
             if (i == 0) {
                 color = getResources().getColor(R.color.base_color1);
             }
-            title.setTextColor(color);
+            ((TextView) getTabWidget().getChildAt(i).findViewById(android.R.id.title)).setTextColor(color);
         }
-
     }
-
 
 }

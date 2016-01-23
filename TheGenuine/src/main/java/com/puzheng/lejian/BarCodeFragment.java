@@ -98,11 +98,11 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
                     Intent intent;
                     if (verification != null) {
                         intent = new Intent(BarCodeFragment.this.getActivity(), SPUActivity.class);
-                        intent.putExtra(MainActivity.TAG_VERIFICATION_INFO, verification);
-                        intent.putExtra(MainActivity.TAG_VERIFICATION_FINISHED, false);
+                        intent.putExtra(NFCAuthenticationActivity.TAG_VERIFICATION_INFO, verification);
+                        intent.putExtra(NFCAuthenticationActivity.TAG_VERIFICATION_FINISHED, false);
                     } else {
                         intent = new Intent(BarCodeFragment.this.getActivity(), CounterfeitActivity.class);
-                        intent.putExtra(MainActivity.TAG_TAG_ID, resultString);
+                        intent.putExtra(NFCAuthenticationActivity.TAG_TAG_ID, resultString);
                     }
                     startActivity(intent);
                 }
@@ -132,7 +132,7 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
         inactivityTimer = new InactivityTimer(this.getActivity());
 
         ImageButton imageButton = (ImageButton) mRootView.findViewById(R.id.imageButton);
-        if (!MainActivity.isNfcEnabled) {
+        if (!NFCAuthenticationActivity.isNfcEnabled) {
             mRootView.findViewById(R.id.imageButtonLayout).setVisibility(View.GONE);
         } else {
             mRootView.findViewById(R.id.imageButtonLayout).setVisibility(View.VISIBLE);

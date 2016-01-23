@@ -184,7 +184,7 @@ public class SPU implements Parcelable {
         dest.writeFloat(rating);
         dest.writeFloat(msrp);
         dest.writeString(desc);
-        dest.writeList(pics);
+        dest.writeTypedList(pics);
         dest.writeParcelable(icon, 0);
         dest.writeInt(distance);
         dest.writeInt(favored ? 1 : 0);
@@ -289,7 +289,7 @@ public class SPU implements Parcelable {
         @Override
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeString(path);
-            dest.writeString(path);
+            dest.writeString(url);
         }
     }
 }

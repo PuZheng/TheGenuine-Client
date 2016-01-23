@@ -34,38 +34,26 @@ import java.util.List;
 public class SPUFragment extends Fragment {
     private SPU spu;
 
-    private UMSocialService mController;
-    private View mView;
+    private UMSocialService umSocialService;
+    private View rootView;
 
     public SPUFragment() {
 
     }
 
-    public SPUFragment setSPU(SPU spu) {
+    public void setSPU(SPU spu) {
+        rootView = getView();
         this.spu = spu;
-        return this;
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        mController = UMServiceFactory.getUMSocialService("com.umeng.login",
-                RequestType.SOCIAL);
-
-        if (mController.getConfig().getSinaSsoHandler() == null) {
-            mController.getConfig().setSsoHandler(new SinaSsoHandler());
-        }
-        mView = inflater.inflate(R.layout.fragment_product, container, false);
-        TextView textView = (TextView) mView.findViewById(R.id.textViewCode);
+        TextView textView = (TextView) rootView.findViewById(R.id.textViewCode);
         textView.setText(spu.getCode());
-        textView = (TextView) mView.findViewById(R.id.textViewName);
+        textView = (TextView) rootView.findViewById(R.id.textViewName);
         textView.setText(spu.getName());
-        textView = (TextView) mView.findViewById(R.id.textViewVendorName);
+        textView = (TextView) rootView.findViewById(R.id.textViewVendorName);
         textView.setText(spu.getVendorName());
-        textView = (TextView) mView.findViewById(R.id.textViewVendorAddress);
+        textView = (TextView) rootView.findViewById(R.id.textViewVendorAddress);
         textView.setText(spu.getVendor().getAddr());
 
-        textView = (TextView) mView.findViewById(R.id.textViewVendorWebsite);
+        textView = (TextView) rootView.findViewById(R.id.textViewVendorWebsite);
         final String website = spu.getVendor().getWebsite();
         textView.setText(spu.getVendor().getWebsite());
         if (!TextUtils.isEmpty(website)) {
@@ -81,10 +69,10 @@ public class SPUFragment extends Fragment {
         }
 
         final String telephone = spu.getVendor().getTel();
-        textView = (TextView) mView.findViewById(R.id.textViewVendorTel);
+        textView = (TextView) rootView.findViewById(R.id.textViewVendorTel);
         textView.setText(telephone);
         if (!TextUtils.isEmpty(telephone)) {
-            mView.findViewById(R.id.call).setOnClickListener(new View.OnClickListener() {
+            rootView.findViewById(R.id.call).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + telephone));
@@ -94,10 +82,10 @@ public class SPUFragment extends Fragment {
         }
 
         final String weixinAccount = spu.getVendor().getWeixinAccount();
-        textView = (TextView) mView.findViewById(R.id.textViewWeixinAccount);
+        textView = (TextView) rootView.findViewById(R.id.textViewWeixinAccount);
         textView.setText(weixinAccount);
 
-        textView = (TextView) mView.findViewById(R.id.textViewWeiboHomepage);
+        textView = (TextView) rootView.findViewById(R.id.textViewWeiboHomepage);
         final String weiboHomepage = spu.getVendor().getWeiboHomepage();
         textView.setText(weiboHomepage);
         if (!TextUtils.isEmpty(weiboHomepage)) {
@@ -112,12 +100,33 @@ public class SPUFragment extends Fragment {
             });
         }
 
-        getFriendsAndUpdateView(false);
-        return mView;
+//        getFriendsAndUpdateView(false);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_product, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        umSocialService = UMServiceFactory.getUMSocialService("com.umeng.login",
+                RequestType.SOCIAL);
+
+        if (umSocialService.getConfig().getSinaSsoHandler() == null) {
+            umSocialService.getConfig().setSsoHandler(new SinaSsoHandler());
+        }
+
+        SPU spu = getArguments().getParcelable(Const.TAG_SPU);
+        if (spu != null) {
+            setSPU(spu);
+        }
     }
 
     private void authVerify() {
-        mController.doOauthVerify(getActivity(), SHARE_MEDIA.SINA, new SocializeListeners.UMAuthListener() {
+        umSocialService.doOauthVerify(getActivity(), SHARE_MEDIA.SINA, new SocializeListeners.UMAuthListener() {
             @Override
             public void onCancel(SHARE_MEDIA platform) {
             }
@@ -143,7 +152,7 @@ public class SPUFragment extends Fragment {
     }
 
     private void follow(String weibo) {
-        mController.follow(getActivity(), SHARE_MEDIA.SINA, new SocializeListeners.MulStatusListener() {
+        umSocialService.follow(getActivity(), SHARE_MEDIA.SINA, new SocializeListeners.MulStatusListener() {
             @Override
             public void onComplete(MultiStatus multiStatus, int i, SocializeEntity socializeEntity) {
                 if (i == 200) {
@@ -163,7 +172,7 @@ public class SPUFragment extends Fragment {
 
     private void getFriendsAndUpdateView(final boolean doFollow) {
         if (OauthHelper.isAuthenticated(getActivity(), SHARE_MEDIA.SINA)) {
-            mController.getFriends(getActivity(), new SocializeListeners.FetchFriendsListener() {
+            umSocialService.getFriends(getActivity(), new SocializeListeners.FetchFriendsListener() {
                 @Override
                 public void onStart() {
 
@@ -205,8 +214,8 @@ public class SPUFragment extends Fragment {
 
     private void updateFollowedView(boolean isFollowed) {
         final String weibo = getWeiboAccount();
-        Button addFocus = (Button) mView.findViewById(R.id.btnAddFocus);
-        mView.findViewById(R.id.layoutAddFocus).setOnClickListener(null);
+        Button addFocus = (Button) rootView.findViewById(R.id.btnAddFocus);
+        rootView.findViewById(R.id.layoutAddFocus).setOnClickListener(null);
         if (!TextUtils.isEmpty(weibo)) {
             addFocus.setVisibility(View.VISIBLE);
             if (isFollowed) {

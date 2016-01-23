@@ -19,15 +19,15 @@ import java.util.Date;
 /**
  * Created by xc on 13-11-21.
  */
-public class VerificationInfoFragment extends Fragment {
+public class AuthenticationFragment extends Fragment {
     private Verification verification;
     private View rootView;
 
-    public VerificationInfoFragment() {
+    public AuthenticationFragment() {
 
     }
 
-    public VerificationInfoFragment setVerificationInfo(Verification verification) {
+    public AuthenticationFragment setVerificationInfo(Verification verification) {
         this.verification = verification;
         return this;
     }

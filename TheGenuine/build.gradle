@@ -37,6 +37,8 @@ android {
     lintOptions {
         disable 'MissingTranslation'
     }
+
+
 }
 
 dependencies {
@@ -60,5 +62,34 @@ dependencies {
 preBuild.doFirst {
     if (!file("./src/main/res/raw/config.json").exists()) {
         throw new GradleException('you must provide a config file!');
+    }
+}
+
+import groovy.json.JsonSlurper
+
+
+
+android.applicationVariants.each { variant ->
+    variant.processManifest.doLast {
+        copy {
+            from("${buildDir}/manifests") {
+                include "${variant.dirName}/AndroidManifest.xml"
+            }
+            into("${buildDir}/manifests/$variant.name")
+
+            // define a variable for your key:
+            def inputFile = file("./src/main/res/raw/config.json")
+            def config = new JsonSlurper().parseText(inputFile.text)
+
+            filter {
+                String line ->
+                    line.replaceAll(
+                            "%AMAP_API_KEY%",
+                            config.apiKey)
+            }
+
+            // set the path to the modified Manifest:
+            variant.processResources.manifestFile = file("${buildDir}/manifests/${variant.name}/${variant.dirName}/AndroidManifest.xml")
+        }
     }
 }

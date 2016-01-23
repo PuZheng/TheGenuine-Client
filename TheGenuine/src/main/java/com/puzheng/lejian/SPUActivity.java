@@ -27,19 +27,23 @@ import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.orhanobut.logger.Logger;
 import com.puzheng.humanize.Humanize;
 import com.puzheng.lejian.adapter.SPUCoverAdapter;
 import com.puzheng.lejian.model.SPU;
 import com.puzheng.lejian.model.SPUResponse;
+import com.puzheng.lejian.model.Vendor;
 import com.puzheng.lejian.model.Verification;
 import com.puzheng.lejian.netutils.WebService;
 import com.puzheng.lejian.util.BadResponseException;
 import com.puzheng.lejian.util.ConfigUtil;
 import com.puzheng.lejian.view.FavorButton;
 import com.puzheng.lejian.view.NearbyButton;
+import com.puzheng.lejian.view.SPUTabHost;
 import com.puzheng.lejian.view.ShareButton;
-import com.umeng.socialize.controller.*;
 import com.viewpagerindicator.CirclePageIndicator;
+
 import org.stringtemplate.v4.ST;
 
 import java.util.ArrayList;
@@ -167,6 +171,9 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             CirclePageIndicator circlePageIndicator = (CirclePageIndicator) findViewById(R.id.circlePageIndicator);
             circlePageIndicator.setViewPager(viewPagerCover);
 
+            SPUTabHost spuTabHost = (SPUTabHost) findViewById(R.id.spuTabHost);
+            spuTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
+            spuTabHost.setSPU(spu);
 //            tabHost = (TabHost) findViewById(R.id.tabHost);
 //            tabHost.setup();
 
@@ -206,8 +213,8 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 
 
     private void retrieveExtra() {
-        authentication = getIntent().getParcelableExtra(MainActivity.TAG_VERIFICATION_INFO);
-        verificationFinished = getIntent().getBooleanExtra(MainActivity.TAG_VERIFICATION_FINISHED, false);
+        authentication = getIntent().getParcelableExtra(NFCAuthenticationActivity.TAG_VERIFICATION_INFO);
+        verificationFinished = getIntent().getBooleanExtra(NFCAuthenticationActivity.TAG_VERIFICATION_FINISHED, false);
         spu = getIntent().getParcelableExtra(Const.TAG_SPU);
         if (BuildConfig.DEBUG) {
             if (spu == null) {
@@ -222,11 +229,13 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
                         Uri.parse(ConfigUtil.getInstance().getBackend())
                                 .buildUpon().path("assets/sample3.png").build().toString()));
 
+                Vendor vendor = new Vendor.Builder().name("foo vendor").addr("foo addr").tel("foo tel").build();
                 spu = new SPU.Builder().id(1).distance(1200).favored(true)
                         .commentCnt(1238).rating(4.3f).name("foo spu")
-                        .pics(pics).build();
+                        .pics(pics).vendor(vendor).build();
             }
         }
+        Logger.json(new Gson().toJson(spu));
     }
 
 
@@ -307,7 +316,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         titleIndicator.setViewPager(viewPagerCover);
 
 
-        tabHost = (TabHost) findViewById(R.id.tabHost);
+        tabHost = (TabHost) findViewById(R.id.spuTabHost);
         tabHost.setup();
 
         String s = getString(R.string.verify_info);
@@ -338,9 +347,9 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         }
 
         setBottomTabs();
-        viewPager = (ViewPager) findViewById(R.id.viewPagerBottom);
-        viewPager.setAdapter(new MyPageAdapter(getSupportFragmentManager()));
-        viewPager.setOnPageChangeListener(this);
+//        viewPager = (ViewPager) findViewById(R.id.viewPagerBottom);
+//        viewPager.setAdapter(new MyPageAdapter(getSupportFragmentManager()));
+//        viewPager.setOnPageChangeListener(this);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -439,12 +448,12 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             super(fm);
             fragments = new ArrayList<Fragment>();
             if (authentication != null) {
-                fragments.add(new VerificationInfoFragment().setVerificationInfo(authentication));
+                fragments.add(new AuthenticationFragment().setVerificationInfo(authentication));
             } else {
-                fragments.add(new SPUFragment().setSPU(spuResponse.getSPU()));
+//                fragments.add(new SPUFragment().setSPU(spuResponse.getSPU()));
             }
-            fragments.add(RecommendationsFragment.createSameTypeProductsFragment(getSPUId()));
-            fragments.add(RecommendationsFragment.createSameVendorProductsFragment(getSPUId()));
+            fragments.add(RecommendationFragment.createSameTypeProductsFragment(getSPUId()));
+            fragments.add(RecommendationFragment.createSameVendorProductsFragment(getSPUId()));
         }
 
         @Override

@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import com.puzheng.lejian.model.Recommendation;
+import com.puzheng.lejian.model.SPU;
 import com.puzheng.lejian.netutils.WebService;
 
 import java.util.List;
@@ -14,7 +17,7 @@ import java.util.List;
 /**
  * Created by xc on 13-11-21.
  */
-public class RecommendationsFragment extends ListFragment implements RefreshInterface {
+public class RecommendationFragment extends ListFragment implements RefreshInterface {
     public static final int SAME_CATEGORY = 3;
     private static final String NEARYBY = "nearby";
     private static final String SAME_VENDOR = "same_vendor";
@@ -23,31 +26,33 @@ public class RecommendationsFragment extends ListFragment implements RefreshInte
     private int spuId;
     private MaskableManager maskableManager;
 
-    public RecommendationsFragment() {
+    public RecommendationFragment() {
 
     }
 
-    public RecommendationsFragment setQueryType(String queryType) {
+
+
+    public RecommendationFragment setQueryType(String queryType) {
         this.queryType = queryType;
         return this;
     }
 
-    public RecommendationsFragment setSPUId(int spuId) {
+    public RecommendationFragment setSPUId(int spuId) {
         this.spuId = spuId;
         return this;
     }
 
 
-    public static RecommendationsFragment createNearByProductsFragment(int spuId) {
-        return new RecommendationsFragment().setQueryType(NEARYBY).setSPUId(spuId);
+    public static RecommendationFragment createNearByProductsFragment(int spuId) {
+        return new RecommendationFragment().setQueryType(NEARYBY).setSPUId(spuId);
     }
 
-    public static RecommendationsFragment createSameTypeProductsFragment(int spuId) {
-        return new RecommendationsFragment().setQueryType(SAME_TYPE).setSPUId(spuId);
+    public static RecommendationFragment createSameTypeProductsFragment(int spuId) {
+        return new RecommendationFragment().setQueryType(SAME_TYPE).setSPUId(spuId);
     }
 
-    public static RecommendationsFragment createSameVendorProductsFragment( int spuId) {
-        return new RecommendationsFragment().setQueryType(SAME_VENDOR).setSPUId(spuId);
+    public static RecommendationFragment createSameVendorProductsFragment( int spuId) {
+        return new RecommendationFragment().setQueryType(SAME_VENDOR).setSPUId(spuId);
     }
 
 
@@ -64,7 +69,7 @@ public class RecommendationsFragment extends ListFragment implements RefreshInte
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         maskableManager = new MaskableManager(getListView(), this);
-        new GetRecommendationsTask(this, queryType, spuId).execute();
+//        new GetRecommendationsTask(this, queryType, spuId).execute();
     }
 
     @Override

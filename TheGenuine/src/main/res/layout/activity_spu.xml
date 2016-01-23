@@ -184,10 +184,10 @@
 
         </FrameLayout>
 
-        <TabHost
+        <com.puzheng.lejian.view.SPUTabHost
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:id="@+id/tabHost"
+            android:id="@+id/spuTabHost"
             android:layout_weight="1"
             android:layout_gravity="center">
 
@@ -207,14 +207,10 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent">
 
-                    <android.support.v4.view.ViewPager
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/viewPagerBottom" />
                 </FrameLayout>
 
             </LinearLayout>
-        </TabHost>
+        </com.puzheng.lejian.view.SPUTabHost>
     </LinearLayout>
 
 </RelativeLayout>
