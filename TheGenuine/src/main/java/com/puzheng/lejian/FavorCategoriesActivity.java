@@ -27,6 +27,7 @@ import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.puzheng.lejian.adapter.RecommendationListAdapter;
 import com.puzheng.lejian.model.Favor;
 import com.puzheng.lejian.image_utils.ImageFetcher;
 import com.puzheng.lejian.netutils.WebService;
@@ -332,9 +333,9 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
             RecommendationListAdapter.ViewHolder viewHolder;
             if (convertView.getTag() == null) {
                 viewHolder = new RecommendationListAdapter.ViewHolder((ImageView) convertView.findViewById(R.id.imageView),
-                        (TextView) convertView.findViewById(R.id.textViewProductName),
+                        (TextView) convertView.findViewById(R.id.textViewName),
                         (TextView) convertView.findViewById(R.id.textViewFavorCnt),
-                        (TextView) convertView.findViewById(R.id.textViewPrice),
+                        (TextView) convertView.findViewById(R.id.textViewMSRP),
                         (Button) convertView.findViewById(R.id.btnNearby),
                         (RatingBar) convertView.findViewById(R.id.ratingBar));
                 convertView.setTag(viewHolder);
@@ -343,14 +344,15 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
             }
 
             final Favor favor = (Favor) getItem(position);
-            mImageFetcher.loadImage(favor.getSPU().getIcon().getURL(), viewHolder.imageView);
+            mImageFetcher.loadImage(favor.getSPU().getIcon().getURL(),
+                    viewHolder.imageView);
 
-            viewHolder.textViewProductName.setText(favor.getSPU().getName());
-            viewHolder.textViewPrice.setText("￥" + favor.getSPU().getMsrp());
+            viewHolder.textViewName.setText(favor.getSPU().getName());
+            viewHolder.textViewMSRP.setText("￥" + favor.getSPU().getMSRP());
 //            viewHolder.textViewFavorCnt.setText(getString(R.string.popularity , Misc.humanizeNum(favor.getFavorCnt(), mActivity)));
             viewHolder.ratingBar.setRating(favor.getSPU().getRating());
-//            viewHolder.button.setText(getString(R.string.nearest, Misc.humanizeDistance(favor.getDistance(), FavorCategoriesActivity.this)) );
-            viewHolder.button.setOnClickListener(new View.OnClickListener() {
+//            viewHolder.buttonNearby.setText(getString(R.string.nearest, Misc.humanizeDistance(favor.getDistance(), FavorCategoriesActivity.this)) );
+            viewHolder.buttonNearby.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mActivity, NearbyActivity.class);
@@ -360,11 +362,11 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
                 }
             });
             if (favor.getDistance() == -1) {
-                viewHolder.button.setVisibility(View.INVISIBLE);
+                viewHolder.buttonNearby.setVisibility(View.INVISIBLE);
             }
 
-//            viewHolder.button.setText(Misc.humanizeDistance(favor.getDistance(), FavorCategoriesActivity.this));
-            viewHolder.textViewPrice.setText(String.valueOf(favor.getSPU().getMsrp()));
+//            viewHolder.buttonNearby.setText(Misc.humanizeDistance(favor.getDistance(), FavorCategoriesActivity.this));
+            viewHolder.textViewMSRP.setText(String.valueOf(favor.getSPU().getMSRP()));
             return convertView;
         }
 

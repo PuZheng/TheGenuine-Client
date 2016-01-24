@@ -11,7 +11,6 @@ import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
 import com.puzheng.lejian.MyApp;
 import com.puzheng.lejian.R;
-import com.puzheng.lejian.SPUTypeListActivity;
 import com.puzheng.lejian.model.SPUType;
 
 import java.util.List;

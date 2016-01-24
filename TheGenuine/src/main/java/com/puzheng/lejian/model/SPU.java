@@ -22,11 +22,12 @@ public class SPU implements Parcelable {
     private int distance;
     private boolean favored;
     private int commentCnt;
+    private int favorCnt;
 
     public SPU(int id, String name, String code, Vendor vendor,
                SPUType spuType, float rating, float msrp, String desc,
                List<Pic> pics, Pic icon, int distance, boolean favored,
-               int commentCnt) {
+               int commentCnt, int favorCnt) {
         this.id = id;
         this.name = name;
         this.code = code;
@@ -40,6 +41,7 @@ public class SPU implements Parcelable {
         this.distance = distance;
         this.favored = favored;
         this.commentCnt = commentCnt;
+        this.favorCnt = favorCnt;
     }
 
     public boolean isFavored() {
@@ -48,6 +50,10 @@ public class SPU implements Parcelable {
 
     public int getCommentCnt() {
         return commentCnt;
+    }
+
+    public int getFavorCnt() {
+        return favorCnt;
     }
 
 
@@ -66,6 +72,7 @@ public class SPU implements Parcelable {
         private int distance;
         private boolean favored;
         private int commentCnt;
+        private int favorCnt;
 
         public Builder id(int id) {
             this.id = id;
@@ -135,9 +142,14 @@ public class SPU implements Parcelable {
             return this;
         }
 
+        public Builder favorCnt(int favorCnt) {
+            this.favorCnt = favorCnt;
+            return this;
+        }
+
         public SPU build() {
             return new SPU(id, name, code, vendor, spuType, rating, msrp, desc,
-                    pics, icon, distance, favored, commentCnt);
+                    pics, icon, distance, favored, commentCnt, favorCnt);
         }
     }
 
@@ -155,6 +167,7 @@ public class SPU implements Parcelable {
         distance = in.readInt();
         favored = in.readInt() == 1;
         commentCnt = in.readInt();
+        favorCnt = in.readInt();
     }
 
     public static final Creator<SPU> CREATOR = new Creator<SPU>() {
@@ -189,6 +202,7 @@ public class SPU implements Parcelable {
         dest.writeInt(distance);
         dest.writeInt(favored ? 1 : 0);
         dest.writeInt(commentCnt);
+        dest.writeInt(favorCnt);
     }
 
     public String getCode() {
@@ -203,11 +217,11 @@ public class SPU implements Parcelable {
         return id;
     }
 
-    public float getMsrp() {
+    public float getMSRP() {
         return msrp;
     }
 
-    public void setMsrp(float msrp) {
+    public void setMSRP(float msrp) {
         this.msrp = msrp;
     }
 
@@ -247,49 +261,4 @@ public class SPU implements Parcelable {
         return distance;
     }
 
-    public static class Pic implements Parcelable {
-        private String path;
-        private String url;
-
-        public Pic(String path, String url) {
-            this.path = path;
-            this.url = url;
-        }
-
-        protected Pic(Parcel in) {
-            path = in.readString();
-            url = in.readString();
-        }
-
-        public static final Creator<Pic> CREATOR = new Creator<Pic>() {
-            @Override
-            public Pic createFromParcel(Parcel in) {
-                return new Pic(in);
-            }
-
-            @Override
-            public Pic[] newArray(int size) {
-                return new Pic[size];
-            }
-        };
-
-        public String getPath() {
-            return path;
-        }
-
-        public String getURL() {
-            return url;
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(path);
-            dest.writeString(url);
-        }
-    }
 }

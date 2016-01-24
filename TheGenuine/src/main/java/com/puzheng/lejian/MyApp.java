@@ -28,7 +28,6 @@ import java.util.Map;
 public class MyApp extends Application {
     public static final int LOGIN_ACTION = 1;
     public static ServiceConnection connection;
-    private static User user;
     private static Context context;
     private static LocationService mLocationService;
     public static String SHAREURL;
@@ -141,8 +140,8 @@ public class MyApp extends Application {
         bindService(intent, connection, BIND_AUTO_CREATE);
     }
 
-    public Activity getCurrentActivity() {
-        return currentActivity;
+    public static Activity getCurrentActivity() {
+        return ((MyApp)getContext()).currentActivity;
     }
 
     private class GetShareTemplateClass extends AsyncTask<Void, Void, HashMap<String, Object>>{

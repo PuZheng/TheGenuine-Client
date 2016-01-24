@@ -133,4 +133,5 @@
     <string name="weichat_app_id">wx5b416dfd76f44a00</string>
     <string name="email_exists">对不起！邮箱已经被注册</string>
     <string name="data_load_failed">加载数据错误</string>
+    <string name="no_recommendations">没有推荐数据</string>
 </resources>

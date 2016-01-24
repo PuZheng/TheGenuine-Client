@@ -31,6 +31,7 @@ import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
 import com.puzheng.humanize.Humanize;
 import com.puzheng.lejian.adapter.SPUCoverAdapter;
+import com.puzheng.lejian.model.Pic;
 import com.puzheng.lejian.model.SPU;
 import com.puzheng.lejian.model.SPUResponse;
 import com.puzheng.lejian.model.Vendor;
@@ -163,7 +164,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             }
 
             List<String> urls = new ArrayList<String>();
-            for (SPU.Pic pic: spu.getPics()) {
+            for (Pic pic: spu.getPics()) {
                 urls.add(pic.getURL());
             }
             adapter = new SPUCoverAdapter(getSupportFragmentManager(), urls);
@@ -218,14 +219,14 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         spu = getIntent().getParcelableExtra(Const.TAG_SPU);
         if (BuildConfig.DEBUG) {
             if (spu == null) {
-                List<SPU.Pic> pics = new ArrayList<SPU.Pic>();
-                pics.add(new SPU.Pic("",
+                List<Pic> pics = new ArrayList<Pic>();
+                pics.add(new Pic("",
                         Uri.parse(ConfigUtil.getInstance().getBackend())
                                 .buildUpon().path("assets/sample1.png").build().toString()));
-                pics.add(new SPU.Pic("",
+                pics.add(new Pic("",
                         Uri.parse(ConfigUtil.getInstance().getBackend())
                                 .buildUpon().path("assets/sample2.png").build().toString()));
-                pics.add(new SPU.Pic("",
+                pics.add(new Pic("",
                         Uri.parse(ConfigUtil.getInstance().getBackend())
                                 .buildUpon().path("assets/sample3.png").build().toString()));
 
@@ -254,7 +255,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         return authentication != null ? authentication.getDistance() : spuResponse.getDistance();
     }
 
-    private List<SPU.Pic> getPics() {
+    private List<Pic> getPics() {
         return authentication != null ? authentication.getSKU().getSPU().getPics() : spuResponse.getSPU().getPics();
     }
 
@@ -307,7 +308,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 
 
         List<String> urls = new ArrayList<String>();
-        for (SPU.Pic pic: getPics()) {
+        for (Pic pic: getPics()) {
             urls.add(pic.getURL());
         }
         adapter = new SPUCoverAdapter(getSupportFragmentManager(), urls);
@@ -452,8 +453,8 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             } else {
 //                fragments.add(new SPUFragment().setSPU(spuResponse.getSPU()));
             }
-            fragments.add(RecommendationFragment.createSameTypeProductsFragment(getSPUId()));
-            fragments.add(RecommendationFragment.createSameVendorProductsFragment(getSPUId()));
+//            fragments.add(RecommendationFragment.createSameTypeProductsFragment(getSPUId()));
+//            fragments.add(RecommendationFragment.createSameVendorProductsFragment(getSPUId()));
         }
 
         @Override
