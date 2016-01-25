@@ -42,7 +42,6 @@ public class FavorStore {
                 .appendPath(String.valueOf(spu.getId())).build();
         final Handler handler = new Handler();
         OkHttpClient client = new OkHttpClient();
-        // why must set Content-Length? https://github.com/square/okhttp/issues/751
         RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain"), "");
         final Request request = new Request.Builder().url(uri.toString()).header("Authorization",
                 "Bearer " + user.getToken()).method(method,
