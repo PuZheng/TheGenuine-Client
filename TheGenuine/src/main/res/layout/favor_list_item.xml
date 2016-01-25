@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:text="商品名称"
             android:textSize="18dp"
-            android:id="@+id/textViewProductName" />
+            android:id="@+id/textViewName" />
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -89,7 +89,7 @@
                 android:textColor="#fc8c43"
                 android:textSize="14dp"
                 android:layout_toRightOf="@id/textViewPriceHint"
-                android:id="@+id/textViewPrice" />
+                android:id="@+id/textViewMSRP" />
         </RelativeLayout>
     </LinearLayout>
 

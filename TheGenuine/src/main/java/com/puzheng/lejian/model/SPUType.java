@@ -67,53 +67,6 @@ public class SPUType implements Parcelable {
         dest.writeParcelable(pic, 0);
     }
 
-    public static class Pic implements Parcelable{
-        String url;
-        String path;
-
-        public Pic(String url, String path) {
-            this.url = url;
-            this.path = path;
-        }
-
-        protected Pic(Parcel in) {
-            url = in.readString();
-            path = in.readString();
-        }
-
-        public static final Creator<Pic> CREATOR = new Creator<Pic>() {
-            @Override
-            public Pic createFromParcel(Parcel in) {
-                return new Pic(in);
-            }
-
-            @Override
-            public Pic[] newArray(int size) {
-                return new Pic[size];
-            }
-        };
-
-        public String getURL() {
-            return url;
-        }
-
-        public String getPath() {
-            return path;
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(url);
-            dest.writeString(path);
-        }
-    }
-
-
     public SPUType(int id, String name, int weight, boolean enabled,
                    int spuCnt, Pic pic) {
         this.id = id;

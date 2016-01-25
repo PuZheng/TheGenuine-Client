@@ -12,6 +12,7 @@ import com.puzheng.lejian.Const;
 import com.puzheng.lejian.R;
 import com.puzheng.lejian.RecommendationFragment;
 import com.puzheng.lejian.SPUFragment;
+import com.puzheng.lejian.SameTypeRecommendationFragment;
 import com.puzheng.lejian.model.SPU;
 
 /**
@@ -36,9 +37,9 @@ public class SPUTabHost extends FragmentTabHost {
         bundle.putParcelable(Const.TAG_SPU, spu);
         addTab(newTabSpec("basic").setIndicator("基本信息"), SPUFragment.class, bundle);
         addTab(newTabSpec("sameType").setIndicator(getContext().getString(R.string.sameType)),
-                RecommendationFragment.class, bundle);
-        addTab(newTabSpec("sameType").setIndicator(getContext().getString(R.string.sameVendor)),
-                RecommendationFragment.class, bundle);
+                SameTypeRecommendationFragment.class, bundle);
+        addTab(newTabSpec("sameVendor").setIndicator(getContext().getString(R.string.sameVendor)),
+                SameVendorRecommendationFragment.class, bundle);
 
         setOnTabChangedListener(new OnTabChangeListener() {
             @Override

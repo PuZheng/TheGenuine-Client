@@ -50,9 +50,9 @@ public class SPUListAdapter extends BaseAdapter {
         ViewHolder viewHolder;
         if (convertView.getTag() == null) {
             viewHolder = new ViewHolder((ImageView) convertView.findViewById(R.id.imageView),
-                    (TextView) convertView.findViewById(R.id.textViewProductName),
+                    (TextView) convertView.findViewById(R.id.textViewName),
                     (TextView) convertView.findViewById(R.id.textViewFavorCnt),
-                    (TextView) convertView.findViewById(R.id.textViewPrice),
+                    (TextView) convertView.findViewById(R.id.textViewMSRP),
                     (Button) convertView.findViewById(R.id.btnNearby),
                     (RatingBar) convertView.findViewById(R.id.ratingBar));
             convertView.setTag(viewHolder);
@@ -63,9 +63,9 @@ public class SPUListAdapter extends BaseAdapter {
         Glide.with(context).load(spu.getIcon().getURL())
                 .error(R.drawable.ic_broken_image_black_24dp).into(viewHolder.imageView);
 
-        viewHolder.textViewProductName.setText(spu.getName());
+        viewHolder.textViewName.setText(spu.getName());
         viewHolder.textViewFavorCnt.setText(context.getString(R.string.popularity, Humanize.with(context).num(1200)));
-        viewHolder.textViewPrice.setText(String.valueOf(spu.getMsrp()) + "元");
+        viewHolder.textViewMSRP.setText(String.valueOf(spu.getMSRP()) + "元");
         viewHolder.ratingBar.setRating(spu.getRating());
         if (spu.getDistance() != 0) {
             viewHolder.button.setText(context.getString(R.string.nearest, Humanize.with(context).distance(spu.getDistance())));
@@ -92,18 +92,18 @@ public class SPUListAdapter extends BaseAdapter {
 
     private static class ViewHolder {
         ImageView imageView;
-        TextView textViewProductName;
-        TextView textViewPrice;
+        TextView textViewName;
+        TextView textViewMSRP;
         TextView textViewFavorCnt;
         Button button;
         RatingBar ratingBar;
 
-        ViewHolder(ImageView imageView, TextView textViewProductName,
-                   TextView textViewFavorCnt, TextView textViewPrice, Button button, RatingBar ratingBar) {
+        ViewHolder(ImageView imageView, TextView textViewName,
+                   TextView textViewFavorCnt, TextView textViewMSRP, Button button, RatingBar ratingBar) {
             this.imageView = imageView;
-            this.textViewProductName = textViewProductName;
+            this.textViewName = textViewName;
             this.textViewFavorCnt = textViewFavorCnt;
-            this.textViewPrice = textViewPrice;
+            this.textViewMSRP = textViewMSRP;
             this.button = button;
             this.ratingBar = ratingBar;
         }

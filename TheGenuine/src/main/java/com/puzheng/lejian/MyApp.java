@@ -14,8 +14,8 @@ import android.os.IBinder;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.orhanobut.logger.Logger;
-import com.puzheng.lejian.model.User;
 import com.puzheng.lejian.netutils.WebService;
+import com.puzheng.lejian.store.LocationStore;
 import com.puzheng.lejian.util.LocateErrorException;
 import com.puzheng.lejian.util.Misc;
 
@@ -28,7 +28,6 @@ import java.util.Map;
 public class MyApp extends Application {
     public static final int LOGIN_ACTION = 1;
     public static ServiceConnection connection;
-    private static User user;
     private static Context context;
     private static LocationService mLocationService;
     public static String SHAREURL;
@@ -119,6 +118,8 @@ public class MyApp extends Application {
 
             }
         });
+        LocationStore.getInstance().setup(MyApp.context);
+
     }
 
 
@@ -141,8 +142,8 @@ public class MyApp extends Application {
         bindService(intent, connection, BIND_AUTO_CREATE);
     }
 
-    public Activity getCurrentActivity() {
-        return currentActivity;
+    public static Activity getCurrentActivity() {
+        return ((MyApp)getContext()).currentActivity;
     }
 
     private class GetShareTemplateClass extends AsyncTask<Void, Void, HashMap<String, Object>>{

@@ -31,6 +31,7 @@ import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
 import com.puzheng.humanize.Humanize;
 import com.puzheng.lejian.adapter.SPUCoverAdapter;
+import com.puzheng.lejian.model.Pic;
 import com.puzheng.lejian.model.SPU;
 import com.puzheng.lejian.model.SPUResponse;
 import com.puzheng.lejian.model.Vendor;
@@ -38,6 +39,7 @@ import com.puzheng.lejian.model.Verification;
 import com.puzheng.lejian.netutils.WebService;
 import com.puzheng.lejian.util.BadResponseException;
 import com.puzheng.lejian.util.ConfigUtil;
+import com.puzheng.lejian.util.FakeUtil;
 import com.puzheng.lejian.view.FavorButton;
 import com.puzheng.lejian.view.NearbyButton;
 import com.puzheng.lejian.view.SPUTabHost;
@@ -163,7 +165,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             }
 
             List<String> urls = new ArrayList<String>();
-            for (SPU.Pic pic: spu.getPics()) {
+            for (Pic pic: spu.getPics()) {
                 urls.add(pic.getURL());
             }
             adapter = new SPUCoverAdapter(getSupportFragmentManager(), urls);
@@ -174,39 +176,6 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             SPUTabHost spuTabHost = (SPUTabHost) findViewById(R.id.spuTabHost);
             spuTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
             spuTabHost.setSPU(spu);
-//            tabHost = (TabHost) findViewById(R.id.tabHost);
-//            tabHost.setup();
-
-//            TabHost.TabSpec tabSpec = tabHost.newTabSpec("tab1").setIndicator(authentication == null? "产品信息": "验证信息");
-//            tabSpec.setContent(new MyTabFactory(this));
-//            tabHost.addTab(tabSpec);
-//            tabSpec = tabHost.newTabSpec("tab2").setIndicator(getString(R.string.sameType));
-//            tabSpec.setContent(new MyTabFactory(this));
-//            tabHost.addTab(tabSpec);
-//            tabSpec = tabHost.newTabSpec("tab3").setIndicator(getString(R.string.sameVendor));
-//            tabSpec.setContent(new MyTabFactory(this));
-//            tabHost.addTab(tabSpec);
-//            tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
-//                @Override
-//                public void onTabChanged(String tabId) {
-//                    int pos = tabHost.getCurrentTab();
-//                    for (int i = 0; i < tabHost.getTabWidget().getChildCount(); ++i) {
-//                        int color = getResources().getColor(android.R.color.darker_gray);
-//                        if (i == pos) {
-//                            color = getResources().getColor(R.color.base_color1);
-//                        }
-//                        TextView title = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-//                        title.setTextColor(color);
-//                    }
-//                    //        viewPager.setCurrentItem(pos);
-//
-//                }
-//            });
-//
-//            setBottomTabs();
-//            viewPager = (ViewPager) findViewById(R.id.viewPagerBottom);
-//            viewPager.setAdapter(new MyPageAdapter(getSupportFragmentManager()));
-//            viewPager.setOnPageChangeListener(this);
         }
 
     }
@@ -218,21 +187,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         spu = getIntent().getParcelableExtra(Const.TAG_SPU);
         if (BuildConfig.DEBUG) {
             if (spu == null) {
-                List<SPU.Pic> pics = new ArrayList<SPU.Pic>();
-                pics.add(new SPU.Pic("",
-                        Uri.parse(ConfigUtil.getInstance().getBackend())
-                                .buildUpon().path("assets/sample1.png").build().toString()));
-                pics.add(new SPU.Pic("",
-                        Uri.parse(ConfigUtil.getInstance().getBackend())
-                                .buildUpon().path("assets/sample2.png").build().toString()));
-                pics.add(new SPU.Pic("",
-                        Uri.parse(ConfigUtil.getInstance().getBackend())
-                                .buildUpon().path("assets/sample3.png").build().toString()));
-
-                Vendor vendor = new Vendor.Builder().name("foo vendor").addr("foo addr").tel("foo tel").build();
-                spu = new SPU.Builder().id(1).distance(1200).favored(true)
-                        .commentCnt(1238).rating(4.3f).name("foo spu")
-                        .pics(pics).vendor(vendor).build();
+                spu = FakeUtil.getInstance().spu();
             }
         }
         Logger.json(new Gson().toJson(spu));
@@ -254,7 +209,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         return authentication != null ? authentication.getDistance() : spuResponse.getDistance();
     }
 
-    private List<SPU.Pic> getPics() {
+    private List<Pic> getPics() {
         return authentication != null ? authentication.getSKU().getSPU().getPics() : spuResponse.getSPU().getPics();
     }
 
@@ -307,7 +262,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 
 
         List<String> urls = new ArrayList<String>();
-        for (SPU.Pic pic: getPics()) {
+        for (Pic pic: getPics()) {
             urls.add(pic.getURL());
         }
         adapter = new SPUCoverAdapter(getSupportFragmentManager(), urls);
@@ -348,7 +303,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 
         setBottomTabs();
 //        viewPager = (ViewPager) findViewById(R.id.viewPagerBottom);
-//        viewPager.setAdapter(new MyPageAdapter(getSupportFragmentManager()));
+//        viewPager.setAdapter(new SPUListPagerAdapter(getSupportFragmentManager()));
 //        viewPager.setOnPageChangeListener(this);
     }
 
@@ -452,8 +407,8 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             } else {
 //                fragments.add(new SPUFragment().setSPU(spuResponse.getSPU()));
             }
-            fragments.add(RecommendationFragment.createSameTypeProductsFragment(getSPUId()));
-            fragments.add(RecommendationFragment.createSameVendorProductsFragment(getSPUId()));
+//            fragments.add(RecommendationFragment.createSameTypeProductsFragment(getSPUId()));
+//            fragments.add(RecommendationFragment.createSameVendorProductsFragment(getSPUId()));
         }
 
         @Override

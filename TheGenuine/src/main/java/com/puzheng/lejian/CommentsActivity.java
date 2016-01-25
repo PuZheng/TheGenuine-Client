@@ -73,7 +73,7 @@ public class CommentsActivity extends ListActivity implements RefreshInterface {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments);
         maskableManager = new MaskableManager(getListView(), this);
-        // Show the Up button in the action bar.
+        // Show the Up buttonNearby in the action bar.
         spuId = getIntent().getIntExtra(Const.TAG_SPU_ID, 0);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         mEmptyView = getListView().getEmptyView();

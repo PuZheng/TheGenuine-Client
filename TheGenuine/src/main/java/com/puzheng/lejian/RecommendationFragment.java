@@ -4,10 +4,17 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.view.LayoutInflater;
+import android.util.Pair;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
+
+import com.google.gson.Gson;
+import com.orhanobut.logger.Logger;
+import com.puzheng.deferred.AlwaysHandler;
+import com.puzheng.deferred.Deferrable;
+import com.puzheng.deferred.DoneHandler;
+import com.puzheng.deferred.FailHandler;
+import com.puzheng.lejian.adapter.RecommendationListAdapter;
 import com.puzheng.lejian.model.Recommendation;
 import com.puzheng.lejian.model.SPU;
 import com.puzheng.lejian.netutils.WebService;
@@ -17,46 +24,18 @@ import java.util.List;
 /**
  * Created by xc on 13-11-21.
  */
-public class RecommendationFragment extends ListFragment implements RefreshInterface {
-    public static final int SAME_CATEGORY = 3;
-    private static final String NEARYBY = "nearby";
-    private static final String SAME_VENDOR = "same_vendor";
-    private static final String SAME_TYPE = "same_type";
-    private String queryType;
-    private int spuId;
+public abstract class RecommendationFragment extends ListFragment implements RefreshInterface {
+
     private MaskableManager maskableManager;
+    private com.puzheng.lejian.model.SPU spu;
+    private List<SPU> spus;
 
     public RecommendationFragment() {
 
     }
 
-
-
-    public RecommendationFragment setQueryType(String queryType) {
-        this.queryType = queryType;
-        return this;
-    }
-
-    public RecommendationFragment setSPUId(int spuId) {
-        this.spuId = spuId;
-        return this;
-    }
-
-
-    public static RecommendationFragment createNearByProductsFragment(int spuId) {
-        return new RecommendationFragment().setQueryType(NEARYBY).setSPUId(spuId);
-    }
-
-    public static RecommendationFragment createSameTypeProductsFragment(int spuId) {
-        return new RecommendationFragment().setQueryType(SAME_TYPE).setSPUId(spuId);
-    }
-
-    public static RecommendationFragment createSameVendorProductsFragment( int spuId) {
-        return new RecommendationFragment().setQueryType(SAME_VENDOR).setSPUId(spuId);
-    }
-
-
     @Override
+
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         Recommendation recommendation = (Recommendation) getListAdapter().getItem(position);
@@ -69,53 +48,43 @@ public class RecommendationFragment extends ListFragment implements RefreshInter
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         maskableManager = new MaskableManager(getListView(), this);
-//        new GetRecommendationsTask(this, queryType, spuId).execute();
+        SPU spu = getArguments().getParcelable(Const.TAG_SPU);
+
+        if (spus == null) {
+            this.spu = spu;
+            fetchRecommendations(spu).done(new DoneHandler<List<SPU>>() {
+                @Override
+                public void done(List<SPU> spus) {
+                    Logger.i("recommendations fetched");
+                    Logger.json(new Gson().toJson(spus));
+                    RecommendationFragment.this.spus = spus;
+                    if (spus.size() != 0) {
+                        setListAdapter(new RecommendationListAdapter(spus));
+                    } else {
+                        setEmptyText(getActivity().getString(R.string.no_recommendations));
+                    }
+
+                }
+            }).fail(new FailHandler<Pair<String, String>>() {
+                @Override
+                public void fail(Pair<String, String> stringStringPair) {
+
+                }
+            }).always(new AlwaysHandler() {
+                @Override
+                public void always() {
+
+                }
+            });
+        }
     }
+
+    abstract public Deferrable<List<SPU>, Pair<String, String>> fetchRecommendations(SPU spu);
 
     @Override
     public void refresh() {
-        new GetRecommendationsTask(this, queryType, spuId).execute();
-    }
 
-    class GetRecommendationsTask extends AsyncTask<Void, Void, List<Recommendation>> {
-        private Exception exception;
-        private final ListFragment listFragment;
-        private final String queryType;
-        private final int spuId;
-
-        GetRecommendationsTask(ListFragment listFragment, String queryType, int spuId) {
-            this.listFragment = listFragment;
-            this.queryType = queryType;
-            this.spuId = spuId;
-        }
-
-        @Override
-        protected List<Recommendation> doInBackground(Void... params) {
-            try {
-                return  WebService.getInstance(getActivity()).getRecommendations(queryType, spuId);
-            } catch (Exception e) {
-                exception = e;
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(List<Recommendation> recommendations) {
-            if (maskableManager.unmask(exception)) {
-                if (recommendations != null && !recommendations.isEmpty()) {
-                    listFragment.setListAdapter(new RecommendationListAdapter(recommendations, getActivity(), (ImageFetcherInteface) getActivity()));
-                    return;
-                }else {
-                    listFragment.setEmptyText(listFragment.getString(R.string.search_no_result_found));
-                }
-            }
-            listFragment.setListAdapter(null);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            maskableManager.mask();
-        }
+//        new GetRecommendationsTask(this, queryType, spuId).execute();
     }
 
 }
