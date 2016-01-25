@@ -28,7 +28,10 @@ public class FakeUtil {
     }
 
     public static synchronized FakeUtil getInstance() {
-        return new FakeUtil();
+        if (instance == null) {
+            instance = new FakeUtil();
+        }
+        return instance;
     }
 
     public SPU spu() {

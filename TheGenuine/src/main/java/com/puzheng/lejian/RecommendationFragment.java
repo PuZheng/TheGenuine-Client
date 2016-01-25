@@ -8,6 +8,8 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+import com.orhanobut.logger.Logger;
 import com.puzheng.deferred.AlwaysHandler;
 import com.puzheng.deferred.Deferrable;
 import com.puzheng.deferred.DoneHandler;
@@ -26,6 +28,7 @@ public abstract class RecommendationFragment extends ListFragment implements Ref
 
     private MaskableManager maskableManager;
     private com.puzheng.lejian.model.SPU spu;
+    private List<SPU> spus;
 
     public RecommendationFragment() {
 
@@ -46,11 +49,15 @@ public abstract class RecommendationFragment extends ListFragment implements Ref
     public void onViewCreated(View view, Bundle savedInstanceState) {
         maskableManager = new MaskableManager(getListView(), this);
         SPU spu = getArguments().getParcelable(Const.TAG_SPU);
-        if (spu != null) {
+
+        if (spus == null) {
             this.spu = spu;
-            fetchRecommendations().done(new DoneHandler<List<SPU>>() {
+            fetchRecommendations(spu).done(new DoneHandler<List<SPU>>() {
                 @Override
                 public void done(List<SPU> spus) {
+                    Logger.i("recommendations fetched");
+                    Logger.json(new Gson().toJson(spus));
+                    RecommendationFragment.this.spus = spus;
                     if (spus.size() != 0) {
                         setListAdapter(new RecommendationListAdapter(spus));
                     } else {
@@ -72,7 +79,7 @@ public abstract class RecommendationFragment extends ListFragment implements Ref
         }
     }
 
-    abstract public Deferrable<List<SPU>, Pair<String, String>> fetchRecommendations();
+    abstract public Deferrable<List<SPU>, Pair<String, String>> fetchRecommendations(SPU spu);
 
     @Override
     public void refresh() {

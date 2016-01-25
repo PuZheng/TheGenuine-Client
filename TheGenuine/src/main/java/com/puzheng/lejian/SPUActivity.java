@@ -39,6 +39,7 @@ import com.puzheng.lejian.model.Verification;
 import com.puzheng.lejian.netutils.WebService;
 import com.puzheng.lejian.util.BadResponseException;
 import com.puzheng.lejian.util.ConfigUtil;
+import com.puzheng.lejian.util.FakeUtil;
 import com.puzheng.lejian.view.FavorButton;
 import com.puzheng.lejian.view.NearbyButton;
 import com.puzheng.lejian.view.SPUTabHost;
@@ -219,21 +220,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         spu = getIntent().getParcelableExtra(Const.TAG_SPU);
         if (BuildConfig.DEBUG) {
             if (spu == null) {
-                List<Pic> pics = new ArrayList<Pic>();
-                pics.add(new Pic("",
-                        Uri.parse(ConfigUtil.getInstance().getBackend())
-                                .buildUpon().path("assets/sample1.png").build().toString()));
-                pics.add(new Pic("",
-                        Uri.parse(ConfigUtil.getInstance().getBackend())
-                                .buildUpon().path("assets/sample2.png").build().toString()));
-                pics.add(new Pic("",
-                        Uri.parse(ConfigUtil.getInstance().getBackend())
-                                .buildUpon().path("assets/sample3.png").build().toString()));
-
-                Vendor vendor = new Vendor.Builder().name("foo vendor").addr("foo addr").tel("foo tel").build();
-                spu = new SPU.Builder().id(1).distance(1200).favored(true)
-                        .commentCnt(1238).rating(4.3f).name("foo spu")
-                        .pics(pics).vendor(vendor).build();
+                spu = FakeUtil.getInstance().spu();
             }
         }
         Logger.json(new Gson().toJson(spu));

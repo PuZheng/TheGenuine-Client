@@ -3,6 +3,7 @@ package com.puzheng.lejian.store;
 import android.os.Handler;
 import android.util.Pair;
 
+import com.orhanobut.logger.Logger;
 import com.puzheng.deferred.Deferrable;
 import com.puzheng.deferred.Deferred;
 import com.puzheng.lejian.model.SPU;
@@ -17,6 +18,7 @@ import java.util.TimerTask;
  * Created by xc on 16-1-24.
  */
 public class RecommendationStore {
+    public static final String SAME_VENDOR = "SAME_VENDOR";
     private static volatile RecommendationStore instance;
     public final static String SAME_TYPE = "SAME_TYPE";
 
@@ -31,7 +33,7 @@ public class RecommendationStore {
         return instance;
     }
 
-    public Deferrable<List<SPU>, Pair<String, String>> fetchList(String type) {
+    public Deferrable<List<SPU>, Pair<String, String>> fetchList(SPU spu, String type) {
         final Deferrable<List<SPU>, Pair<String, String>> deferred = new Deferred<List<SPU>, Pair<String, String>>();
         final Handler handler = new Handler();
         new Timer().schedule(new TimerTask() {
