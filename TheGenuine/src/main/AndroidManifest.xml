@@ -46,7 +46,7 @@
         <service android:name="com.amap.api.location.APSService"></service>
 
 
-        <meta-data android:name="com.amap.api.v2.apikey" android:value="%AMAP_API_KEY%"/>
+        <meta-data android:name="com.amap.api.v2.apikey" android:value="${AMAP_KEY}"/>
 
         <service
             android:name="com.baidu.location.f"
@@ -60,11 +60,11 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
 
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN"/>-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
 
-                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
-            <!--</intent-filter>-->
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
 
             <!--
                 <intent-filter>
@@ -96,11 +96,11 @@
             <meta-data
                 android:name="android.support.UI_OPTIONS"
                 android:value="splitActionBarWhenNarrow"/>
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN"/>-->
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--</intent-filter>-->
 
         </activity>
         <activity

@@ -69,8 +69,13 @@ public class RecommendationListAdapter extends BaseAdapter {
                 Humanize.with(context).num(spu.getFavorCnt())));
         viewHolder.textViewMSRP.setText(String.valueOf(spu.getMSRP()));
         viewHolder.ratingBar.setRating(spu.getRating());
-        viewHolder.buttonNearby.setText(context.getString(R.string.nearest,
-                Humanize.with(context).distance(spu.getDistance())));
+        if (spu.getDistance() != 0) {
+            viewHolder.buttonNearby.setVisibility(View.VISIBLE);
+            viewHolder.buttonNearby.setText(context.getString(R.string.nearest,
+                    Humanize.with(context).distance(spu.getDistance())));
+        } else {
+            viewHolder.buttonNearby.setVisibility(View.INVISIBLE);
+        }
         viewHolder.buttonNearby.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

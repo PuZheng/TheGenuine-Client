@@ -26,14 +26,9 @@
     <string name="clear_recent_search">清空搜索历史</string>
     <string name="search_no_result_found">暂无数据</string>
     <string-array name="order_by_list">
-        <item>按价格排序</item>
-        <item>按距离排序</item>
-        <item>按星级排序</item>
-    </string-array>
-    <string-array name="order_by_str_list">
-        <item>msrp.asc</item>
-        <item>distance.asc</item>
-        <item>rating.desc</item>
+        <item>按价格排序,msrp.asc</item>
+        <item>按距离排序,distance.asc</item>
+        <item>按星级排序,rating.desc</item>
     </string-array>
     <string name="title_activity_account_settings">账户管理</string>
     <string name="action_search">搜索</string>

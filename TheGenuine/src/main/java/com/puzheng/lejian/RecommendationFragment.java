@@ -87,46 +87,4 @@ public abstract class RecommendationFragment extends ListFragment implements Ref
 //        new GetRecommendationsTask(this, queryType, spuId).execute();
     }
 
-
-    class GetRecommendationsTask extends AsyncTask<Void, Void, List<Recommendation>> {
-        private Exception exception;
-        private final ListFragment listFragment;
-        private final String queryType;
-        private final int spuId;
-
-        GetRecommendationsTask(ListFragment listFragment, String queryType, int spuId) {
-            this.listFragment = listFragment;
-            this.queryType = queryType;
-            this.spuId = spuId;
-        }
-
-        @Override
-        protected List<Recommendation> doInBackground(Void... params) {
-            try {
-                return WebService.getInstance(getActivity()).getRecommendations(queryType, spuId);
-            } catch (Exception e) {
-                exception = e;
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(List<Recommendation> recommendations) {
-//            if (maskableManager.unmask(exception)) {
-//                if (recommendations != null && !recommendations.isEmpty()) {
-//                    listFragment.setListAdapter(new RecommendationListAdapter(recommendations, getActivity(), (ImageFetcherInteface) getActivity()));
-//                    return;
-//                }else {
-//                    listFragment.setEmptyText(listFragment.getString(R.string.search_no_result_found));
-//                }
-//            }
-//            listFragment.setListAdapter(null);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            maskableManager.mask();
-        }
-    }
-
 }

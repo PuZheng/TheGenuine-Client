@@ -176,39 +176,6 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             SPUTabHost spuTabHost = (SPUTabHost) findViewById(R.id.spuTabHost);
             spuTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
             spuTabHost.setSPU(spu);
-//            tabHost = (TabHost) findViewById(R.id.tabHost);
-//            tabHost.setup();
-
-//            TabHost.TabSpec tabSpec = tabHost.newTabSpec("tab1").setIndicator(authentication == null? "产品信息": "验证信息");
-//            tabSpec.setContent(new MyTabFactory(this));
-//            tabHost.addTab(tabSpec);
-//            tabSpec = tabHost.newTabSpec("tab2").setIndicator(getString(R.string.sameType));
-//            tabSpec.setContent(new MyTabFactory(this));
-//            tabHost.addTab(tabSpec);
-//            tabSpec = tabHost.newTabSpec("tab3").setIndicator(getString(R.string.sameVendor));
-//            tabSpec.setContent(new MyTabFactory(this));
-//            tabHost.addTab(tabSpec);
-//            tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
-//                @Override
-//                public void onTabChanged(String tabId) {
-//                    int pos = tabHost.getCurrentTab();
-//                    for (int i = 0; i < tabHost.getTabWidget().getChildCount(); ++i) {
-//                        int color = getResources().getColor(android.R.color.darker_gray);
-//                        if (i == pos) {
-//                            color = getResources().getColor(R.color.base_color1);
-//                        }
-//                        TextView title = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-//                        title.setTextColor(color);
-//                    }
-//                    //        viewPager.setCurrentItem(pos);
-//
-//                }
-//            });
-//
-//            setBottomTabs();
-//            viewPager = (ViewPager) findViewById(R.id.viewPagerBottom);
-//            viewPager.setAdapter(new MyPageAdapter(getSupportFragmentManager()));
-//            viewPager.setOnPageChangeListener(this);
         }
 
     }
@@ -336,7 +303,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 
         setBottomTabs();
 //        viewPager = (ViewPager) findViewById(R.id.viewPagerBottom);
-//        viewPager.setAdapter(new MyPageAdapter(getSupportFragmentManager()));
+//        viewPager.setAdapter(new SPUListPagerAdapter(getSupportFragmentManager()));
 //        viewPager.setOnPageChangeListener(this);
     }
 

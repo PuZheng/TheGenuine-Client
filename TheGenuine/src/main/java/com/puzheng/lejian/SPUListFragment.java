@@ -50,7 +50,7 @@ public class SPUListFragment extends ListFragment {
         }
     }
 
-    static class Builder {
+    public static class Builder {
         private Deferrable<List<SPU>, Pair<String, String>> deferrable;
 
         public Builder() {

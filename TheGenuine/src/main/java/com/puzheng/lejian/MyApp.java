@@ -14,8 +14,8 @@ import android.os.IBinder;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.orhanobut.logger.Logger;
-import com.puzheng.lejian.model.User;
 import com.puzheng.lejian.netutils.WebService;
+import com.puzheng.lejian.store.LocationStore;
 import com.puzheng.lejian.util.LocateErrorException;
 import com.puzheng.lejian.util.Misc;
 
@@ -118,6 +118,8 @@ public class MyApp extends Application {
 
             }
         });
+        LocationStore.getInstance().setup(MyApp.context);
+
     }
 
 
