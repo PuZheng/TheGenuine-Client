@@ -5,14 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.Display;
@@ -22,24 +17,17 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RatingBar;
-import android.widget.TabHost;
-import android.widget.TabWidget;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
-import com.puzheng.humanize.Humanize;
-import com.puzheng.lejian.adapter.SPUCoverAdapter;
+import com.puzheng.lejian.adapter.SPUPicListAdapter;
 import com.puzheng.lejian.model.Pic;
 import com.puzheng.lejian.model.SPU;
 import com.puzheng.lejian.model.SPUResponse;
-import com.puzheng.lejian.model.Vendor;
 import com.puzheng.lejian.model.Verification;
-import com.puzheng.lejian.netutils.WebService;
-import com.puzheng.lejian.util.BadResponseException;
-import com.puzheng.lejian.util.ConfigUtil;
 import com.puzheng.lejian.util.FakeUtil;
+import com.puzheng.lejian.util.LoginRequired;
 import com.puzheng.lejian.view.FavorButton;
 import com.puzheng.lejian.view.NearbyButton;
 import com.puzheng.lejian.view.SPUTabHost;
@@ -51,21 +39,19 @@ import org.stringtemplate.v4.ST;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SPUActivity extends FragmentActivity implements ViewPager.OnPageChangeListener, RefreshInterface {
+public class SPUActivity extends FragmentActivity implements LoginRequired.ILoginHandler, RefreshInterface {
 
     private static final String TAG = "SPUActivity";
-    private ViewPager viewPager;
     private Verification authentication;
 
     //只有二维码验证才需要展示 验证码
     private boolean verificationFinished;
 
-    private SPUResponse spuResponse;
-    private ViewPager viewPagerCover;
-    private TabHost tabHost;
+    private ViewPager picListViewPager;
     private SPU spu;
     private MaskableManager maskableManager;
-    private SPUCoverAdapter adapter;
+    private SPUPicListAdapter spuPicListAdapter;
+    private LoginRequired.LoginHandler loginHandler;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -81,22 +67,6 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     }
 
     @Override
-    public void onPageScrollStateChanged(int i) {
-        int pos = viewPager.getCurrentItem();
-        tabHost.setCurrentTab(pos);
-    }
-
-    @Override
-    public void onPageScrolled(int i, float v, int i2) {
-
-    }
-
-    @Override
-    public void onPageSelected(int i) {
-
-    }
-
-    @Override
     public void refresh() {
         //new GetSPUTask().execute(spu);
     }
@@ -107,12 +77,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 //        if (ssoHandler != null) {
 //            ssoHandler.authorizeCallBack(requestCode, resultCode, data);
 //        }
-        if (resultCode == RESULT_OK) {
-            FavorButton favorButton = (FavorButton) findViewById(R.id.favorButton);
-            if (requestCode == favorButton.LOGIN_ACTION) {
-                favorButton.performClick();
-            }
-        }
+        loginHandler.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -128,11 +93,8 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             throw new IllegalArgumentException("必须传入产品信息或者验证信息");
         }
 
-        viewPagerCover = (ViewPager) findViewById(R.id.viewPagerCover);
-
-        Point point = new Point();
-        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        display.getSize(point);
+        picListViewPager = (ViewPager) findViewById(R.id.viewPagerCover);
+        loginHandler = new LoginRequired.LoginHandler();
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         if (authentication != null) {
@@ -168,10 +130,10 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
             for (Pic pic: spu.getPics()) {
                 urls.add(pic.getURL());
             }
-            adapter = new SPUCoverAdapter(getSupportFragmentManager(), urls);
-            viewPagerCover.setAdapter(adapter);
+            spuPicListAdapter = new SPUPicListAdapter(getSupportFragmentManager(), urls);
+            picListViewPager.setAdapter(spuPicListAdapter);
             CirclePageIndicator circlePageIndicator = (CirclePageIndicator) findViewById(R.id.circlePageIndicator);
-            circlePageIndicator.setViewPager(viewPagerCover);
+            circlePageIndicator.setViewPager(picListViewPager);
 
             SPUTabHost spuTabHost = (SPUTabHost) findViewById(R.id.spuTabHost);
             spuTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
@@ -193,46 +155,6 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         Logger.json(new Gson().toJson(spu));
     }
 
-
-    private void doAddFavor() {
-    }
-
-    private int getCommentsCnt() {
-        return authentication != null ? authentication.getCommentsCnt() : spuResponse.getCommentsCnt();
-    }
-
-    private int getDistance() {
-        return authentication != null ? authentication.getDistance() : spuResponse.getDistance();
-    }
-
-    private List<Pic> getPics() {
-        return authentication != null ? authentication.getSKU().getSPU().getPics() : spuResponse.getSPU().getPics();
-    }
-
-    private float getRating() {
-        return authentication != null ? authentication.getSKU().getSPU().getRating() : spuResponse.getSPU().getRating();
-    }
-
-    private int getSPUId() {
-        return authentication != null ? authentication.getSKU().getSPU().getId() : spuResponse.getSPU().getId();
-    }
-
-    private int getSameTypeRecommendationsCnt() {
-        return authentication != null ? authentication.getSameTypeRecommendationsCnt() : spuResponse.getSameTypeRecommendationsCnt();
-    }
-
-    private int getSameVendorRecommendationsCnt() {
-        return authentication != null ? authentication.getSameVendorRecommendationsCnt() : spuResponse.getSameVendorRecommendationsCnt();
-    }
-
-    private SPU getSPU() {
-        return authentication != null ? authentication.getSKU().getSPU() : spuResponse.getSPU();
-    }
-
-    private int getVendorId() {
-        return authentication != null ? authentication.getSKU().getSPU().getVendorId() :
-                spuResponse.getSPU().getVendorId();
-    }
 
     private void initViews() {
 ////        setTitle();
@@ -261,10 +183,10 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 //        for (Pic pic: getPics()) {
 //            urls.add(pic.getURL());
 //        }
-//        adapter = new SPUCoverAdapter(getSupportFragmentManager(), urls);
-//        viewPagerCover.setAdapter(adapter);
+//        spuPicListAdapter = new SPUPicListAdapter(getSupportFragmentManager(), urls);
+//        picListViewPager.setAdapter(spuPicListAdapter);
 //        CirclePageIndicator titleIndicator = (CirclePageIndicator) findViewById(R.id.circlePageIndicator);
-//        titleIndicator.setViewPager(viewPagerCover);
+//        titleIndicator.setViewPager(picListViewPager);
 //
 //
 //        tabHost = (TabHost) findViewById(R.id.spuTabHost);
@@ -303,25 +225,12 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 ////        viewPager.setOnPageChangeListener(this);
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void setBottomTabs() {
-        for (int i = 0; i < tabHost.getTabWidget().getChildCount(); ++i) {
-            View v = tabHost.getTabWidget().getChildTabViewAt(i);
-            v.setBackground(getResources().getDrawable(R.drawable.tab_indicator_holo));
-            TextView title = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-            int color = getResources().getColor(android.R.color.darker_gray);
-            if (i == 0) {
-                color = getResources().getColor(R.color.base_color1);
-            }
-            title.setTextColor(color);
-        }
-    }
 
     private String getShareContent(String shareURL) {
         if (!TextUtils.isEmpty(MyApp.SHARETEMPLATE)) {
             try {
                 ST template = new ST(MyApp.SHARETEMPLATE);
-                template.add("spu", getSPU());
+                template.add("spu", spu);
                 return template.render();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -334,7 +243,7 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         if (!TextUtils.isEmpty(MyApp.SHAREURL)) {
              try {
                 ST template = new ST(MyApp.SHAREURL);
-                template.add("spu", getSPU());
+                template.add("spu", spu);
                 return template.render();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -343,4 +252,8 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         return getString(R.string.share_url_template);
     }
 
+    @Override
+    public void onLoginDone(LoginRequired.Runnable runnable) {
+        loginHandler.onLoginDone(runnable);
+    }
 }

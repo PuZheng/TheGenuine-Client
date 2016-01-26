@@ -10,10 +10,10 @@ import com.puzheng.lejian.SPUActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SPUCoverAdapter extends FragmentPagerAdapter {
+public class SPUPicListAdapter extends FragmentPagerAdapter {
     private List<Fragment> fragments;
 
-    public SPUCoverAdapter(FragmentManager fm, List<String> urls) {
+    public SPUPicListAdapter(FragmentManager fm, List<String> urls) {
         super(fm);
         fragments = new ArrayList<Fragment>();
         for (String url : urls) {
