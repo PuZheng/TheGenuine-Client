@@ -131,4 +131,6 @@
     <string name="no_recommendations">没有推荐数据</string>
     <string name="load_comment_list_failed">加载评论失败</string>
     <string name="comment_cnt">评论数</string>
+    <string name="unfavor_succeed">取消收藏成功</string>
+    <string name="unfavor_failed">取消收藏失败</string>
 </resources>

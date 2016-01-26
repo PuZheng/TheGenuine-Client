@@ -53,7 +53,12 @@ public class SPUStore {
                     final Handler handler = new Handler();
                     OkHttpClient client = new OkHttpClient();
 
-                    Request request = new Request.Builder().url(url).build();
+                    Request.Builder builder = new Request.Builder().url(url);
+
+                    if (!AuthStore.getInstance().isAnonymous()) {
+                        builder.header("Authorization", "Bearer " + AuthStore.getInstance().getUser().getToken());
+                    }
+                    Request request = builder.build();
                     client.newCall(request).enqueue(new okhttp3.Callback() {
                         @Override
                         public void onFailure(Request request, IOException e) {

@@ -108,8 +108,9 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 //            ssoHandler.authorizeCallBack(requestCode, resultCode, data);
 //        }
         if (resultCode == RESULT_OK) {
-            if (requestCode == MyApp.LOGIN_ACTION) {
-                doAddFavor();
+            FavorButton favorButton = (FavorButton) findViewById(R.id.favorButton);
+            if (requestCode == favorButton.LOGIN_ACTION) {
+                favorButton.performClick();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

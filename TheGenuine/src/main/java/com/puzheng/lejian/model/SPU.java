@@ -20,6 +20,11 @@ public class SPU implements Parcelable {
     private List<Pic> pics;
     private Pic icon;
     private int distance;
+
+    public void setFavored(boolean favored) {
+        this.favored = favored;
+    }
+
     private boolean favored;
     private int commentCnt;
     private int favorCnt;
