@@ -28,7 +28,7 @@ public class CommentButton extends Button {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), CommentsActivity.class);
+                Intent intent = new Intent(getContext(), CommentListActivity.class);
                 intent.putExtra(Const.TAG_SPU_ID, CommentButton.this.spu.getId());
                 getContext().startActivity(intent);
             }

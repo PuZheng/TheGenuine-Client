@@ -65,7 +65,6 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     private TabHost tabHost;
     private SPU spu;
     private MaskableManager maskableManager;
-    private FavorTask mTask;
     private SPUCoverAdapter adapter;
 
     @Override
@@ -196,10 +195,6 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
 
 
     private void doAddFavor() {
-        if (mTask == null) {
-            mTask = new FavorTask();
-            mTask.execute();
-        }
     }
 
     private int getCommentsCnt() {
@@ -240,72 +235,72 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
     }
 
     private void initViews() {
-//        setTitle();
-//        initShare();
-//        setupNearbyButton();
-//        updateFavorView(isFavored());
-        ImageView imageView = (ImageView) findViewById(R.id.imageView);
-        if (authentication == null) {
-            imageView.setVisibility(View.GONE);
-        } else {
-            if (!verificationFinished) {
-                // 二维码验证不提示真品伪品
-                findViewById(R.id.checksumLayout).setVisibility(View.VISIBLE);
-                ((TextView) findViewById(R.id.textViewChecksum)).setText(getString(R.string.verify_number, authentication.getSKU().getChecksum()));
-                imageView.setVisibility(View.GONE);
-            }
-        }
-
-
-        RatingBar rb = (RatingBar) findViewById(R.id.productRatingBar);
-        rb.setRating(getRating());
-
-
-
-        List<String> urls = new ArrayList<String>();
-        for (Pic pic: getPics()) {
-            urls.add(pic.getURL());
-        }
-        adapter = new SPUCoverAdapter(getSupportFragmentManager(), urls);
-        viewPagerCover.setAdapter(adapter);
-        CirclePageIndicator titleIndicator = (CirclePageIndicator) findViewById(R.id.circlePageIndicator);
-        titleIndicator.setViewPager(viewPagerCover);
-
-
-        tabHost = (TabHost) findViewById(R.id.spuTabHost);
-        tabHost.setup();
-
-        String s = getString(R.string.verify_info);
-        if (spuResponse != null) {
-            s = getString(R.string.product_info);
-        }
-        TabHost.TabSpec tabSpec = tabHost.newTabSpec("tab1").setIndicator(s);
-        tabSpec.setContent(new MyTabFactory(this));
-        tabHost.addTab(tabSpec);
-        s = getString(R.string.sameType,
-                Humanize.with(this).num(getSameTypeRecommendationsCnt()));
-        tabSpec = tabHost.newTabSpec("tab2").setIndicator(s);
-        tabSpec.setContent(new MyTabFactory(this));
-        tabHost.addTab(tabSpec);
-        s = getString(R.string.sameVendor,
-                Humanize.with(this).num(getSameVendorRecommendationsCnt()));
-        tabSpec = tabHost.newTabSpec("tab3").setIndicator(s);
-        tabSpec.setContent(new MyTabFactory(this));
-        tabHost.addTab(tabSpec);
-//        tabHost.setOnTabChangedListener(this);
-
-        TabWidget tabWidget = tabHost.getTabWidget();
-        int tabCounts = tabHost.getTabWidget().getTabCount();
-
-        for (int i = 0; i < tabCounts; i++) {
-            TextView textView = (TextView) tabWidget.getChildAt(i).findViewById(android.R.id.title);
-            textView.setAllCaps(false);
-        }
-
-        setBottomTabs();
-//        viewPager = (ViewPager) findViewById(R.id.viewPagerBottom);
-//        viewPager.setAdapter(new SPUListPagerAdapter(getSupportFragmentManager()));
-//        viewPager.setOnPageChangeListener(this);
+////        setTitle();
+////        initShare();
+////        setupNearbyButton();
+////        updateFavorView(isFavored());
+//        ImageView imageView = (ImageView) findViewById(R.id.imageView);
+//        if (authentication == null) {
+//            imageView.setVisibility(View.GONE);
+//        } else {
+//            if (!verificationFinished) {
+//                // 二维码验证不提示真品伪品
+//                findViewById(R.id.checksumLayout).setVisibility(View.VISIBLE);
+//                ((TextView) findViewById(R.id.textViewChecksum)).setText(getString(R.string.verify_number, authentication.getSKU().getChecksum()));
+//                imageView.setVisibility(View.GONE);
+//            }
+//        }
+//
+//
+//        RatingBar rb = (RatingBar) findViewById(R.id.productRatingBar);
+//        rb.setRating(getRating());
+//
+//
+//
+//        List<String> urls = new ArrayList<String>();
+//        for (Pic pic: getPics()) {
+//            urls.add(pic.getURL());
+//        }
+//        adapter = new SPUCoverAdapter(getSupportFragmentManager(), urls);
+//        viewPagerCover.setAdapter(adapter);
+//        CirclePageIndicator titleIndicator = (CirclePageIndicator) findViewById(R.id.circlePageIndicator);
+//        titleIndicator.setViewPager(viewPagerCover);
+//
+//
+//        tabHost = (TabHost) findViewById(R.id.spuTabHost);
+//        tabHost.setup();
+//
+//        String s = getString(R.string.verify_info);
+//        if (spuResponse != null) {
+//            s = getString(R.string.product_info);
+//        }
+//        TabHost.TabSpec tabSpec = tabHost.newTabSpec("tab1").setIndicator(s);
+//        tabSpec.setContent(new MyTabFactory(this));
+//        tabHost.addTab(tabSpec);
+//        s = getString(R.string.sameType,
+//                Humanize.with(this).num(getSameTypeRecommendationsCnt()));
+//        tabSpec = tabHost.newTabSpec("tab2").setIndicator(s);
+//        tabSpec.setContent(new MyTabFactory(this));
+//        tabHost.addTab(tabSpec);
+//        s = getString(R.string.sameVendor,
+//                Humanize.with(this).num(getSameVendorRecommendationsCnt()));
+//        tabSpec = tabHost.newTabSpec("tab3").setIndicator(s);
+//        tabSpec.setContent(new MyTabFactory(this));
+//        tabHost.addTab(tabSpec);
+////        tabHost.setOnTabChangedListener(this);
+//
+//        TabWidget tabWidget = tabHost.getTabWidget();
+//        int tabCounts = tabHost.getTabWidget().getTabCount();
+//
+//        for (int i = 0; i < tabCounts; i++) {
+//            TextView textView = (TextView) tabWidget.getChildAt(i).findViewById(android.R.id.title);
+//            textView.setAllCaps(false);
+//        }
+//
+//        setBottomTabs();
+////        viewPager = (ViewPager) findViewById(R.id.viewPagerBottom);
+////        viewPager.setAdapter(new SPUListPagerAdapter(getSupportFragmentManager()));
+////        viewPager.setOnPageChangeListener(this);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -348,106 +343,4 @@ public class SPUActivity extends FragmentActivity implements ViewPager.OnPageCha
         return getString(R.string.share_url_template);
     }
 
-
-    private class FavorTask extends AsyncTask<Void, Void, Void> {
-        private Exception exception;
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                WebService.getInstance(SPUActivity.this).addFavor(getSPUId());
-            } catch (Exception e) {
-                exception = e;
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            if (exception == null) {
-                Toast.makeText(SPUActivity.this, getString(R.string.favor_succeed), Toast.LENGTH_SHORT).show();
-//                updateFavorView(true);
-            } else {
-                if (exception instanceof BadResponseException) {
-                    if (((BadResponseException) exception).getStatusCode() == 403) {
-//                        updateFavorView(true);
-                    }
-                    Toast.makeText(SPUActivity.this, exception.getMessage(), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(SPUActivity.this, getString(R.string.favor_failed), Toast.LENGTH_SHORT).show();
-                }
-            }
-            mTask = null;
-        }
-    }
-
-    class MyTabFactory implements TabHost.TabContentFactory {
-
-        private final Context mContext;
-
-        public MyTabFactory(Context context) {
-            mContext = context;
-        }
-
-        public View createTabContent(String tag) {
-            View v = new View(mContext);
-            v.setMinimumWidth(0);
-            v.setMinimumHeight(0);
-            return v;
-        }
-    }
-
-    class MyPageAdapter extends FragmentPagerAdapter {
-        private List<Fragment> fragments;
-
-        public MyPageAdapter(FragmentManager fm) {
-            super(fm);
-            fragments = new ArrayList<Fragment>();
-            if (authentication != null) {
-                fragments.add(new AuthenticationFragment().setVerificationInfo(authentication));
-            } else {
-//                fragments.add(new SPUFragment().setSPU(spuResponse.getSPU()));
-            }
-//            fragments.add(RecommendationFragment.createSameTypeProductsFragment(getSPUId()));
-//            fragments.add(RecommendationFragment.createSameVendorProductsFragment(getSPUId()));
-        }
-
-        @Override
-        public int getCount() {
-            return fragments.size();
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return fragments.get(position);
-        }
-    }
-
-    private class GetSPUTask extends AsyncTask<Integer, Void, SPUResponse> {
-
-        private Exception exception;
-
-        @Override
-        protected SPUResponse doInBackground(Integer... params) {
-            try {
-                return WebService.getInstance(SPUActivity.this).getSPUResponse(params[0]);
-            } catch (Exception e) {
-                exception = e;
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(SPUResponse spuResponse) {
-            if (maskableManager.unmask(exception)) {
-                SPUActivity.this.spuResponse = spuResponse;
-                SPUActivity.this.initViews();
-            }
-        }
-
-        @Override
-        protected void onPreExecute() {
-            maskableManager.mask();
-        }
-    }
 }
