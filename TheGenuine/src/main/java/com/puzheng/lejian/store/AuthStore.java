@@ -125,7 +125,7 @@ public class AuthStore {
     }
 
     public boolean isAnonymous() {
-        return user == null;
+        return getUser() == null;
     }
 
     public void logout() {
