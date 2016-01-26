@@ -1,20 +1,14 @@
 package com.puzheng.lejian;
 
-import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -24,7 +18,6 @@ import com.orhanobut.logger.Logger;
 import com.puzheng.lejian.adapter.SPUPicListAdapter;
 import com.puzheng.lejian.model.Pic;
 import com.puzheng.lejian.model.SPU;
-import com.puzheng.lejian.model.SPUResponse;
 import com.puzheng.lejian.model.Verification;
 import com.puzheng.lejian.util.FakeUtil;
 import com.puzheng.lejian.util.LoginRequired;
@@ -42,6 +35,7 @@ import java.util.List;
 public class SPUActivity extends FragmentActivity implements LoginRequired.ILoginHandler, RefreshInterface {
 
     private static final String TAG = "SPUActivity";
+    private static final int LOGIN_ACTION = 1;
     private Verification authentication;
 
     //只有二维码验证才需要展示 验证码
@@ -88,13 +82,13 @@ public class SPUActivity extends FragmentActivity implements LoginRequired.ILogi
 
         retrieveExtra();
 
+        loginHandler = new LoginRequired.LoginHandler(LOGIN_ACTION);
 
         if (authentication == null && spu == null) {
             throw new IllegalArgumentException("必须传入产品信息或者验证信息");
         }
 
         picListViewPager = (ViewPager) findViewById(R.id.viewPagerCover);
-        loginHandler = new LoginRequired.LoginHandler();
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         if (authentication != null) {
@@ -109,8 +103,7 @@ public class SPUActivity extends FragmentActivity implements LoginRequired.ILogi
             ((ShareButton) findViewById(R.id.shareButton)).setSPU(spu);
             ((CommentButton) findViewById(R.id.commentButton)).setSPU(spu);
             ((NearbyButton) findViewById(R.id.nearbyButton)).setSPU(spu);
-            ((FavorButton) findViewById(R.id.favorButton)).setSPU(spu);
-
+            ((FavorButton) findViewById(R.id.favorButton)).setup(spu, LOGIN_ACTION);
             RatingBar rb = (RatingBar) findViewById(R.id.productRatingBar);
             rb.setRating(spu.getRating());
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.*;
+import android.widget.BaseAdapter;
 import android.widget.Toast;
 
 import com.puzheng.deferred.AlwaysHandler;
@@ -13,18 +14,24 @@ import com.puzheng.deferred.FailHandler;
 import com.puzheng.humanize.Humanize;
 import com.puzheng.lejian.adapter.CommentListAdapter;
 import com.puzheng.lejian.model.Comment;
+import com.puzheng.lejian.model.User;
 import com.puzheng.lejian.store.AuthStore;
 import com.puzheng.lejian.store.CommentStore;
+import com.puzheng.lejian.util.LoginRequired;
 
 import java.util.List;
 
-public class CommentListActivity extends ListActivity implements RefreshInterface {
+public class CommentListActivity extends ListActivity implements RefreshInterface, LoginRequired.ILoginHandler {
+    private static final int COMMENT_ACTION = 1;
+    private static final int LOGIN_ACTION = 2;
     private MaskableManager maskableManager;
     private int spuId;
     private View emptyView;
+    private LoginRequired.LoginHandler loginHandler;
+    private List<Comment> comments;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.comments, menu);
         return true;
     }
@@ -33,11 +40,16 @@ public class CommentListActivity extends ListActivity implements RefreshInterfac
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.newComment:
-                if (AuthStore.getInstance().getUser() == null) {
-                    MyApp.doLoginIn(CommentListActivity.this);
-                } else {
-                    addComment();
-                }
+                LoginRequired loginRequired = LoginRequired.with(this).requestCode(LOGIN_ACTION);
+                loginHandler = loginRequired.createHandler();
+                loginRequired.wraps(new LoginRequired.Runnable() {
+                    @Override
+                    public void run(User user) {
+                        Intent intent = new Intent(CommentListActivity.this, CommentActivity.class);
+                        intent.putExtra(Const.TAG_SPU_ID, spuId);
+                        startActivityForResult(intent, COMMENT_ACTION);
+                    }
+                });
                 return true;
             case android.R.id.home:
                 this.finish();
@@ -53,11 +65,12 @@ public class CommentListActivity extends ListActivity implements RefreshInterfac
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == MyApp.LOGIN_ACTION) {
-                addComment();
-            }
+        loginHandler.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == COMMENT_ACTION) {
+            comments.add(0, (Comment) data.getParcelableExtra(CommentActivity.TAG_COMMENT));
+            ((BaseAdapter) getListAdapter()).notifyDataSetChanged();
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -74,6 +87,7 @@ public class CommentListActivity extends ListActivity implements RefreshInterfac
         CommentStore.getInstance().fetchList(spuId).done(new DoneHandler<List<Comment>>() {
             @Override
             public void done(List<Comment> comments) {
+                CommentListActivity.this.comments = comments;
                 setListAdapter(new CommentListAdapter(CommentListActivity.this, comments));
                 if (comments.size() == 0) {
                     emptyView.setVisibility(View.VISIBLE);
@@ -96,10 +110,8 @@ public class CommentListActivity extends ListActivity implements RefreshInterfac
         });
     }
 
-    private void addComment() {
-        Intent intent = new Intent(this, CommentActivity.class);
-        intent.putExtra(Const.TAG_SPU_ID, spuId);
-        startActivity(intent);
+    @Override
+    public void onLoginDone(LoginRequired.Runnable runnable) {
+        loginHandler.onLoginDone(runnable);
     }
-
 }

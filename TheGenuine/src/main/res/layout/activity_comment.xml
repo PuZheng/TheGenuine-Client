@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:numStars="5"
-            android:rating="5"
+            android:rating="1"
             style="@style/RatingBarAppTheme"
             android:stepSize="0.5"
             android:id="@+id/ratingBar" />

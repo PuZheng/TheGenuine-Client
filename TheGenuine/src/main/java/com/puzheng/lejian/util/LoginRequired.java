@@ -10,8 +10,9 @@ import com.puzheng.lejian.store.AuthStore;
 
 public class LoginRequired {
 
-    private static final int LOGIN_ACTION = 1;
+    private static final int LOGIN_ACTION = 129384712;
     private final Context context;
+    private int requestCode = LOGIN_ACTION;
 
     private LoginRequired(Context context) {
         this.context = context;
@@ -24,11 +25,20 @@ public class LoginRequired {
     public void wraps(Runnable runnable) {
         if (AuthStore.getInstance().isAnonymous()) {
             Intent intent = new Intent(context, LoginActivity.class);
-            ((Activity) context).startActivityForResult(intent, LOGIN_ACTION);
+            ((Activity) context).startActivityForResult(intent, requestCode);
             ((ILoginHandler) context).onLoginDone(runnable);
         } else {
             runnable.run(AuthStore.getInstance().getUser());
         }
+    }
+
+    public LoginRequired requestCode(int requestCode) {
+        this.requestCode = requestCode;
+        return this;
+    }
+
+    public LoginHandler createHandler() {
+        return new LoginHandler(this.requestCode);
     }
 
     public interface Runnable {
@@ -41,15 +51,16 @@ public class LoginRequired {
 
 
     public static class LoginHandler implements ILoginHandler {
+        private final int requestCode;
         private Runnable runnable;
 
-        public LoginHandler() {
-
+        public LoginHandler(int requestCode) {
+            this.requestCode = requestCode;
         }
 
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
             if (resultCode == Activity.RESULT_OK) {
-                if (requestCode == LOGIN_ACTION) {
+                if (requestCode == this.requestCode) {
                     runnable.run(AuthStore.getInstance().getUser());
                 }
             }
