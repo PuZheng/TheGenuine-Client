@@ -9,35 +9,23 @@ import java.util.Date;
  */
 public class Comment {
 
+    private final User user;
     private int id;
-    @SerializedName("user_id")
-    private int userId;
-    @SerializedName("user_name")
-    private String userName;
-    @SerializedName("user_avatar")
-    private String userSmallAvatar;
     private String content;
-    @SerializedName("create_time")
-    private Date date;
+    private Date createdAt;
     private float rating;
 
-    public Comment(int id, int userId, String userName, String userSmallAvatar,
-                   String content, Date date, float rating) {
+    public Comment(int id, User user,
+                   String content, Date createdAt, float rating) {
         this.id = id;
-        this.userId = userId;
-        this.userName = userName;
-        this.userSmallAvatar = userSmallAvatar;
+        this.user = user;
         this.content = content;
-        this.date = date;
+        this.createdAt = createdAt;
         this.rating = rating;
     }
 
     public String getContent() {
         return content;
-    }
-
-    public Date getDate() {
-        return date;
     }
 
     public int getId() {
@@ -48,15 +36,11 @@ public class Comment {
         return rating;
     }
 
-    public int getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getUserSmallAvatar() {
-        return userSmallAvatar;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 }

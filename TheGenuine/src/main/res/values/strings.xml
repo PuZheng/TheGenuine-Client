@@ -129,4 +129,6 @@
     <string name="email_exists">对不起！邮箱已经被注册</string>
     <string name="data_load_failed">加载数据错误</string>
     <string name="no_recommendations">没有推荐数据</string>
+    <string name="load_comment_list_failed">加载评论失败</string>
+    <string name="comment_cnt">评论数</string>
 </resources>
