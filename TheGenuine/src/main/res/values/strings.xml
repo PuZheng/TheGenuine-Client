@@ -16,8 +16,8 @@
     <string name="title_activity_categories">CategoriesActivity</string>
     <string name="exit_press_back_twice_message">再按一次，退出程序</string>
     <string name="add_comment">请输入评论</string>
-    <string name="add_comment_failure">发表评论失败</string>
-    <string name="add_comment_succeed">发表评论成功</string>
+    <string name="add_comment_failure">评论失败</string>
+    <string name="add_comment_succeed">评论成功</string>
     <string name="add_comment_empty">评论不能为空</string>
     <string name="comment">发表</string>
     <string name="search_hint">搜索</string>

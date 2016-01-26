@@ -32,46 +32,47 @@ public class FavorButton extends ImageButton {
                 Toast.LENGTH_SHORT).show();
     }
 
-    public void setSPU(SPU spu) {
+    public void setup(SPU spu, final int requestCode) {
         this.spu = spu;
         setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoginRequired.with(getContext()).wraps(new LoginRequired.Runnable() {
-                    @Override
-                    public void run(User user) {
-                        if (FavorButton.this.spu.isFavored()) {
-                            FavorStore.getInstance().unfavor(user, FavorButton.this.spu).done(new DoneHandler<Void>() {
-                                @Override
-                                public void done(Void aVoid) {
-                                    makeToast(R.string.unfavor_succeed);
-                                    FavorButton.this.spu.setFavored(false);
-                                    update();
+                LoginRequired.with(getContext()).requestCode(requestCode)
+                        .wraps(new LoginRequired.Runnable() {
+                            @Override
+                            public void run(User user) {
+                                if (FavorButton.this.spu.isFavored()) {
+                                    FavorStore.getInstance().unfavor(user, FavorButton.this.spu).done(new DoneHandler<Void>() {
+                                        @Override
+                                        public void done(Void aVoid) {
+                                            makeToast(R.string.unfavor_succeed);
+                                            FavorButton.this.spu.setFavored(false);
+                                            update();
+                                        }
+                                    }).fail(new FailHandler<Void>() {
+                                        @Override
+                                        public void fail(Void aVoid) {
+                                            makeToast(R.string.unfavor_failed);
+                                        }
+                                    });
+                                } else {
+                                    FavorStore.getInstance().favor(user, FavorButton.this.spu).done(new DoneHandler<Void>() {
+                                        @Override
+                                        public void done(Void aVoid) {
+                                            makeToast(R.string.favor_succeed);
+                                            FavorButton.this.spu.setFavored(true);
+                                            update();
+                                        }
+                                    }).fail(new FailHandler<Void>() {
+                                        @Override
+                                        public void fail(Void aVoid) {
+                                            makeToast(R.string.favor_failed);
+                                        }
+                                    });
                                 }
-                            }).fail(new FailHandler<Void>() {
-                                @Override
-                                public void fail(Void aVoid) {
-                                    makeToast(R.string.unfavor_failed);
-                                }
-                            });
-                        } else {
-                            FavorStore.getInstance().favor(user, FavorButton.this.spu).done(new DoneHandler<Void>() {
-                                @Override
-                                public void done(Void aVoid) {
-                                    makeToast(R.string.favor_succeed);
-                                    FavorButton.this.spu.setFavored(true);
-                                    update();
-                                }
-                            }).fail(new FailHandler<Void>() {
-                                @Override
-                                public void fail(Void aVoid) {
-                                    makeToast(R.string.favor_failed);
-                                }
-                            });
-                        }
 
-                    }
-                });
+                            }
+                        });
             }
         });
         update();
@@ -81,4 +82,5 @@ public class FavorButton extends ImageButton {
     private void update() {
         setImageResource(spu.isFavored() ? R.drawable.ic_action_important : R.drawable.ic_action_not_important);
     }
+
 }

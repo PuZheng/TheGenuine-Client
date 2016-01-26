@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.orhanobut.logger.Logger;
 import com.puzheng.deferred.Deferrable;
 import com.puzheng.deferred.Deferred;
 import com.puzheng.lejian.model.Comment;
@@ -19,8 +20,11 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.List;
 
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 
 public class CommentStore {
 
@@ -68,6 +72,50 @@ public class CommentStore {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+                        } else {
+                            // TODO show real reason
+                            deferrable.reject(null);
+                        }
+
+                    }
+                });
+
+            }
+        });
+        return deferrable;
+    }
+
+    public Deferrable<Comment, Pair<String, String>> create(Comment comment) {
+        Uri uri = Uri.parse(ConfigUtil.getInstance().getBackend()).buildUpon()
+                .path("/comment/object").build();
+
+
+        final Deferrable<Comment, Pair<String, String>> deferrable = new Deferred<Comment, Pair<String, String>>();
+        final Handler handler = new Handler();
+        OkHttpClient client = new OkHttpClient();
+        final Request request = new Request.Builder().url(uri.toString())
+                .method("POST", RequestBody.create(MediaType.parse("application/json; charset=utf-8"),
+                        new Gson().toJson(comment)))
+                .header("Authorization", "Bearer " + AuthStore.getInstance().getUser().getToken())
+                .build();
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                deferrable.reject(null);
+            }
+
+            @Override
+            public void onResponse(final okhttp3.Response response) throws IOException {
+                final String data = response.body().string();
+                Logger.i(data);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (response.isSuccessful()) {
+                            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+                            Comment comment = gson.fromJson(data,
+                                    Comment.class);
+                            deferrable.resolve(comment);
                         } else {
                             // TODO show real reason
                             deferrable.reject(null);
