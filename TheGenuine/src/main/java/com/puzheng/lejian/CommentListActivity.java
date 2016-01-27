@@ -15,7 +15,6 @@ import com.puzheng.humanize.Humanize;
 import com.puzheng.lejian.adapter.CommentListAdapter;
 import com.puzheng.lejian.model.Comment;
 import com.puzheng.lejian.model.User;
-import com.puzheng.lejian.store.AuthStore;
 import com.puzheng.lejian.store.CommentStore;
 import com.puzheng.lejian.util.LoginRequired;
 
@@ -41,7 +40,7 @@ public class CommentListActivity extends ListActivity implements RefreshInterfac
         switch (item.getItemId()) {
             case R.id.newComment:
                 LoginRequired loginRequired = LoginRequired.with(this).requestCode(LOGIN_ACTION);
-                loginHandler = loginRequired.createHandler();
+                loginHandler = loginRequired.createLoginHandler();
                 loginRequired.wraps(new LoginRequired.Runnable() {
                     @Override
                     public void run(User user) {

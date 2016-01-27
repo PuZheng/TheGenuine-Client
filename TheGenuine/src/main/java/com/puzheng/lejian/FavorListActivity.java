@@ -3,7 +3,6 @@ package com.puzheng.lejian;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ListFragment;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -13,45 +12,44 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.SparseArray;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RatingBar;
-import android.widget.TextView;
 
-import com.puzheng.lejian.adapter.RecommendationListAdapter;
+import com.puzheng.deferred.AlwaysHandler;
+import com.puzheng.deferred.DoneHandler;
+import com.puzheng.deferred.FailHandler;
+import com.puzheng.lejian.adapter.FavorListAdapter;
 import com.puzheng.lejian.model.Favor;
 import com.puzheng.lejian.image_utils.ImageFetcher;
+import com.puzheng.lejian.model.User;
 import com.puzheng.lejian.netutils.WebService;
 import com.puzheng.lejian.search.SearchActivity;
-import com.puzheng.lejian.store.AuthStore;
+import com.puzheng.lejian.store.FavorStore;
+import com.puzheng.lejian.util.LoginRequired;
 import com.puzheng.lejian.view.NavBar;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FavorCategoriesActivity extends ActionBarActivity implements BackPressedInterface, RefreshInterface {
-    private String mDrawerTitle;
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-    private ActionBarDrawerToggle mDrawerToggle;
+public class FavorListActivity extends ActionBarActivity implements BackPressedInterface, RefreshInterface {
+    private static final int LOGIN_ACTION = 1;
+    private DrawerLayout drawerLayout;
+    private ListView drawerList;
+    private ActionBarDrawerToggle drawerToggle;
     private CharSequence mTitle = "";
     private List<String> mPlanetTitles;
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
     private SparseArray<List<Favor>> mData;
     private MaskableManager maskableManager;
     private ImageFetcher mImageFetcher;
+    private LoginRequired loginRequired;
+    private LoginRequired.LoginHandler loginHandler;
 
     @Override
     public void doBackPressed() {
@@ -67,7 +65,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
-        mDrawerToggle.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -79,7 +77,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
         switch (item.getItemId()) {
@@ -95,7 +93,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
         menu.findItem(R.id.action_search).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
@@ -113,12 +111,9 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == MyApp.LOGIN_ACTION) {
-                new GetFavorsTask().execute();
-            }
-        }
-        if (resultCode == RESULT_CANCELED) {
+        loginHandler.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_CANCELED && requestCode == LOGIN_ACTION) {
+            // 不登录， 就意味着无法看到收藏， 直接返回上一个Activity
             this.doBackPressed();
         }
     }
@@ -127,15 +122,14 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favor_categories);
-        mDrawerTitle = getString(R.string.taxonomy);
         mImageFetcher = ImageFetcher.getImageFetcher(this, getResources().getDimensionPixelSize(R.dimen.image_view_list_item_width), 0.25f);
 
-        maskableManager = new MaskableManager(findViewById(R.id.content_frame), FavorCategoriesActivity.this);
+        maskableManager = new MaskableManager(findViewById(R.id.content_frame), FavorListActivity.this);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        drawerList = (ListView) findViewById(R.id.left_drawer);
+        drawerList.setOnItemClickListener(new DrawerItemClickListener());
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
@@ -145,9 +139,9 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
 
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
-        mDrawerToggle = new ActionBarDrawerToggle(
+        drawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
-                mDrawerLayout,         /* DrawerLayout object */
+                drawerLayout,         /* DrawerLayout object */
                 R.drawable.ic_action_storage,  /* nav drawer image to replace 'Up' caret */
                 R.string.drawer_open,  /* "open drawer" description for accessibility */
                 R.string.drawer_close  /* "close drawer" description for accessibility */
@@ -158,60 +152,66 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
             }
 
             public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle(mDrawerTitle);
+                getActionBar().setTitle(getString(R.string.taxonomy));
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        drawerLayout.setDrawerListener(drawerToggle);
 
-        if (AuthStore.getInstance().getUser() == null) {
-            HashMap<String, Serializable> map = new HashMap<String, Serializable>();
-            map.put("ISTOPACTIVITY", true);
-            MyApp.doLoginIn(FavorCategoriesActivity.this, map);
-        } else {
-            new GetFavorsTask().execute();
-        }
-    }
+        loginRequired = LoginRequired.with(this).requestCode(LOGIN_ACTION);
+        loginHandler = loginRequired.createLoginHandler();
+        maskableManager.mask();
+        loginRequired.wraps(new LoginRequired.Runnable() {
+            @Override
+            public void run(User user) {
+                FavorStore.getInstance().fetchList(user).done(new DoneHandler<List<Favor>>() {
+                    @Override
+                    public void done(List<Favor> favors) {
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mImageFetcher.closeCache();
-    }
+                    }
+                }).fail(new FailHandler<Void>() {
+                    @Override
+                    public void fail(Void aVoid) {
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mImageFetcher.setPauseWork(false);
-        mImageFetcher.setExitTasksEarly(true);
-        mImageFetcher.flushCache();
+                    }
+                }).always(new AlwaysHandler() {
+                    @Override
+                    public void always() {
+                        maskableManager.unmask(null);
+                    }
+                });
+            }
+        });
+
+//        if (AuthStore.getInstance().getUser() == null) {
+//            HashMap<String, Serializable> map = new HashMap<String, Serializable>();
+//            map.put("ISTOPACTIVITY", true);
+//            MyApp.doLoginIn(FavorListActivity.this, map);
+//        } else {
+//            new GetFavorsTask().execute();
+//        }
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
+        drawerToggle.syncState();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mImageFetcher.setExitTasksEarly(false);
-    }
 
     private void selectItem(int position) {
         // update the main content by replacing fragments
         FavorListFragment fragment = new FavorListFragment();
-        fragment.setActivity(FavorCategoriesActivity.this);
-        fragment.setListAdapter(new FavorListAdapter(mData.get(position), FavorCategoriesActivity.this));
+        fragment.setActivity(FavorListActivity.this);
+        fragment.setListAdapter(new FavorListAdapter(mData.get(position)));
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
         // update selected item and title, then close the drawer
-        mDrawerList.setItemChecked(position, true);
+        drawerList.setItemChecked(position, true);
         setActionBarTitle(mPlanetTitles.get(position));
-        mDrawerLayout.closeDrawer(mDrawerList);
+        drawerLayout.closeDrawer(drawerList);
     }
 
     private void setNavBar() {
@@ -254,7 +254,7 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
         @Override
         protected HashMap<String, List<Favor>> doInBackground(Void... params) {
             try {
-                return WebService.getInstance(FavorCategoriesActivity.this).getFavorCategories();
+                return WebService.getInstance(FavorListActivity.this).getFavorCategories();
             } catch (Exception e) {
                 exception = e;
                 return null;
@@ -280,16 +280,16 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
                     allData.addAll(entry.getValue());
                     idx++;
                 }
-                mPlanetTitles.add(0, String.format(format, getString(R.string.all), totalCnt));
-                mDrawerList.setAdapter(new ArrayAdapter<String>(FavorCategoriesActivity.this,
+                mPlanetTitles.add(0, String.format(format, getString(R.string.any_spu_type), totalCnt));
+                drawerList.setAdapter(new ArrayAdapter<String>(FavorListActivity.this,
                         R.layout.drawer_list_item, mPlanetTitles));
-                if (mDrawerList.getCheckedItemPosition() == AdapterView.INVALID_POSITION) {
+                if (drawerList.getCheckedItemPosition() == AdapterView.INVALID_POSITION) {
                     selectItem(0);
                 }
             } else {
                 getActionBar().setTitle(getString(R.string.error_message));
                 getActionBar().setSubtitle(null);
-                mDrawerLayout.setDrawerListener(null);
+                drawerLayout.setDrawerListener(null);
             }
         }
 
@@ -299,77 +299,5 @@ public class FavorCategoriesActivity extends ActionBarActivity implements BackPr
         }
     }
 
-    class FavorListAdapter extends BaseAdapter {
-        private List<Favor> mFavorList;
-        private LayoutInflater inflater;
-        private Activity mActivity;
-
-        public FavorListAdapter(List<Favor> list, Activity activity) {
-            this.mActivity = activity;
-            inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            this.mFavorList = list;
-        }
-
-        @Override
-        public int getCount() {
-            return mFavorList.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return mFavorList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return mFavorList.get(position).getId();
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = inflater.inflate(R.layout.spu_list_item, null);
-            }
-            RecommendationListAdapter.ViewHolder viewHolder;
-            if (convertView.getTag() == null) {
-                viewHolder = new RecommendationListAdapter.ViewHolder((ImageView) convertView.findViewById(R.id.imageView),
-                        (TextView) convertView.findViewById(R.id.textViewName),
-                        (TextView) convertView.findViewById(R.id.textViewFavorCnt),
-                        (TextView) convertView.findViewById(R.id.textViewMSRP),
-                        (Button) convertView.findViewById(R.id.btnNearby),
-                        (RatingBar) convertView.findViewById(R.id.ratingBar));
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (RecommendationListAdapter.ViewHolder) convertView.getTag();
-            }
-
-            final Favor favor = (Favor) getItem(position);
-            mImageFetcher.loadImage(favor.getSPU().getIcon().getURL(),
-                    viewHolder.imageView);
-
-            viewHolder.textViewName.setText(favor.getSPU().getName());
-            viewHolder.textViewMSRP.setText("￥" + favor.getSPU().getMSRP());
-//            viewHolder.textViewFavorCnt.setText(getString(R.string.popularity , Misc.humanizeNum(favor.getFavorCnt(), mActivity)));
-            viewHolder.ratingBar.setRating(favor.getSPU().getRating());
-//            viewHolder.buttonNearby.setText(getString(R.string.nearest, Misc.humanizeDistance(favor.getDistance(), FavorCategoriesActivity.this)) );
-            viewHolder.buttonNearby.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mActivity, NearbyActivity.class);
-                    intent.putExtra("current", NearbyActivity.NEARBY_LIST);
-                    intent.putExtra(Const.TAG_SPU_ID, favor.getSPU().getId());
-                    mActivity.startActivity(intent);
-                }
-            });
-            if (favor.getDistance() == -1) {
-                viewHolder.buttonNearby.setVisibility(View.INVISIBLE);
-            }
-
-//            viewHolder.buttonNearby.setText(Misc.humanizeDistance(favor.getDistance(), FavorCategoriesActivity.this));
-            viewHolder.textViewMSRP.setText(String.valueOf(favor.getSPU().getMSRP()));
-            return convertView;
-        }
-
-    }
 }
 

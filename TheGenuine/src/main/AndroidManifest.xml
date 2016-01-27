@@ -187,7 +187,7 @@
             android:theme="@style/WithUpIndicatorTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name="com.puzheng.lejian.FavorCategoriesActivity"
+            android:name=".FavorListActivity"
             android:label="@string/title_activity_favor"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
