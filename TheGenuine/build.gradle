@@ -42,6 +42,7 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE.txt'
     }
 
     buildTypes {
@@ -71,6 +72,8 @@ dependencies {
     compile project(':MyLibrary')
     compile project(':deferred')
     compile project(':humanize')
+    compile project(':umengcore')
+    compile project(':umengweixin')
     compile files('libs/AMap_Location_v2.3.0_20160112.jar')
     compile 'com.github.blocoio:faker:1.1.0'
 }

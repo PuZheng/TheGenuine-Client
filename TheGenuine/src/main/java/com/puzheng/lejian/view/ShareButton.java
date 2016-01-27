@@ -1,21 +1,32 @@
 package com.puzheng.lejian.view;
 
+import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
+import com.puzheng.lejian.MyApp;
+import com.puzheng.lejian.R;
 import com.puzheng.lejian.model.SPU;
+import com.puzheng.lejian.util.ConfigUtil;
+import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.controller.RequestType;
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.controller.UMWXHandler;
 import com.umeng.socialize.media.UMImage;
-import com.umeng.socialize.sso.SinaSsoHandler;
+import com.umeng.socialize.shareboard.SnsPlatform;
+import com.umeng.socialize.utils.ShareBoardlistener;
+
+import org.stringtemplate.v4.ST;
 
 public class ShareButton extends ImageButton {
 
+
+    private SPU spu;
 
     public ShareButton(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -23,39 +34,65 @@ public class ShareButton extends ImageButton {
 
     public ShareButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+
+
     }
 
     public void setSPU(SPU spu) {
-        UMSocialService umSocialService = UMServiceFactory.getUMSocialService("com.umeng.share",
-                RequestType.SOCIAL);
-//        String contentUrl = getShareURL();
-//        if (MyApp.SHAREMEDIA) {
-//            umSocialService.setShareMedia(new UMImage(getContext(), spu.getIcon().getURL()));
-//        }
-//
-//        umSocialService.setShareContent(getShareContent(contentUrl));
-//
-//        umSocialService.getConfig().removePlatform(SHARE_MEDIA.EMAIL,
-//                SHARE_MEDIA.DOUBAN,
-//                SHARE_MEDIA.RENREN);
-//        String appID = getString(R.string.weichat_app_id);
-//        // 微信图文分享必须设置一个url
-//        // 添加微信平台，参数1为当前Activity, 参数2为用户申请的AppID, 参数3为点击分享内容跳转到的目标url
-//        UMWXHandler wxHandler = umSocialService.getConfig().supportWXPlatform(this,
-//                appID,
-//                contentUrl);
-//        wxHandler.setWXTitle(getString(R.string.share_title));
-//        // 支持微信朋友圈
-//        umSocialService.getConfig().supportWXCirclePlatform(this, appID,
-//                contentUrl);
-//        umSocialService.getConfig().setSsoHandler(new SinaSsoHandler());
-//        ImageButton imageButton = (ImageButton) findViewById(R.id.imageButtonShare);
-//        imageButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // 打开平台选择面板，参数2为打开分享面板时是否强制登录,false为不强制登录
-//                umSocialService.openShare(getContext(), false);
-//            }
-//        });
+        this.spu = spu;
+        Logger.i(ConfigUtil.getInstance().getWeichatAppId(), ConfigUtil.getInstance().getWeichatAppSecret());
+        PlatformConfig.setWeixin(ConfigUtil.getInstance().getWeichatAppId(),
+                ConfigUtil.getInstance().getWeichatAppSecret());
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final SHARE_MEDIA[] displaylist = new SHARE_MEDIA[]
+                        {
+                                SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.SINA,
+                                SHARE_MEDIA.QQ,
+                        };
+                new ShareAction((Activity) getContext()).setDisplayList(displaylist)
+                        .setListenerList(umShareListener, umShareListener)
+                        .setShareboardclickCallback(shareBoardlistener)
+                        .open();
+            }
+        });
+    }
+
+    private UMShareListener umShareListener = new UMShareListener() {
+        @Override
+        public void onResult(SHARE_MEDIA share_media) {
+            Toast.makeText(getContext(), "分享成功", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA share_media) {
+
+        }
+    };
+
+    private ShareBoardlistener shareBoardlistener = new ShareBoardlistener() {
+
+        @Override
+        public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
+            new ShareAction((Activity) getContext()).setPlatform(share_media).setCallback(umShareListener)
+                    .withText(getContext().getString(R.string.share_template))
+                    .withMedia(new UMImage(getContext(), spu.getIcon().getURL()))
+                    .withTargetUrl(genShareURL())
+                    .share();
+        }
+
+
+    };
+
+    private String genShareURL() {
+        ST template = new ST(ConfigUtil.getInstance().getShareURLTemplate());
+        template.add("spu", spu.getId());
+        return template.render();
     }
 }

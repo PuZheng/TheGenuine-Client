@@ -5,7 +5,6 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,9 +24,8 @@ import com.puzheng.lejian.view.FavorButton;
 import com.puzheng.lejian.view.NearbyButton;
 import com.puzheng.lejian.view.SPUTabHost;
 import com.puzheng.lejian.view.ShareButton;
+import com.umeng.socialize.UMShareAPI;
 import com.viewpagerindicator.CirclePageIndicator;
-
-import org.stringtemplate.v4.ST;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,11 +65,8 @@ public class SPUActivity extends FragmentActivity implements LoginRequired.ILogi
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        UMSsoHandler ssoHandler = umSocialService.getConfig().getSsoHandler(requestCode);
-//        if (ssoHandler != null) {
-//            ssoHandler.authorizeCallBack(requestCode, resultCode, data);
-//        }
         loginHandler.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -219,31 +214,7 @@ public class SPUActivity extends FragmentActivity implements LoginRequired.ILogi
     }
 
 
-    private String getShareContent(String shareURL) {
-        if (!TextUtils.isEmpty(MyApp.SHARETEMPLATE)) {
-            try {
-                ST template = new ST(MyApp.SHARETEMPLATE);
-                template.add("spu", spu);
-                return template.render();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return getString(R.string.share_template) + " " + shareURL;
-    }
 
-    private String getShareURL() {
-        if (!TextUtils.isEmpty(MyApp.SHAREURL)) {
-             try {
-                ST template = new ST(MyApp.SHAREURL);
-                template.add("spu", spu);
-                return template.render();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return getString(R.string.share_url_template);
-    }
 
     @Override
     public void onLoginDone(LoginRequired.Runnable runnable) {

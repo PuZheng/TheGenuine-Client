@@ -7,16 +7,8 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.puzheng.lejian.store.AuthStore;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.bean.SocializeEntity;
-import com.umeng.socialize.controller.RequestType;
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.controller.listener.SocializeListeners;
-import com.umeng.socialize.db.OauthHelper;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -24,7 +16,7 @@ import java.util.HashMap;
 public class ProfileActivity extends Activity implements BackPressedInterface {
 
     private BackPressedHandle mBackPressedHandle = new BackPressedHandle();
-    private UMSocialService service;
+//    private UMSocialService service;
     private Button unbindButton;
 
     @Override
@@ -80,34 +72,34 @@ public class ProfileActivity extends Activity implements BackPressedInterface {
             }
         });
 //        service.openUserCenter(ProfileActivity.this, SocializeConstants.FLAG_USER_CENTER_HIDE_LOGININFO);
-        service = UMServiceFactory.getUMSocialService("com.umeng.login",
-                RequestType.SOCIAL);
-        unbindButton = (Button) findViewById(R.id.unbindWeibo);
-        if (OauthHelper.isAuthenticated(ProfileActivity.this, SHARE_MEDIA.SINA)) {
-            unbindButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    service.deleteOauth(ProfileActivity.this, SHARE_MEDIA.SINA, new SocializeListeners.SocializeClientListener() {
-                        @Override
-                        public void onStart() {
-
-                        }
-
-                        @Override
-                        public void onComplete(int i, SocializeEntity socializeEntity) {
-                            if (i == 200 && socializeEntity != null) {
-                                Toast.makeText(ProfileActivity.this, getString(R.string.unbinding_succeed), Toast.LENGTH_SHORT).show();
-                                unbindButton.setVisibility(View.GONE);
-                            } else {
-                                Toast.makeText(ProfileActivity.this, getString(R.string.unbinding_failed), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }
-            });
-        } else {
-            unbindButton.setVisibility(View.GONE);
-        }
+//        service = UMServiceFactory.getUMSocialService("com.umeng.login",
+//                RequestType.SOCIAL);
+//        unbindButton = (Button) findViewById(R.id.unbindWeibo);
+//        if (OauthHelper.isAuthenticated(ProfileActivity.this, SHARE_MEDIA.SINA)) {
+//            unbindButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    service.deleteOauth(ProfileActivity.this, SHARE_MEDIA.SINA, new SocializeListeners.SocializeClientListener() {
+//                        @Override
+//                        public void onStart() {
+//
+//                        }
+//
+//                        @Override
+//                        public void onComplete(int i, SocializeEntity socializeEntity) {
+//                            if (i == 200 && socializeEntity != null) {
+//                                Toast.makeText(ProfileActivity.this, getString(R.string.unbinding_succeed), Toast.LENGTH_SHORT).show();
+//                                unbindButton.setVisibility(View.GONE);
+//                            } else {
+//                                Toast.makeText(ProfileActivity.this, getString(R.string.unbinding_failed), Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
+//                }
+//            });
+//        } else {
+//            unbindButton.setVisibility(View.GONE);
+//        }
     }
 
     private void login() {
