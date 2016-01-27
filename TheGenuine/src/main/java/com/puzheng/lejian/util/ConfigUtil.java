@@ -6,6 +6,8 @@ import com.orhanobut.logger.Logger;
 import com.puzheng.lejian.MyApp;
 import com.puzheng.lejian.R;
 
+import org.stringtemplate.v4.ST;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -47,11 +49,30 @@ public class ConfigUtil {
         return config.backend;
     }
 
+    public String getWeichatAppId() {
+        return config.wechatAppId;
+    }
+
+    public String getWeichatAppSecret() {
+        return config.wechatAppSecret;
+    }
+
+    public String getShareURLTemplate() {
+        return config.shareURLTemplate;
+    }
+
     private class Config {
         private String backend;
+        private String wechatAppId;
+        public String wechatAppSecret;
+        public String shareURLTemplate;
 
-        private Config(String backend) {
+        private Config(String backend, String wechatAppId, String wechatAppSecret,
+                       String shareURLTemplate) {
             this.backend = backend;
+            this.wechatAppId = wechatAppId;
+            this.wechatAppSecret = wechatAppSecret;
+            this.shareURLTemplate = shareURLTemplate;
         }
     }
 }

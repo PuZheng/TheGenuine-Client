@@ -10,21 +10,10 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import com.puzheng.lejian.model.SPU;
-import com.umeng.socialize.bean.MultiStatus;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.bean.SocializeEntity;
 import com.umeng.socialize.bean.UMFriend;
-import com.umeng.socialize.controller.RequestType;
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.controller.listener.SocializeListeners;
-import com.umeng.socialize.db.OauthHelper;
-import com.umeng.socialize.exception.SocializeException;
-import com.umeng.socialize.sso.SinaSsoHandler;
 
 import java.util.List;
 
@@ -34,7 +23,7 @@ import java.util.List;
 public class SPUFragment extends Fragment {
     private SPU spu;
 
-    private UMSocialService umSocialService;
+//    private UMSocialService umSocialService;
     private View rootView;
 
     public SPUFragment() {
@@ -112,12 +101,12 @@ public class SPUFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        umSocialService = UMServiceFactory.getUMSocialService("com.umeng.login",
-                RequestType.SOCIAL);
-
-        if (umSocialService.getConfig().getSinaSsoHandler() == null) {
-            umSocialService.getConfig().setSsoHandler(new SinaSsoHandler());
-        }
+//        umSocialService = UMServiceFactory.getUMSocialService("com.umeng.login",
+//                RequestType.SOCIAL);
+//
+//        if (umSocialService.getConfig().getSinaSsoHandler() == null) {
+//            umSocialService.getConfig().setSsoHandler(new SinaSsoHandler());
+//        }
 
         SPU spu = getArguments().getParcelable(Const.TAG_SPU);
         if (spu != null) {
@@ -126,74 +115,74 @@ public class SPUFragment extends Fragment {
     }
 
     private void authVerify() {
-        umSocialService.doOauthVerify(getActivity(), SHARE_MEDIA.SINA, new SocializeListeners.UMAuthListener() {
-            @Override
-            public void onCancel(SHARE_MEDIA platform) {
-            }
-
-            @Override
-            public void onComplete(Bundle value, SHARE_MEDIA platform) {
-                if (value != null && !TextUtils.isEmpty(value.getString("uid"))) {
-                    Toast.makeText(getActivity(), getString(R.string.binding_succeed), Toast.LENGTH_SHORT).show();
-                    getFriendsAndUpdateView(true);
-                } else {
-                    Toast.makeText(getActivity(), getString(R.string.binding_failed), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onError(SocializeException e, SHARE_MEDIA platform) {
-            }
-
-            @Override
-            public void onStart(SHARE_MEDIA platform) {
-            }
-        });
+////        umSocialService.doOauthVerify(getActivity(), SHARE_MEDIA.SINA, new SocializeListeners.UMAuthListener() {
+//            @Override
+//            public void onCancel(SHARE_MEDIA platform) {
+//            }
+//
+//            @Override
+//            public void onComplete(Bundle value, SHARE_MEDIA platform) {
+//                if (value != null && !TextUtils.isEmpty(value.getString("uid"))) {
+//                    Toast.makeText(getActivity(), getString(R.string.binding_succeed), Toast.LENGTH_SHORT).show();
+//                    getFriendsAndUpdateView(true);
+//                } else {
+//                    Toast.makeText(getActivity(), getString(R.string.binding_failed), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onError(SocializeException e, SHARE_MEDIA platform) {
+//            }
+//
+//            @Override
+//            public void onStart(SHARE_MEDIA platform) {
+//            }
+//        });
     }
 
     private void follow(String weibo) {
-        umSocialService.follow(getActivity(), SHARE_MEDIA.SINA, new SocializeListeners.MulStatusListener() {
-            @Override
-            public void onComplete(MultiStatus multiStatus, int i, SocializeEntity socializeEntity) {
-                if (i == 200) {
-                    Toast.makeText(getActivity(), getString(R.string.watch_succeed), Toast.LENGTH_SHORT).show();
-                    updateFollowedView(true);
-                } else {
-                    Toast.makeText(getActivity(), getString(R.string.watch_failed), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onStart() {
-
-            }
-        }, weibo);
+//        umSocialService.follow(getActivity(), SHARE_MEDIA.SINA, new SocializeListeners.MulStatusListener() {
+//            @Override
+//            public void onComplete(MultiStatus multiStatus, int i, SocializeEntity socializeEntity) {
+//                if (i == 200) {
+//                    Toast.makeText(getActivity(), getString(R.string.watch_succeed), Toast.LENGTH_SHORT).show();
+//                    updateFollowedView(true);
+//                } else {
+//                    Toast.makeText(getActivity(), getString(R.string.watch_failed), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onStart() {
+//
+//            }
+//        }, weibo);
     }
 
     private void getFriendsAndUpdateView(final boolean doFollow) {
-        if (OauthHelper.isAuthenticated(getActivity(), SHARE_MEDIA.SINA)) {
-            umSocialService.getFriends(getActivity(), new SocializeListeners.FetchFriendsListener() {
-                @Override
-                public void onStart() {
-
-                }
-
-                @Override
-                public void onComplete(int i, List<UMFriend> umFriends) {
-                    if (i == 200 && umFriends != null) {
-                        final boolean followed = isFollowed(umFriends);
-                        if (!followed && doFollow) {
-                            follow(getWeiboAccount());
-                        } else {
-                            updateFollowedView(followed);
-                        }
-
-                    }
-                }
-            }, SHARE_MEDIA.SINA);
-        } else {
-            updateFollowedView(false);
-        }
+//        if (OauthHelper.isAuthenticated(getActivity(), SHARE_MEDIA.SINA)) {
+//            umSocialService.getFriends(getActivity(), new SocializeListeners.FetchFriendsListener() {
+//                @Override
+//                public void onStart() {
+//
+//                }
+//
+//                @Override
+//                public void onComplete(int i, List<UMFriend> umFriends) {
+//                    if (i == 200 && umFriends != null) {
+//                        final boolean followed = isFollowed(umFriends);
+//                        if (!followed && doFollow) {
+//                            follow(getWeiboAccount());
+//                        } else {
+//                            updateFollowedView(followed);
+//                        }
+//
+//                    }
+//                }
+//            }, SHARE_MEDIA.SINA);
+//        } else {
+//            updateFollowedView(false);
+//        }
     }
 
     private String getWeiboAccount() {
@@ -213,31 +202,31 @@ public class SPUFragment extends Fragment {
     }
 
     private void updateFollowedView(boolean isFollowed) {
-        final String weibo = getWeiboAccount();
-        Button addFocus = (Button) rootView.findViewById(R.id.btnAddFocus);
-        rootView.findViewById(R.id.layoutAddFocus).setOnClickListener(null);
-        if (!TextUtils.isEmpty(weibo)) {
-            addFocus.setVisibility(View.VISIBLE);
-            if (isFollowed) {
-                addFocus.setText(R.string.watched);
-                addFocus.setOnClickListener(null);
-            } else {
-                addFocus.setText(R.string.watch);
-                addFocus.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (!OauthHelper.isAuthenticated(getActivity(), SHARE_MEDIA.SINA)) {
-                            authVerify();
-                        } else {
-                            follow(weibo);
-                        }
-
-                    }
-                });
-
-            }
-        } else {
-            addFocus.setVisibility(View.GONE);
-        }
+//        final String weibo = getWeiboAccount();
+//        Button addFocus = (Button) rootView.findViewById(R.id.btnAddFocus);
+//        rootView.findViewById(R.id.layoutAddFocus).setOnClickListener(null);
+//        if (!TextUtils.isEmpty(weibo)) {
+//            addFocus.setVisibility(View.VISIBLE);
+//            if (isFollowed) {
+//                addFocus.setText(R.string.watched);
+//                addFocus.setOnClickListener(null);
+//            } else {
+//                addFocus.setText(R.string.watch);
+//                addFocus.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        if (!OauthHelper.isAuthenticated(getActivity(), SHARE_MEDIA.SINA)) {
+//                            authVerify();
+//                        } else {
+//                            follow(weibo);
+//                        }
+//
+//                    }
+//                });
+//
+//            }
+//        } else {
+//            addFocus.setVisibility(View.GONE);
+//        }
     }
 }

@@ -1,1 +1,1 @@
-include ':TheGenuine', ':MyLibrary', ':deferred', ':humanize'
+include ':TheGenuine', ':MyLibrary', ':deferred', ':humanize', ':umengcore', ':umengweixin'

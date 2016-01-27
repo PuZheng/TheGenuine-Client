@@ -6,6 +6,7 @@ import android.util.Pair;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.orhanobut.logger.Logger;
 import com.puzheng.deferred.Deferrable;
@@ -53,6 +54,9 @@ public class LocationStore {
                 }
             }
         });
+        AMapLocationClientOption aMapLocationClientOption = new AMapLocationClientOption();
+        aMapLocationClientOption.setInterval(30000);
+        locationClient.setLocationOption(aMapLocationClientOption);
         locationClient.startLocation();
     }
 
