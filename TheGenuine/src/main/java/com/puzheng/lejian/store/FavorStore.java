@@ -2,12 +2,14 @@ package com.puzheng.lejian.store;
 
 import android.net.Uri;
 import android.os.Handler;
+import android.util.Pair;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.puzheng.deferred.Deferrable;
 import com.puzheng.deferred.Deferred;
+import com.puzheng.deferred.DoneHandler;
 import com.puzheng.lejian.model.Favor;
 import com.puzheng.lejian.model.SPU;
 import com.puzheng.lejian.model.User;
@@ -92,11 +94,18 @@ public class FavorStore {
     public Deferrable<List<Favor>, Void> fetchList(User user) {
         final Deferrable<List<Favor>, Void> deferrable = new Deferred<List<Favor>, Void>();
 
-        Uri uri = Uri.parse(ConfigUtil.getInstance().getBackend()).buildUpon()
-                .appendPath("favor/list").build();
+        final Uri.Builder builder = Uri.parse(ConfigUtil.getInstance().getBackend()).buildUpon()
+                .path("favor/list");
+        LocationStore.getInstance().getLocation().done(new DoneHandler<Pair<Double, Double>>() {
+            @Override
+            public void done(Pair<Double, Double> lnglat) {
+                builder.appendQueryParameter("lnglat", lnglat.first + "," + lnglat.second);
+            }
+        });
+
         final Handler handler = new Handler();
         OkHttpClient client = new OkHttpClient();
-        final Request request = new Request.Builder().url(uri.toString()).header("Authorization",
+        final Request request = new Request.Builder().url(builder.build().toString()).header("Authorization",
                 "Bearer " + user.getToken()).build();
 
         client.newCall(request).enqueue(new okhttp3.Callback() {

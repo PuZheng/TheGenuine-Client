@@ -66,7 +66,7 @@
     <string name="committing">正在提交</string>
     <string name="loading_failed">加载评论失败</string>
     <string name="taxonomy">选择分类</string>
-    <string name="any_spu_type">所有</string>
+    <string name="any_spu_type">不限分类</string>
     <string name="popularity">人气%s</string>
     <string name="nearest">最近%s</string>
     <string name="meter">米</string>

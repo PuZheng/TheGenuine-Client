@@ -1,5 +1,6 @@
 package com.puzheng.lejian.adapter;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,15 +68,16 @@ public class FavorListAdapter extends BaseAdapter {
         }
 
         final Favor favor = (Favor) getItem(position);
-        Glide.with(MyApp.getContext()).load(favor.getSPU().getIcon().getURL()).into(viewHolder.imageView);
+        Context context = MyApp.getContext();
+        Glide.with(context).load(favor.getSPU().getIcon().getURL()).into(viewHolder.imageView);
 
         viewHolder.textViewName.setText(favor.getSPU().getName());
         viewHolder.textViewMSRP.setText("￥" + favor.getSPU().getMSRP());
-        viewHolder.textViewFavorCnt.setText(favorListActivity.getString(R.string.popularity,
-                Humanize.with(MyApp.getContext()).num(favor.getFavorCnt())));
+        viewHolder.textViewFavorCnt.setText(context.getString(R.string.popularity,
+                Humanize.with(context).num(favor.getSPU().getFavorCnt())));
         viewHolder.ratingBar.setRating(favor.getSPU().getRating());
-        viewHolder.buttonNearby.setText(favorListActivity.getString(R.string.nearest,
-                Humanize.with(MyApp.getContext()).distance(favor.getDistance())));
+        viewHolder.buttonNearby.setText(context.getString(R.string.nearest,
+                Humanize.with(context).distance(favor.getSPU().getDistance())));
         viewHolder.buttonNearby.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,11 +87,11 @@ public class FavorListAdapter extends BaseAdapter {
                 MyApp.getCurrentActivity().startActivity(intent);
             }
         });
-        if (favor.getDistance() == -1) {
+        if (favor.getSPU().getDistance() == 0) {
             viewHolder.buttonNearby.setVisibility(View.INVISIBLE);
         }
 
-        viewHolder.buttonNearby.setText(Humanize.with(MyApp.getContext()).distance(favor.getDistance()));
+        viewHolder.buttonNearby.setText(Humanize.with(context).distance(favor.getSPU().getDistance()));
         viewHolder.textViewMSRP.setText(String.valueOf(favor.getSPU().getMSRP()));
         return convertView;
     }

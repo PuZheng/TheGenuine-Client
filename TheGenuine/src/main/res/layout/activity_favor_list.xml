@@ -14,11 +14,17 @@
 
         <!-- As the main content view, the view below consumes the entire
              space available using match_parent in both dimensions. -->
-        <FrameLayout
-            android:id="@+id/content_frame"
+        <!--<FrameLayout-->
+            <!--android:id="@+id/content_frame"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_above="@id/navBar" />-->
+        <fragment
+            android:id="@+id/fragment_favor_list"
+            android:name="com.puzheng.lejian.FavorListActivity$FavorListFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/navBar" />
+            android:layout_above="@id/navBar"/>
 
 
         <com.puzheng.lejian.view.NavBar
@@ -42,7 +48,6 @@
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:choiceMode="singleChoice"
-        android:background="#FFF" />
+        android:choiceMode="singleChoice"/>
 
 </android.support.v4.widget.DrawerLayout>
