@@ -1,6 +1,7 @@
 package com.puzheng.lejian.store;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.util.Pair;
 
@@ -12,6 +13,8 @@ import com.orhanobut.logger.Logger;
 import com.puzheng.deferred.Deferrable;
 import com.puzheng.deferred.Deferred;
 import com.puzheng.deferred.LazyDeferred;
+import com.puzheng.lejian.MyApp;
+import com.puzheng.lejian.R;
 
 public class LocationStore {
 
@@ -43,6 +46,8 @@ public class LocationStore {
                         lng = location.getLongitude();
                         lat = location.getLatitude();
                         Logger.i("located at " + String.format("%f,%f", lng, lat));
+                        Intent intent = new Intent(String.valueOf(R.id.BROADCAST_LOCATION_ACTION));
+                        MyApp.getContext().sendBroadcast(intent);
                     } else {
                         //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
                         errCode = location.getErrorCode();

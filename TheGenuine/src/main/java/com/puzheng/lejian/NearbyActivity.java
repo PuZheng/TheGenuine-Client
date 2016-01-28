@@ -2,6 +2,7 @@ package com.puzheng.lejian;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -83,12 +84,16 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
                 getActionBar().setSelectedNavigationItem(position);
             }
         });
+        receiver = new LocationBroadcastReceiver();
+        IntentFilter filter = new IntentFilter(LocationService.LOCATION_ACTION);
+        getActivity().registerReceiver(receiver, filter);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
+        fetchRetailerList();
     }
 
     class NearbyPagerAdapter extends FragmentPagerAdapter {

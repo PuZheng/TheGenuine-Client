@@ -79,7 +79,9 @@ public class MyApp extends Application {
         MyApp.context = getApplicationContext();
         webServieHandler = WebService.getInstance(MyApp.context);
         Misc.assertDirExists(Misc.getStorageDir());
-        connectLocationService();
+        // TODO: 16-1-29 remove this function
+        //connectLocationService();
+
         new GetShareTemplateClass().execute();
         Logger.init(getString(R.string.app_name));
         this.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
