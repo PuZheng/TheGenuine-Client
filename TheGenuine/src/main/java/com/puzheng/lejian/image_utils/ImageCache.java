@@ -722,7 +722,7 @@ public class ImageCache {
         }
 
         /**
-         * Store a single object in this Fragment.
+         * Retailer a single object in this Fragment.
          *
          * @param object The object to store
          */

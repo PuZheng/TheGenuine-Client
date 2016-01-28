@@ -14,7 +14,6 @@ import com.puzheng.lejian.model.Comment;
 import com.puzheng.lejian.model.Favor;
 import com.puzheng.lejian.model.Recommendation;
 import com.puzheng.lejian.model.SPUResponse;
-import com.puzheng.lejian.model.StoreResponse;
 import com.puzheng.lejian.model.User;
 import com.puzheng.lejian.model.Verification;
 import com.puzheng.lejian.util.BadResponseException;
@@ -126,19 +125,6 @@ public class WebService {
         return instance;
     }
 
-    public List<StoreResponse> getNearbyStoreList(int spu_id) throws IOException, JSONException, BadResponseException, LocateErrorException {
-        HashMap<String, String> params = getCurrentLocation();
-        if (spu_id != Const.INVALID_ARGUMENT) {
-            params.put("spu_id", String.valueOf(spu_id));
-        }
-        String url = HttpUtil.composeUrl("retailer-ws", "retailer-list", params);
-        String result = HttpUtil.getStringResult(url);
-        JSONObject object = new JSONObject(result);
-        Type type = new TypeToken<List<StoreResponse>>() {
-        }.getType();
-        Gson gson = new Gson();
-        return gson.fromJson(object.getString("data"), type);
-    }
 
     public List<Recommendation> getRecommendations(String queryType, int productId) throws IOException, JSONException, BadResponseException {
         HashMap<String, String> params;

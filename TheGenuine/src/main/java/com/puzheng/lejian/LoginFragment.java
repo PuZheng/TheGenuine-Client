@@ -94,7 +94,7 @@ public class LoginFragment extends Fragment {
         emailView.setError(null);
         passwordView.setError(null);
 
-        // Store values at the time of the register_or_login attempt.
+        // Retailer values at the time of the register_or_login attempt.
         email = emailView.getText().toString();
         password = passwordView.getText().toString();
 

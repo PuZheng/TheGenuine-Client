@@ -14,8 +14,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.puzheng.lejian.model.Store;
-import com.puzheng.lejian.model.StoreResponse;
+import com.puzheng.lejian.model.Retailer;
 import com.puzheng.lejian.util.LocateErrorException;
 import com.puzheng.lejian.util.Misc;
 
@@ -43,7 +42,7 @@ public class GoogleMapFragment extends SupportMapFragment {
         if (map != null) {
             map.setMyLocationEnabled(true);
             locateToMyLocation(map);
-            setStores(((NearbyActivity) getActivity()).getStoreResponses(), map);
+//            setStores(((NearbyActivity) getActivity()).getStoreResponses(), map);
 
             receiver = new LocationBroadcastReceiver();
             IntentFilter filter = new IntentFilter(LocationService.LOCATION_ACTION);
@@ -51,24 +50,24 @@ public class GoogleMapFragment extends SupportMapFragment {
         }
     }
 
-    public void setStores(List<StoreResponse> stores, GoogleMap map) {
-        if (stores == null) {
-            return;
-        }
-        if (map != null) {
-            for (int i = 0; i < stores.size(); i++) {
-                Store store = stores.get(i).getStore();
-                MarkerOptions marker = new MarkerOptions().position(new LatLng(store.getLatitude(),
-                        store.getLongitude())).title(store.getName());
-                if (i < Const.MARKS.size()) {
-                    marker.icon(BitmapDescriptorFactory.fromResource(Const.MARKS.get(i)));
-                } else {
-                    marker.icon(BitmapDescriptorFactory.defaultMarker());
-                }
-                map.addMarker(marker);
-            }
-        }
-    }
+//    public void setStores(List<StoreResponse> stores, GoogleMap map) {
+//        if (stores == null) {
+//            return;
+//        }
+//        if (map != null) {
+//            for (int i = 0; i < stores.size(); i++) {
+//                Retailer retailer = stores.get(i).getRetailer();
+//                MarkerOptions marker = new MarkerOptions().position(new LatLng(retailer.getLatitude(),
+//                        retailer.getLongitude())).title(retailer.getName());
+//                if (i < Const.MARKS.size()) {
+//                    marker.icon(BitmapDescriptorFactory.fromResource(Const.MARKS.get(i)));
+//                } else {
+//                    marker.icon(BitmapDescriptorFactory.defaultMarker());
+//                }
+//                map.addMarker(marker);
+//            }
+//        }
+//    }
 
     private void locateToMyLocation(GoogleMap map) {
         Location location;
