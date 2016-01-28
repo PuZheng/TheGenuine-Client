@@ -95,7 +95,7 @@ public class RecommendationListAdapter extends BaseAdapter {
         public ImageView imageView;
         public TextView textViewName;
         public TextView textViewMSRP;
-        TextView textViewFavorCnt;
+        public TextView textViewFavorCnt;
         public Button buttonNearby;
         public RatingBar ratingBar;
 

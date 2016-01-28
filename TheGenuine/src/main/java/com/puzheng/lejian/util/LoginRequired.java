@@ -37,7 +37,7 @@ public class LoginRequired {
         return this;
     }
 
-    public LoginHandler createHandler() {
+    public LoginHandler createLoginHandler() {
         return new LoginHandler(this.requestCode);
     }
 

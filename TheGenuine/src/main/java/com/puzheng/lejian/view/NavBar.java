@@ -11,9 +11,9 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import com.puzheng.lejian.FavorListActivity;
 import com.puzheng.lejian.ProfileActivity;
 import com.puzheng.lejian.SPUTypeListActivity;
-import com.puzheng.lejian.FavorCategoriesActivity;
 import com.puzheng.lejian.NFCAuthenticationActivity;
 import com.puzheng.lejian.NearbyActivity;
 import com.puzheng.lejian.R;
@@ -49,7 +49,7 @@ public class NavBar extends LinearLayout {
         initTab(R.id.go_home, NFCAuthenticationActivity.class);
         initTab(R.id.genuines, SPUTypeListActivity.class);
         initTab(R.id.nearby, NearbyActivity.class);
-        initTab(R.id.favor, FavorCategoriesActivity.class);
+        initTab(R.id.favor, FavorListActivity.class);
         initTab(R.id.account, ProfileActivity.class);
     }
 
