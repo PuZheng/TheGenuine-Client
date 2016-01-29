@@ -61,7 +61,7 @@ public class NearbyListAdapter extends BaseAdapter {
         }
 
         Retailer retailer = (Retailer) getItem(position);
-        Glide.with(MyApp.getContext()).load(retailer.getIcon().getURL()).into(viewHolder.mImageView);
+        Glide.with(MyApp.getContext()).load(retailer.getPic().getURL()).into(viewHolder.mImageView);
 
         viewHolder.textViewName.setText(retailer.getName());
         viewHolder.textViewDistance.setText(Humanize.with(MyApp.getContext()).distance(

@@ -54,12 +54,6 @@ public class Retailer {
         return poi;
     }
 
-    public Pic getIcon() {
-        return new Pic("",
-                Uri.parse(ConfigUtil.getInstance().getBackend()).buildUpon()
-                        .path("assets/sample1.png").build().toString());
-    }
-
     public static class Builder {
         private int id;
         private String name;

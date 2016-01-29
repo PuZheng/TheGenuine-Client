@@ -18,6 +18,7 @@ import com.puzheng.lejian.R;
 
 public class LocationStore {
 
+    public static final String LOCATION = "LOCATION";
     private static volatile LocationStore instance;
     private AMapLocationClient locationClient;
     private double lng;
@@ -45,6 +46,7 @@ public class LocationStore {
                     if (location.getErrorCode() == 0) {
                         lng = location.getLongitude();
                         lat = location.getLatitude();
+                        // TODO: 16-1-29 should only broadcast when move in certain meters
                         Logger.i("located at " + String.format("%f,%f", lng, lat));
                         Intent intent = new Intent(String.valueOf(R.id.BROADCAST_LOCATION_ACTION));
                         MyApp.getContext().sendBroadcast(intent);
