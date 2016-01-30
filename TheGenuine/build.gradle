@@ -1,4 +1,5 @@
 import groovy.json.JsonSlurper
+
 buildscript {
     repositories {
         mavenCentral()
@@ -58,16 +59,6 @@ android {
 }
 
 dependencies {
-    compile 'com.google.android.gms:play-services:4.0.30'
-    compile 'com.android.support:support-v4:19.0.+'
-    compile 'com.android.support:appcompat-v7:19.0.+'
-    compile 'com.google.code.gson:gson:2.3'
-    compile 'com.google.zxing:core:3.1.0'
-    compile 'com.jakewharton:disklrucache:2.0.2'
-    compile 'com.github.orhanobut:logger:1.12'
-    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
-    compile 'com.github.bumptech.glide:glide:3.6.1'
     compile fileTree(include: '*.jar', dir: 'libs')
     compile project(':MyLibrary')
     compile project(':deferred')
@@ -75,6 +66,16 @@ dependencies {
     compile project(':umengcore')
     compile project(':umengweixin')
     compile files('libs/AMap_Location_v2.3.0_20160112.jar')
+    compile 'com.google.android.gms:play-services:8.4.0'
+    compile 'com.android.support:support-v4:19.1.0'
+    compile 'com.android.support:appcompat-v7:19.1.0'
+    compile 'com.google.code.gson:gson:2.3'
+    compile 'com.google.zxing:core:3.1.0'
+    compile 'com.jakewharton:disklrucache:2.0.2'
+    compile 'com.github.orhanobut:logger:1.12'
+    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
+    compile 'com.github.bumptech.glide:glide:3.6.1'
     compile 'com.github.blocoio:faker:1.1.0'
 }
 
