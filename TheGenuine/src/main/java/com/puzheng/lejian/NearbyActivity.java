@@ -6,24 +6,22 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Pair;
 
-import com.amap.api.location.AMapLocation;
 import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
 import com.puzheng.deferred.AlwaysHandler;
 import com.puzheng.deferred.DoneHandler;
 import com.puzheng.deferred.FailHandler;
+import com.puzheng.lejian.adapter.NearbyListAdapter;
 import com.puzheng.lejian.model.Retailer;
-import com.puzheng.lejian.netutils.WebService;
 import com.puzheng.lejian.store.LocationStore;
 import com.puzheng.lejian.store.RetailerStore;
 
@@ -40,6 +38,7 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
     private ViewPager viewPager;
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
     private int spuId = Const.INVALID_ARGUMENT;
+    private NearbyListFragment nearbyListFragment;
 
 
     @Override
@@ -94,13 +93,19 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
 
         actionBar.addTab(actionBar.newTab().setText(R.string.list).setTabListener(listener));
 
-//        viewPager.setAdapter(new NearbyPagerAdapter(getSupportFragmentManager()));
-//        viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-//            @Override
-//            public void onPageSelected(int position) {
-//                getActionBar().setSelectedNavigationItem(position);
-//            }
-//        });
+        nearbyListFragment = new NearbyListFragment();
+        nearbyListFragment.setListAdapter(new NearbyListAdapter());
+
+        List<Fragment> fragmentList = new ArrayList<Fragment>();
+        fragmentList.add(nearbyListFragment);
+
+        viewPager.setAdapter(new NearbyPagerAdapter(getSupportFragmentManager(), fragmentList));
+        viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                getActionBar().setSelectedNavigationItem(position);
+            }
+        });
         IntentFilter filter = new IntentFilter(String.valueOf(R.id.BROADCAST_LOCATION_ACTION));
         registerReceiver(new BroadcastReceiver() {
             @Override
@@ -140,13 +145,12 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
                     public void done(List<Retailer> retailers) {
                         Logger.i("retailers fetched");
                         Logger.json(new Gson().toJson(retailers));
-                        // TODO: 16-1-29 setup list view
+                        ((NearbyListAdapter) nearbyListFragment.getListAdapter()).setRetailers(retailers);
                         // TODO: 16-1-29 setup map view
                     }
                 }).fail(new FailHandler<Void>() {
                     @Override
                     public void fail(Void aVoid) {
-
                     }
                 }).always(new AlwaysHandler() {
                     @Override
@@ -162,16 +166,14 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
     class NearbyPagerAdapter extends FragmentPagerAdapter {
         private List<Fragment> fragmentList;
 
-        public NearbyPagerAdapter(FragmentManager fragmentManager) {
+        public NearbyPagerAdapter(FragmentManager fragmentManager, List<Fragment> fragmentList) {
             super(fragmentManager);
-            fragmentList = new ArrayList<Fragment>();
 //            if (MyApp.isGooglePlayServiceAvailable()) {
 //                fragmentList.add(new GoogleMapFragment());
 //            } else {
 //                fragmentList.add(new BaiduMapFragment());
 //            }
-            NearbyFragment nearbyFragment = new NearbyFragment();
-            fragmentList.add(new NearbyFragment());
+            this.fragmentList = fragmentList;
         }
 
         @Override
@@ -182,6 +184,11 @@ public class NearbyActivity extends ActionBarActivity implements BackPressedInte
         @Override
         public Fragment getItem(int position) {
             return fragmentList.get(position);
+        }
+
+        public void setRetailers(List<Retailer> retailers) {
+            ((NearbyListAdapter) ((NearbyListFragment) fragmentList.get(0)).getListAdapter()).setRetailers(retailers);
+//            ((BaiduMapFragment) fragmentList.get(1)).setRetailers(retailers);
         }
     }
 

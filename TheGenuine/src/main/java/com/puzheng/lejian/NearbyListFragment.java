@@ -18,9 +18,9 @@ import java.util.List;
 /**
  * Created by abc549825@163.com(https://github.com/abc549825) at 11-27.
  */
-public class NearbyFragment extends ListFragment {
+public class NearbyListFragment extends ListFragment {
 
-    public NearbyFragment() {
+    public NearbyListFragment() {
 
     }
 

@@ -50,7 +50,7 @@ public class Retailer {
         return pic;
     }
 
-    public POI getPoi() {
+    public POI getPOI() {
         return poi;
     }
 

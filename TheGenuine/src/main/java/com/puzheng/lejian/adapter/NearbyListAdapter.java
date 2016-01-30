@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.puzheng.humanize.Humanize;
 import com.puzheng.lejian.MyApp;
-import com.puzheng.lejian.NearbyFragment;
 import com.puzheng.lejian.R;
 import com.puzheng.lejian.model.Retailer;
 
@@ -19,27 +18,26 @@ import java.util.List;
 
 public class NearbyListAdapter extends BaseAdapter {
 
-    private final List<Retailer> retailers;
+    private List<Retailer> retailers;
     private final LayoutInflater inflater;
 
-    public NearbyListAdapter(List<Retailer> retailers) {
-        this.retailers = retailers;
+    public NearbyListAdapter() {
         inflater = LayoutInflater.from(MyApp.getContext());
     }
 
     @Override
     public int getCount() {
-        return retailers.size();
+        return retailers == null? 0: retailers.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return retailers.get(position);
+        return retailers == null? null: retailers.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return retailers.get(position).getId();
+        return retailers == null? null: retailers.get(position).getId();
     }
 
     @Override
@@ -61,19 +59,24 @@ public class NearbyListAdapter extends BaseAdapter {
         }
 
         Retailer retailer = (Retailer) getItem(position);
-        Glide.with(MyApp.getContext()).load(retailer.getPic().getURL()).into(viewHolder.mImageView);
+        Glide.with(MyApp.getContext()).load(retailer.getPic().getURL()).into(viewHolder.imageView);
 
         viewHolder.textViewName.setText(retailer.getName());
         viewHolder.textViewDistance.setText(Humanize.with(MyApp.getContext()).distance(
-                retailer.getPoi().getDistance()));
-        viewHolder.textViewAddr.setText(retailer.getPoi().getAddr());
+                retailer.getPOI().getDistance()));
+        viewHolder.textViewAddr.setText(retailer.getPOI().getAddr());
         viewHolder.ratingBar.setRating(retailer.getRating());
-        viewHolder.textViewMark.setText(String.valueOf(position + 1));
+        viewHolder.textViewMark.setText(Character.toString((char) (position + 65)));
         return convertView;
     }
 
+    public void setRetailers(List<Retailer> retailers) {
+        this.retailers = retailers;
+        notifyDataSetChanged();
+    }
+
     class ViewHolder {
-        ImageView mImageView;
+        ImageView imageView;
         TextView textViewName;
         TextView textViewDistance;
         TextView textViewAddr;
@@ -82,7 +85,7 @@ public class NearbyListAdapter extends BaseAdapter {
 
         ViewHolder(ImageView imageView, TextView textViewName, TextView textViewDistance,
                    TextView textViewAddr, RatingBar ratingBar, TextView textViewMark) {
-            this.mImageView = imageView;
+            this.imageView = imageView;
             this.textViewName = textViewName;
             this.textViewDistance = textViewDistance;
             this.textViewAddr = textViewAddr;
