@@ -32,7 +32,7 @@
         android:paddingRight="15dp">
 
         <TextView
-            android:id="@+id/markView"
+            android:id="@+id/textViewMark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="A"
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:text="麦当劳"
             android:textSize="18dp"
-            android:id="@+id/textViewStore" />
+            android:id="@+id/textViewName" />
 
 
         <RatingBar
@@ -68,7 +68,7 @@
                 android:layout_alignParentLeft="true"
                 android:textColor="@android:color/darker_gray"
                 android:includeFontPadding="false"
-                android:id="@+id/textViewAddress" />
+                android:id="@+id/textViewAddr" />
 
             <TextView
                 android:layout_width="wrap_content"

@@ -92,11 +92,11 @@ public class CounterfeitActivity extends Activity {
             if (TextUtils.isEmpty(mTag)) {
                 return false;
             }
-            try {
-                return WebService.getInstance(CounterfeitActivity.this).denounce(mTag, params[0]);
-            } catch (Exception e) {
-                exception = e;
-            }
+//            try {
+//                return WebService.getInstance(CounterfeitActivity.this).denounce(mTag, params[0]);
+//            } catch (Exception e) {
+//                exception = e;
+//            }
             return false;
         }
 

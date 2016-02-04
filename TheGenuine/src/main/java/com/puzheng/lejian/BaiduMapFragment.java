@@ -24,7 +24,6 @@ import com.baidu.mapapi.map.OverlayItem;
 import com.baidu.mapapi.map.PopupClickListener;
 import com.baidu.mapapi.map.PopupOverlay;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
-import com.puzheng.lejian.model.StoreResponse;
 import com.puzheng.lejian.util.LocateErrorException;
 import com.puzheng.lejian.util.Misc;
 
@@ -113,42 +112,42 @@ public class BaiduMapFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        this.setStores(((NearbyActivity) getActivity()).getStoreResponses());
+//        this.setStores(((NearbyActivity) getActivity()).getStoreResponses());
     }
 
-    public void setStores(List<StoreResponse> storeList) {
-        if (storeList == null) {
-            return;
-        }
-        if (mMapView != null) {
-            Drawable mark = getResources().getDrawable(R.drawable.red_mark);
-
-            //创建IteminizedOverlay
-            if (mOverlay == null) {
-                mOverlay = new MyOverlay(mark, mMapView);
-                //将IteminizedOverlay添加到MapView中
-                mMapView.getOverlays().add(mOverlay);
-            }
-            mOverlay.getAllItem().clear();
-
-            for (int i = 0, size = storeList.size(); i < size; i++) {
-                StoreResponse storeResponse = storeList.get(i);
-                GeoPoint p = new GeoPoint((int) (storeResponse.getStore().getLatitude() * 1E6), ((int) (storeResponse.getStore().getLongitude() * 1E6)));
-                OverlayItem item = new OverlayItem(p, storeResponse.getStore().getName(), storeResponse.getStore().getDesc());
-                if (i < Const.MARKS.size()) {
-                    item.setMarker(getResources().getDrawable(Const.MARKS.get(i)));
-                }
-                mOverlay.addItem(item);
-            }
-
-            pop = new PopupOverlay(mMapView, new PopupClickListener() {
-                @Override
-                public void onClickedPopup(int index) {
-                }
-            });
-            mMapView.refresh();
-        }
-    }
+//    public void setStores(List<StoreResponse> storeList) {
+//        if (storeList == null) {
+//            return;
+//        }
+//        if (mMapView != null) {
+//            Drawable mark = getResources().getDrawable(R.drawable.red_mark);
+//
+//            //创建IteminizedOverlay
+//            if (mOverlay == null) {
+//                mOverlay = new MyOverlay(mark, mMapView);
+//                //将IteminizedOverlay添加到MapView中
+//                mMapView.getOverlays().add(mOverlay);
+//            }
+//            mOverlay.getAllItem().clear();
+//
+//            for (int i = 0, size = storeList.size(); i < size; i++) {
+//                StoreResponse storeResponse = storeList.get(i);
+//                GeoPoint p = new GeoPoint((int) (storeResponse.getRetailer().getLatitude() * 1E6), ((int) (storeResponse.getRetailer().getLongitude() * 1E6)));
+//                OverlayItem item = new OverlayItem(p, storeResponse.getRetailer().getName(), storeResponse.getRetailer().getDesc());
+//                if (i < Const.MARKS.size()) {
+//                    item.setMarker(getResources().getDrawable(Const.MARKS.get(i)));
+//                }
+//                mOverlay.addItem(item);
+//            }
+//
+//            pop = new PopupOverlay(mMapView, new PopupClickListener() {
+//                @Override
+//                public void onClickedPopup(int index) {
+//                }
+//            });
+//            mMapView.refresh();
+//        }
+//    }
 
     private void animateToLastLocation() {
         //移动地图到定位点

@@ -36,6 +36,6 @@
     <item name="about_version_code" type="id">false</item>
     <item name="split" type="id">false</item>
 
-    <item name="VIEW_HOLDER" type="id"></item>
-    <item name="FAVOR_LIST" type="id"></item>
+    <item name="BROADCAST_LOCATION_ACTION" type="id" />
+
 </resources>

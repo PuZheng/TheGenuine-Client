@@ -10,6 +10,8 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -25,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class MyApp extends Application {
+public class MyApp extends MultiDexApplication {
     public static final int LOGIN_ACTION = 1;
     public static ServiceConnection connection;
     private static Context context;
@@ -38,6 +40,11 @@ public class MyApp extends Application {
     public static String SHARETEMPLATE = null;
     public static boolean SHAREMEDIA = false;
     private Activity currentActivity;
+
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 
     public static void doLoginIn(Activity activity) {
         doLoginIn(activity, null);
@@ -77,9 +84,11 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
         MyApp.context = getApplicationContext();
-        webServieHandler = WebService.getInstance(MyApp.context);
+//        webServieHandler = WebService.getInstance(MyApp.context);
         Misc.assertDirExists(Misc.getStorageDir());
-        connectLocationService();
+        // TODO: 16-1-29 remove this function
+        //connectLocationService();
+
         new GetShareTemplateClass().execute();
         Logger.init(getString(R.string.app_name));
         this.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
@@ -155,7 +164,8 @@ public class MyApp extends Application {
                 configs.add("share_content");
                 configs.add("spu_share_media");
                 configs.add("spu_share_url");
-                return WebService.getInstance(context).getConfigs(configs);
+//                return WebService.getInstance(context).getConfigs(configs);
+                return null;
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
