@@ -2,6 +2,7 @@ package com.puzheng.lejian.store;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Handler;
 import android.util.Pair;
 
@@ -49,6 +50,7 @@ public class LocationStore {
                         // TODO: 16-1-29 should only broadcast when move in certain meters
                         Logger.i("located at " + String.format("%f,%f", lng, lat));
                         Intent intent = new Intent(String.valueOf(R.id.BROADCAST_LOCATION_ACTION));
+                        intent.putExtra(LOCATION, new Location(location));
                         MyApp.getContext().sendBroadcast(intent);
                     } else {
                         //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。

@@ -85,12 +85,12 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
             onPause();
             PoliteBackgroundTask.Builder<Verification> builder = new PoliteBackgroundTask.Builder<Verification>(this.getActivity());
             builder.msg(getString(R.string.verifying));
-            builder.run(new PoliteBackgroundTask.XRunnable<Verification>() {
-                @Override
-                public Verification run() throws Exception {
-                    return WebService.getInstance(BarCodeFragment.this.getActivity()).verify(resultString);
-                }
-            });
+//            builder.run(new PoliteBackgroundTask.XRunnable<Verification>() {
+//                @Override
+//                public Verification run() throws Exception {
+//                    return WebService.getInstance(BarCodeFragment.this.getActivity()).verify(resultString);
+//                }
+//            });
             builder.after(new PoliteBackgroundTask.OnAfter<Verification>() {
 
                 @Override

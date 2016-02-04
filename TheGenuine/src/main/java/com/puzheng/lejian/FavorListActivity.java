@@ -120,7 +120,7 @@ public class FavorListActivity extends ActionBarActivity implements LoginRequire
 
     @Override
     public void refresh() {
-        new GetFavorsTask().execute();
+//        new GetFavorsTask().execute();
     }
 
     public void setActionBarTitle(CharSequence title) {
@@ -273,57 +273,7 @@ public class FavorListActivity extends ActionBarActivity implements LoginRequire
         }
     }
 
-    class GetFavorsTask extends AsyncTask<Void, Void, HashMap<String, List<Favor>>> {
 
-        private Exception exception;
-
-        @Override
-        protected HashMap<String, List<Favor>> doInBackground(Void... params) {
-            try {
-                return WebService.getInstance(FavorListActivity.this).getFavorCategories();
-            } catch (Exception e) {
-                exception = e;
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(HashMap<String, List<Favor>> map) {
-            if (maskableManager.unmask(exception)) {
-                String format = "%s(%d)";
-                mPlanetTitles = new ArrayList<String>();
-                mData = new SparseArray<List<Favor>>();
-                mData.put(0, new ArrayList<Favor>());
-                int idx = 1;
-                int totalCnt = 0;
-                for (Map.Entry<String, List<Favor>> entry : map.entrySet()) {
-                    List<Favor> value = entry.getValue();
-                    int size = value.size();
-                    totalCnt += size;
-                    mPlanetTitles.add(String.format(format, entry.getKey(), size));
-                    mData.append(idx, value);
-                    List<Favor> allData = mData.get(0);
-                    allData.addAll(entry.getValue());
-                    idx++;
-                }
-                mPlanetTitles.add(0, String.format(format, getString(R.string.any_spu_type), totalCnt));
-                spuTypeListView.setAdapter(new ArrayAdapter<String>(FavorListActivity.this,
-                        R.layout.drawer_list_item, mPlanetTitles));
-                if (spuTypeListView.getCheckedItemPosition() == AdapterView.INVALID_POSITION) {
-                    selectItem(0);
-                }
-            } else {
-                getActionBar().setTitle(getString(R.string.error_message));
-                getActionBar().setSubtitle(null);
-                drawerLayout.setDrawerListener(null);
-            }
-        }
-
-        @Override
-        protected void onPreExecute() {
-            maskableManager.mask();
-        }
-    }
 
 
     private static class SPUTypeAdapter extends BaseAdapter {

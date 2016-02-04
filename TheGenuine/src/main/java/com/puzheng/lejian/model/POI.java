@@ -20,4 +20,12 @@ public class POI {
     public int getDistance() {
         return distance;
     }
+
+    public float getLng() {
+        return lng;
+    }
+
+    public float getLat() {
+        return lat;
+    }
 }

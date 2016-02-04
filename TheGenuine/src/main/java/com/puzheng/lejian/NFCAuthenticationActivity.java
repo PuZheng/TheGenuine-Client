@@ -208,12 +208,12 @@ public class NFCAuthenticationActivity extends Activity implements BackPressedIn
         if (!TextUtils.isEmpty(code)) {
             PoliteBackgroundTask.Builder<Verification> builder = new PoliteBackgroundTask.Builder<Verification>(this);
             builder.msg(getString(R.string.verifying));
-            builder.run(new PoliteBackgroundTask.XRunnable<Verification>() {
-                @Override
-                public Verification run() throws Exception {
-                    return WebService.getInstance(NFCAuthenticationActivity.this).verify(code);
-                }
-            });
+//            builder.run(new PoliteBackgroundTask.XRunnable<Verification>() {
+//                @Override
+//                public Verification run() throws Exception {
+//                    return WebService.getInstance(NFCAuthenticationActivity.this).verify(code);
+//                }
+//            });
             builder.after(new PoliteBackgroundTask.OnAfter<Verification>() {
 
                 @Override
