@@ -104,49 +104,6 @@ public class NearbyActivity extends AppCompatActivity implements BackPressedInte
                 fetchRetailerList();
             }
         };
-//        tabLayout.addTab(tabLayout.newTab().setText(R.string.map));
-//        tabLayout.addTab(tabLayout.newTab().setText(R.string.list));
-//        viewPager = (ViewPager) findViewById(R.id.pager);
-//        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-//        actionBar.setDisplayShowTitleEnabled(false);
-//        actionBar.setDisplayShowHomeEnabled(false);
-//        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-//        ActionBar.TabListener listener = new ActionBar.TabListener() {
-//            @Override
-//            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-//
-//            }
-//
-//            @Override
-//            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-//                viewPager.setCurrentItem(tab.getPosition());
-//            }
-//
-//            @Override
-//            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-//
-//            }
-//        };
-//
-//        actionBar.addTab(actionBar.newTab().setText(R.string.map).setTabListener(listener));
-//
-//        actionBar.addTab(actionBar.newTab().setText(R.string.list).setTabListener(listener));
-
-
-//
-//        List<Fragment> fragmentList = new ArrayList<Fragment>();
-//        fragmentList.add(nearbyListFragment);
-//        fragmentList.add(amapFragment);
-//
-//        viewPager.setAdapter(new NearbyPagerAdapter(getSupportFragmentManager(), fragmentList));
-//        viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-//            @Override
-//            public void onPageSelected(int position) {
-//                getActionBar().setSelectedNavigationItem(position);
-//            }
-//        });
-
     }
 
     @Override
@@ -289,65 +246,4 @@ public class NearbyActivity extends AppCompatActivity implements BackPressedInte
         }
     }
 
-
-    class NearbyPagerAdapter extends FragmentPagerAdapter {
-        private List<Fragment> fragmentList;
-
-        public NearbyPagerAdapter(FragmentManager fragmentManager, List<Fragment> fragmentList) {
-            super(fragmentManager);
-//            if (MyApp.isGooglePlayServiceAvailable()) {
-//                fragmentList.add(new GoogleMapFragment());
-//            } else {
-//                fragmentList.add(new BaiduMapFragment());
-//            }
-            this.fragmentList = fragmentList;
-        }
-
-        @Override
-        public int getCount() {
-            return fragmentList.size();
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return fragmentList.get(position);
-        }
-
-        public void setRetailers(List<Retailer> retailers) {
-//            ((NearbyListAdapter) ((NearbyListFragment) fragmentList.get(0)).getListAdapter()).setRetailers(retailers);
-//            ((BaiduMapFragment) fragmentList.get(1)).setRetailers(retailers);
-        }
-    }
-
-//    class GetNearbyListTask extends AsyncTask<Void, Void, List<StoreResponse>> {
-//
-//        private Exception exception;
-//
-//        @Override
-//        protected List<StoreResponse> doInBackground(Void... params) {
-//            try {
-//                return WebService.getInstance(NearbyActivity.this).getNearbyStoreList(spuId);
-//            } catch (Exception e) {
-//                exception = e;
-//                return null;
-//            }
-//        }
-//
-//        @Override
-//        protected void onPostExecute(List<StoreResponse> storeList) {
-//            task = null;
-//            mStoreList = storeList;
-//            if (maskableManager.unmask(exception)) {
-//                int current = getIntent().getIntExtra("current", 0);
-//                getActionBar().setSelectedNavigationItem(current);
-//                viewPager.setCurrentItem(current);
-//            }
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            maskableManager.mask();
-//        }
-//
-//    }
 }

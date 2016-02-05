@@ -53,7 +53,7 @@ public class SPUTypeListAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         final SPUType spuType = (SPUType) getItem(position);
-        Logger.d(new Gson().toJson(spuType));
+        Logger.json(new Gson().toJson(spuType));
 
         Glide.with(MyApp.getContext()).load(spuType.getPic().getURL())
                 .error(R.drawable.ic_broken_image_black_24dp).into(viewHolder.imageView);

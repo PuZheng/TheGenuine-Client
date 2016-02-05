@@ -10,7 +10,6 @@ import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
 import com.puzheng.deferred.Deferrable;
 import com.puzheng.deferred.DoneHandler;
-import com.puzheng.lejian.adapter.SPUListAdapter;
 import com.puzheng.lejian.model.SPU;
 
 import java.util.List;
@@ -43,7 +42,9 @@ public class SPUListFragment extends ListFragment {
             deferrable.done(new DoneHandler<List<SPU>>() {
                 @Override
                 public void done(List<SPU> spus) {
-                    setListAdapter(new SPUListAdapter(getActivity(), spus));
+                    Logger.i("spus loaded");
+                    Logger.json(new Gson().toJson(spus));
+                    setListAdapter(new SPUListActivity.SPUListAdapter(spus));
                 }
             });
             inited = true;
