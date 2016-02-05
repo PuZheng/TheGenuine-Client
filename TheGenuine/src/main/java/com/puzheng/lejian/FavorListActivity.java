@@ -151,15 +151,12 @@ public class FavorListActivity extends AppCompatActivity implements LoginRequire
         supportActionBar.setTitle(R.string.title_activity_favor);
         supportActionBar.setHomeButtonEnabled(true);
         supportActionBar.setDisplayHomeAsUpEnabled(true);
-//        getActionBar().setDisplayHomeAsUpEnabled(true);
-//        getActionBar().setHomeButtonEnabled(true);
 
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
         drawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
                 drawerLayout,         /* DrawerLayout object */
-                  /* nav drawer image to replace 'Up' caret */
                 R.string.drawer_open,  /* "open drawer" description for accessibility */
                 R.string.drawer_close  /* "close drawer" description for accessibility */
         ) {
