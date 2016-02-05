@@ -1,16 +1,14 @@
 package com.puzheng.lejian;
 
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.ListFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,33 +16,31 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.orhanobut.logger.Logger;
+import com.bumptech.glide.Glide;
 import com.puzheng.deferred.AlwaysHandler;
 import com.puzheng.deferred.DoneHandler;
 import com.puzheng.deferred.FailHandler;
-import com.puzheng.lejian.adapter.FavorListAdapter;
+import com.puzheng.humanize.Humanize;
+import com.puzheng.lejian.adapter.RecommendationListAdapter;
 import com.puzheng.lejian.model.Favor;
-import com.puzheng.lejian.image_utils.ImageFetcher;
 import com.puzheng.lejian.model.SPUType;
 import com.puzheng.lejian.model.User;
-import com.puzheng.lejian.netutils.WebService;
 import com.puzheng.lejian.search.SearchActivity;
 import com.puzheng.lejian.store.FavorStore;
 import com.puzheng.lejian.util.LoginRequired;
-import com.puzheng.lejian.view.NavBar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class FavorListActivity extends ActionBarActivity implements LoginRequired.ILoginHandler, BackPressedInterface, RefreshInterface {
+public class FavorListActivity extends AppCompatActivity implements LoginRequired.ILoginHandler, BackPressedInterface, RefreshInterface {
     private static final int LOGIN_ACTION = 1;
     private DrawerLayout drawerLayout;
     private ListView spuTypeListView;
@@ -56,20 +52,9 @@ public class FavorListActivity extends ActionBarActivity implements LoginRequire
     private MaskableManager maskableManager;
     private LoginRequired loginRequired;
     private LoginRequired.LoginHandler loginHandler;
-    private ListView.OnItemClickListener drawerListItemClickListener = new ListView.OnItemClickListener() {
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//            // update selected item and title, then close the drawer
-            spuTypeListView.setItemChecked(position, true);
-
-
-            favorListFragment.setListAdapter(new FavorListAdapter((List<Favor>) view.getTag()));
-        }
-
-    };
     private FavorListFragment favorListFragment;
     private List<Favor> favors;
+    private ActionBar supportActionBar;
 
     @Override
     public void doBackPressed() {
@@ -125,8 +110,8 @@ public class FavorListActivity extends ActionBarActivity implements LoginRequire
 
     public void setActionBarTitle(CharSequence title) {
         mTitle = title;
-        getActionBar().setTitle(R.string.title_activity_favor);
-        getActionBar().setSubtitle(mTitle);
+        supportActionBar.setTitle(R.string.title_activity_favor);
+        supportActionBar.setSubtitle(mTitle);
     }
 
     @Override
@@ -153,23 +138,28 @@ public class FavorListActivity extends ActionBarActivity implements LoginRequire
                 SPUType spuType = (SPUType) parent.getAdapter().getItem(position);
                 setActionBarTitle(spuType == null ? getString(R.string.any_spu_type) : spuType.getName());
                 drawerLayout.closeDrawer(spuTypeListView);
-                favorListFragment.setListAdapter(new FavorListAdapter((List<Favor>) view.getTag()));
+                List<Favor> favors = (List<Favor>) view.getTag();
+                if (favors == null || favors.isEmpty()) {
+                    favorListFragment.setEmptyText("您没有收藏任何商品");
+                }
+                ((FavorListAdapter) favorListFragment.getListAdapter()).setFavors(favors);
             }
         });
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setTitle(R.string.title_activity_favor);
-
-        setNavBar();
+        supportActionBar = getSupportActionBar();
+        supportActionBar.setTitle(R.string.title_activity_favor);
+        supportActionBar.setHomeButtonEnabled(true);
+        supportActionBar.setDisplayHomeAsUpEnabled(true);
+//        getActionBar().setDisplayHomeAsUpEnabled(true);
+//        getActionBar().setHomeButtonEnabled(true);
 
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
         drawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
                 drawerLayout,         /* DrawerLayout object */
-                R.drawable.ic_action_storage,  /* nav drawer image to replace 'Up' caret */
+                  /* nav drawer image to replace 'Up' caret */
                 R.string.drawer_open,  /* "open drawer" description for accessibility */
                 R.string.drawer_close  /* "close drawer" description for accessibility */
         ) {
@@ -179,7 +169,7 @@ public class FavorListActivity extends ActionBarActivity implements LoginRequire
             }
 
             public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle(getString(R.string.taxonomy));
+                getSupportActionBar().setTitle(getString(R.string.taxonomy));
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
@@ -218,6 +208,7 @@ public class FavorListActivity extends ActionBarActivity implements LoginRequire
 
         });
         favorListFragment = (FavorListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_favor_list);
+        favorListFragment.setListAdapter(new FavorListAdapter());
     }
 
     @Override
@@ -228,41 +219,16 @@ public class FavorListActivity extends ActionBarActivity implements LoginRequire
     }
 
 
-    private void selectItem(int position) {
-        // update the main content by replacing fragments
-        FavorListFragment fragment = new FavorListFragment();
-        fragment.setActivity(FavorListActivity.this);
-        fragment.setListAdapter(new FavorListAdapter(mData.get(position)));
-        FragmentManager fragmentManager = getFragmentManager();
-//        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
-        // update selected item and title, then close the drawer
-        spuTypeListView.setItemChecked(position, true);
-        setActionBarTitle(mPlanetTitles.get(position));
-        drawerLayout.closeDrawer(spuTypeListView);
-    }
-
-    private void setNavBar() {
-        NavBar navBar = (NavBar) findViewById(R.id.navBar);
-        navBar.enableTab(NavBar.FAVOR, true);
-    }
-
     @Override
     public void onLoginDone(LoginRequired.Runnable runnable) {
         loginHandler.onLoginDone(runnable);
     }
 
     public static class FavorListFragment extends android.support.v4.app.ListFragment {
-        private Activity mActivity;
 
         public FavorListFragment() {
 
         }
-
-        void setActivity(Activity activity) {
-            this.mActivity = activity;
-        }
-
 
         @Override
         public void onListItemClick(ListView l, View v, int position, long id) {
@@ -337,5 +303,84 @@ public class FavorListActivity extends ActionBarActivity implements LoginRequire
 
     }
 
+    /**
+     * Created by xc on 16-1-27.
+     */
+    public static class FavorListAdapter extends BaseAdapter {
+        private List<Favor> favors;
+        private LayoutInflater inflater;
+
+        public FavorListAdapter() {
+            inflater = LayoutInflater.from(MyApp.getContext());
+        }
+
+        public void setFavors(List<Favor> favors) {
+            this.favors = favors;
+            this.notifyDataSetChanged();
+        }
+
+        @Override
+        public int getCount() {
+            return favors == null? 0: favors.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return favors.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return favors.get(position).getId();
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.spu_list_item, null);
+            }
+            RecommendationListAdapter.ViewHolder viewHolder;
+            if (convertView.getTag() == null) {
+                viewHolder = new RecommendationListAdapter.ViewHolder((ImageView) convertView.findViewById(R.id.imageView),
+                        (TextView) convertView.findViewById(R.id.textViewName),
+                        (TextView) convertView.findViewById(R.id.textViewFavorCnt),
+                        (TextView) convertView.findViewById(R.id.textViewMSRP),
+                        (Button) convertView.findViewById(R.id.btnNearby),
+                        (RatingBar) convertView.findViewById(R.id.ratingBar));
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (RecommendationListAdapter.ViewHolder) convertView.getTag();
+            }
+
+            final Favor favor = (Favor) getItem(position);
+            Context context = MyApp.getContext();
+            Glide.with(context).load(favor.getSPU().getIcon().getURL()).into(viewHolder.imageView);
+
+            viewHolder.textViewName.setText(favor.getSPU().getName());
+            viewHolder.textViewMSRP.setText("￥" + favor.getSPU().getMSRP());
+            viewHolder.textViewFavorCnt.setText(context.getString(R.string.popularity,
+                    Humanize.with(context).num(favor.getSPU().getFavorCnt())));
+            viewHolder.ratingBar.setRating(favor.getSPU().getRating());
+            viewHolder.buttonNearby.setText(context.getString(R.string.nearest,
+                    Humanize.with(context).distance(favor.getSPU().getDistance())));
+            viewHolder.buttonNearby.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MyApp.getCurrentActivity(), NearbyActivity.class);
+                    intent.putExtra("current", NearbyActivity.NEARBY_LIST);
+                    intent.putExtra(Const.TAG_SPU_ID, favor.getSPU().getId());
+                    MyApp.getCurrentActivity().startActivity(intent);
+                }
+            });
+            if (favor.getSPU().getDistance() == 0) {
+                viewHolder.buttonNearby.setVisibility(View.INVISIBLE);
+            }
+
+            viewHolder.buttonNearby.setText(Humanize.with(context).distance(favor.getSPU().getDistance()));
+            viewHolder.textViewMSRP.setText(String.valueOf(favor.getSPU().getMSRP()));
+            return convertView;
+        }
+
+    }
 }
 
