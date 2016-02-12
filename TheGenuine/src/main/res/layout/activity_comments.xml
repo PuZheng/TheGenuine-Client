@@ -1,32 +1,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <com.puzheng.lejian.view.NavBar
+        android:id="@+id/navBar"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/nav_bar_height"
+        android:layout_alignParentBottom="true"
         android:background="#3c3c3c"
         android:weightSum="6"
-        android:layout_alignParentBottom="true"
-        app:enabledTab="go_home"
-        android:id="@+id/view" />
+        app:enabledTab="go_home" />
 
-    <ListView
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
+    <fragment
+        android:id="@+id/comments"
+        android:name="android.app.ListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@android:id/list"
-        android:layout_above="@+id/view" />
-
-    <TextView
-        android:id="@android:id/empty"
-        android:gravity="center"
-        android:visibility="gone"
-        android:textSize="14sp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/search_no_result_found" />
+        android:layout_above="@+id/navBar"></fragment>
 </RelativeLayout>
