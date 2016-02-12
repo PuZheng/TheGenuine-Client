@@ -40,7 +40,7 @@ public class FakeUtil {
             pics.add(pic());
         }
         return new SPU.Builder()
-                .id(random.nextInt())
+                .id(random.nextInt(100) + 1)
                 .name(faker.lorem.word())
                 .code(faker.lorem.word())
                 .spuType(spuType())
