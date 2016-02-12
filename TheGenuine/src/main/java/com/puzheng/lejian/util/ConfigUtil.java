@@ -49,11 +49,11 @@ public class ConfigUtil {
         return config.backend;
     }
 
-    public String getWeichatAppId() {
+    public String getWechatAppId() {
         return config.wechatAppId;
     }
 
-    public String getWeichatAppSecret() {
+    public String getWechatAppSecret() {
         return config.wechatAppSecret;
     }
 

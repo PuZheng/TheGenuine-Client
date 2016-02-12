@@ -2,14 +2,12 @@ package com.puzheng.lejian.view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
-import com.puzheng.lejian.MyApp;
 import com.puzheng.lejian.R;
 import com.puzheng.lejian.model.SPU;
 import com.puzheng.lejian.util.ConfigUtil;
@@ -40,9 +38,9 @@ public class ShareButton extends ImageButton {
 
     public void setSPU(SPU spu) {
         this.spu = spu;
-        Logger.i(ConfigUtil.getInstance().getWeichatAppId(), ConfigUtil.getInstance().getWeichatAppSecret());
-        PlatformConfig.setWeixin(ConfigUtil.getInstance().getWeichatAppId(),
-                ConfigUtil.getInstance().getWeichatAppSecret());
+        Logger.i(ConfigUtil.getInstance().getWechatAppId(), ConfigUtil.getInstance().getWechatAppSecret());
+        PlatformConfig.setWeixin(ConfigUtil.getInstance().getWechatAppId(),
+                ConfigUtil.getInstance().getWechatAppSecret());
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

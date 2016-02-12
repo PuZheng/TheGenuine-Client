@@ -5,6 +5,8 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,9 +32,8 @@ import com.viewpagerindicator.CirclePageIndicator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SPUActivity extends FragmentActivity implements LoginRequired.ILoginHandler, RefreshInterface {
+public class SPUActivity extends AppCompatActivity implements LoginRequired.ILoginHandler, RefreshInterface {
 
-    private static final String TAG = "SPUActivity";
     private static final int LOGIN_ACTION = 1;
     private Verification authentication;
 
@@ -44,6 +45,7 @@ public class SPUActivity extends FragmentActivity implements LoginRequired.ILogi
     private MaskableManager maskableManager;
     private SPUPicListAdapter spuPicListAdapter;
     private LoginRequired.LoginHandler loginHandler;
+    private ActionBar supportActionBar;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -85,7 +87,8 @@ public class SPUActivity extends FragmentActivity implements LoginRequired.ILogi
 
         picListViewPager = (ViewPager) findViewById(R.id.viewPagerCover);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        supportActionBar = getSupportActionBar();
+        supportActionBar.setDisplayHomeAsUpEnabled(true);
         if (authentication != null) {
             initViews();
             MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.good);
@@ -93,8 +96,7 @@ public class SPUActivity extends FragmentActivity implements LoginRequired.ILogi
             mediaPlayer.start();
         } else {
             maskableManager = new MaskableManager(findViewById(R.id.main), this);
-            //new GetSPUTask().execute(spu);
-            getActionBar().setTitle(spu.getName());
+            supportActionBar.setTitle(spu.getName());
             ((ShareButton) findViewById(R.id.shareButton)).setSPU(spu);
             ((CommentButton) findViewById(R.id.commentButton)).setSPU(spu);
             ((NearbyButton) findViewById(R.id.nearbyButton)).setSPU(spu);
