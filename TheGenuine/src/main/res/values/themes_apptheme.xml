@@ -15,7 +15,7 @@
         <item name="android:homeAsUpIndicator">@null</item>
     </style>
 
-    <style name="WithUpIndicatorTheme" parent="AppTheme">
+    <style name="WithUpIndicatorTheme" parent="Theme.AppCompat.Light">
         <item name="android:homeAsUpIndicator">@drawable/ic_action_back</item>
     </style>
 </resources>

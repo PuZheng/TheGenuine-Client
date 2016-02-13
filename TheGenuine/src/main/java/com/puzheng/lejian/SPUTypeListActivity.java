@@ -46,7 +46,6 @@ public class SPUTypeListActivity extends ActionBarActivity implements BackPresse
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.spu_types, menu);
         return true;
     }
@@ -106,10 +105,10 @@ public class SPUTypeListActivity extends ActionBarActivity implements BackPresse
             }
         });
 
-        maskableManager = new MaskableManager(gridView, this);
+//        maskableManager = new MaskableManager(gridView, this);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.spu_types);
-        maskableManager.mask();
+//        maskableManager.mask();
         SPUTypeStore.getInstance().fetchList().done(new DoneHandler<List<SPUType>>() {
             @Override
             public void done(List<SPUType> spuTypes) {
@@ -127,7 +126,7 @@ public class SPUTypeListActivity extends ActionBarActivity implements BackPresse
         }).always(new AlwaysHandler() {
             @Override
             public void always() {
-                maskableManager.unmask(null);
+//                maskableManager.unmask(null);
             }
         });
     }

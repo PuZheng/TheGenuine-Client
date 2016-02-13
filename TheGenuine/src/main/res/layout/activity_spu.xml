@@ -4,16 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ProductActivity">
-
-    <com.puzheng.lejian.view.NavBar
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/nav_bar_height"
-        android:background="#3c3c3c"
-        android:weightSum="6"
-        android:id="@+id/navBar"
-        android:layout_alignParentBottom="true"
-        app:enabledTab="go_home" />
+    tools:context=".SPUActivity">
 
     <LinearLayout
         android:orientation="vertical"
@@ -213,4 +204,12 @@
         </com.puzheng.lejian.view.SPUTabHost>
     </LinearLayout>
 
+    <com.puzheng.lejian.view.NavBar
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/nav_bar_height"
+        android:background="#3c3c3c"
+        android:weightSum="6"
+        android:id="@+id/navBar"
+        android:layout_alignParentBottom="true"
+        app:enabledTab="go_home" />
 </RelativeLayout>

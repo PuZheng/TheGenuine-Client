@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.puzheng.deferred.AlwaysHandler;
 import com.puzheng.deferred.DoneHandler;
 import com.puzheng.deferred.FailHandler;
 import com.puzheng.humanize.Humanize;
@@ -96,7 +95,7 @@ public class CommentListActivity extends AppCompatActivity implements RefreshInt
                 CommentListActivity.this.comments = comments;
                 commentListFragment.setListAdapter(new CommentListAdapter(comments));
                 if (comments.size() == 0) {
-                    commentListFragment.setEmptyText(getString(R.string.NO_RESULT_FOUND));
+                    commentListFragment.setEmptyText(getString(R.string.no_result_found));
                 }
                 String text = getString(R.string.comment_cnt) + "(" +
                         Humanize.with(CommentListActivity.this).num(comments.size()) + ")";
