@@ -44,6 +44,9 @@ public class SPUListFragment extends ListFragment {
                 public void done(List<SPU> spus) {
                     Logger.i("spus loaded");
                     Logger.json(new Gson().toJson(spus));
+                    if (spus != null && spus.size() == 0) {
+                        setEmptyText(getString(R.string.no_result_found));
+                    }
                     setListAdapter(new SPUListActivity.SPUListAdapter(spus));
                 }
             });
