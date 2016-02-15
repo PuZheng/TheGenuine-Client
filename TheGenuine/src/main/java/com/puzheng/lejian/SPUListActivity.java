@@ -1,5 +1,6 @@
 package com.puzheng.lejian;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -170,10 +171,12 @@ public class SPUListActivity extends AppCompatActivity {
 
         private final List<SPU> spus;
         private final LayoutInflater inflater;
+        private final Activity activity;
 
-        public SPUListAdapter(List<SPU> spus) {
+        public SPUListAdapter(Activity activity, List<SPU> spus) {
             this.spus = spus;
-            inflater = LayoutInflater.from(MyApp.getContext());
+            this.activity = activity;
+            inflater = LayoutInflater.from(activity);
         }
 
         @Override
@@ -188,7 +191,7 @@ public class SPUListActivity extends AppCompatActivity {
 
         @Override
         public long getItemId(int position) {
-            return ((SPU)getItem(position)).getId();
+            return ((SPU) getItem(position)).getId();
         }
 
         @Override
@@ -208,7 +211,7 @@ public class SPUListActivity extends AppCompatActivity {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            SPU spu = (SPU) getItem(position);
+            final SPU spu = (SPU) getItem(position);
             Context context = MyApp.getContext();
             Glide.with(context).load(spu.getIcon().getURL())
                     .error(R.drawable.ic_broken_image_black_24dp).into(viewHolder.imageView);
@@ -220,24 +223,21 @@ public class SPUListActivity extends AppCompatActivity {
             if (spu.getDistance() != 0) {
                 viewHolder.button.setText(context.getString(R.string.nearest, Humanize.with(context).distance(spu.getDistance())));
                 viewHolder.button.setVisibility(View.VISIBLE);
+                viewHolder.button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(activity, NearbyActivity.class);
+                        intent.putExtra("current", NearbyActivity.NEARBY_LIST);
+                        intent.putExtra(Const.TAG_SPU_ID, spu.getId());
+                        activity.startActivity(intent);
+                    }
+                });
             } else {
                 viewHolder.button.setVisibility(View.INVISIBLE);
             }
-    //        viewHolder.button.setOnClickListener(new View.OnClickListener() {
-    //            @Override
-    //            public void onClick(View v) {
-    //                Intent intent = new Intent(mActivity, NearbyActivity.class);
-    //                intent.putExtra("current", NearbyActivity.NEARBY_LIST);
-    //                intent.putExtra(Const.TAG_SPU_ID, recommendation.getSPUId());
-    //                mActivity.startActivity(intent);
-    //            }
-    //        });
-    //        if (recommendation.getDistance() == -1) {
-    //            viewHolder.button.setVisibility(View.INVISIBLE);
-    //        }
+
             return convertView;
         }
-
 
 
         private static class ViewHolder {

@@ -60,6 +60,7 @@
         android:textSize="16dp"
         android:layout_margin="16dp"
         android:layout_below="@+id/tableLayout"
+        android:visibility="gone"
         android:layout_centerHorizontal="true" />
 
     <Button
