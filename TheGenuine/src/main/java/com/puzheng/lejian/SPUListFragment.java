@@ -47,7 +47,7 @@ public class SPUListFragment extends ListFragment {
                     if (spus != null && spus.size() == 0) {
                         setEmptyText(getString(R.string.no_result_found));
                     }
-                    setListAdapter(new SPUListActivity.SPUListAdapter(spus));
+                    setListAdapter(new SPUListActivity.SPUListAdapter(getActivity(), spus));
                 }
             });
             inited = true;

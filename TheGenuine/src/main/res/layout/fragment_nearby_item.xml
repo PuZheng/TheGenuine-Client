@@ -44,6 +44,7 @@
             android:layout_height="wrap_content"
             android:text="麦当劳"
             android:textSize="18dp"
+            android:textColor="@color/primary"
             android:id="@+id/textViewName" />
 
 
