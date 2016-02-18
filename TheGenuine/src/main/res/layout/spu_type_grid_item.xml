@@ -11,5 +11,5 @@
         android:layout_width="@dimen/categories_grid_item_width"
         android:layout_height="@dimen/categories_grid_item_height"
         android:scaleType="fitCenter"
-        android:id="@+id/imageView" />
+        android:id="@+id/imageViewVerified" />
 </LinearLayout>

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".CounterfeitActivity">
+    tools:context=".WarningActivity">
 
 
     <com.puzheng.lejian.view.NavBar
@@ -31,7 +31,7 @@
             <ImageView
                 android:layout_width="@dimen/counterfeits_cover_width"
                 android:layout_height="@dimen/counterfeits_cover_height"
-                android:id="@+id/imageView"
+                android:id="@+id/imageViewVerified"
                 android:layout_centerInParent="true"
                 android:src="@drawable/counterfeits" />
 

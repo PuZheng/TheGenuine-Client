@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewPager;
@@ -198,7 +197,7 @@ public class NearbyActivity extends AppCompatActivity implements BackPressedInte
             }
             ViewHolder viewHolder;
             if (convertView.getTag() == null) {
-                viewHolder = new ViewHolder((ImageView) convertView.findViewById(R.id.imageView),
+                viewHolder = new ViewHolder((ImageView) convertView.findViewById(R.id.imageViewVerified),
                         (TextView) convertView.findViewById(R.id.textViewName),
                         (TextView) convertView.findViewById(R.id.textViewDistance),
                         (TextView) convertView.findViewById(R.id.textViewAddr),

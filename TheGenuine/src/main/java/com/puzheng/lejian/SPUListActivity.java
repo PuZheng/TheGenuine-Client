@@ -201,7 +201,7 @@ public class SPUListActivity extends AppCompatActivity {
             }
             ViewHolder viewHolder;
             if (convertView.getTag() == null) {
-                viewHolder = new ViewHolder((ImageView) convertView.findViewById(R.id.imageView),
+                viewHolder = new ViewHolder((ImageView) convertView.findViewById(R.id.imageViewVerified),
                         (TextView) convertView.findViewById(R.id.textViewName),
                         (TextView) convertView.findViewById(R.id.textViewFavorCnt),
                         (TextView) convertView.findViewById(R.id.textViewMSRP),
