@@ -122,43 +122,6 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
                     });
                 }
             });
-
-//            PoliteBackgroundTask.Builder<Verification> builder = new PoliteBackgroundTask.Builder<Verification>(this.getActivity());
-//            builder.msg(getString(R.string.verifying));
-//            builder.run(new PoliteBackgroundTask.XRunnable<Verification>() {
-//                @Override
-//                public Verification run() throws Exception {
-//                    return WebService.getInstance(BarCodeFragment.this.getActivity()).verify(resultString);
-//                }
-//            });
-//            builder.after(new PoliteBackgroundTask.OnAfter<Verification>() {
-//
-//                @Override
-//                public void onAfter(Verification verification) {
-//                    Intent intent;
-//                    if (verification != null) {
-//                        intent = new Intent(BarCodeFragment.this.getActivity(), SPUActivity.class);
-//                        intent.putExtra(AuthenticationActivity.TAG_SKU, verification);
-//                        intent.putExtra(AuthenticationActivity.TAG_VERIFICATION_METHOD, false);
-//                    } else {
-//                        intent = new Intent(BarCodeFragment.this.getActivity(), WarningActivity.class);
-//                        intent.putExtra(AuthenticationActivity.TAG_TOKEN, resultString);
-//                    }
-//                    startActivity(intent);
-//                }
-//            });
-//            builder.exceptionHandler(new PoliteBackgroundTask.ExceptionHandler() {
-//                @Override
-//                public void run(Exception e) {
-//                    if (Misc.isNetworkException(e)) {
-//                        Toast.makeText(getActivity(), R.string.httpError, Toast.LENGTH_SHORT).show();
-//                    }else{
-//                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-//                    }
-//                    BarCodeFragment.this.onResume();
-//                }
-//            });
-//            builder.create().start();
         }
     }
 

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +21,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.puzheng.deferred.AlwaysHandler;
+import com.puzheng.deferred.DoneHandler;
+import com.puzheng.deferred.FailHandler;
+import com.puzheng.lejian.model.Denounce;
+import com.puzheng.lejian.store.DenounceStore;
+import com.puzheng.lejian.store.LocationStore;
 import com.puzheng.lejian.util.Misc;
 
 public class WarningActivity extends AppCompatActivity {
@@ -36,36 +43,57 @@ public class WarningActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(WarningActivity.this, SPUTypeListActivity.class);
+                Intent intent = new Intent(WarningActivity.this, NearbyActivity.class);
                 startActivity(intent);
             }
         });
 
-        Button b = (Button) findViewById(R.id.denounce);
-        b.setOnClickListener(new View.OnClickListener() {
+        button = (Button) findViewById(R.id.denounce);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(WarningActivity.this);
                 builder.setTitle(R.string.counterfeit);
-                final EditText reason = new EditText(WarningActivity.this);
-                reason.setHint(R.string.enter_reason);
-                reason.setMinLines(3);
-                reason.setGravity(Gravity.TOP);
-                builder.setView(reason);
+                final EditText editText = new EditText(WarningActivity.this);
+                editText.setHint(R.string.enter_reason);
+                editText.setMinLines(3);
+                editText.setGravity(Gravity.TOP);
+                builder.setView(editText);
 
                 progressDialog = new ProgressDialog(WarningActivity.this);
                 builder.setNegativeButton(android.R.string.cancel, null);
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String reasonStr = reason.getText().toString();
-                        if (TextUtils.isEmpty(reasonStr)) {
+                        final String reason = editText.getText().toString();
+                        if (TextUtils.isEmpty(reason)) {
                             Toast.makeText(WarningActivity.this, R.string.denounce_empty, Toast.LENGTH_SHORT).show();
                             return;
                         }
                         dialog.dismiss();
                         progressDialog.show();
-                        new DenounceTask().execute(reasonStr);
+
+                        LocationStore.getInstance().getLocation().done(new DoneHandler<Pair<Double, Double>>() {
+                            @Override
+                            public void done(Pair<Double, Double> lnglat) {
+                                DenounceStore.getInstance().denounce(token, reason, lnglat).done(new DoneHandler<Denounce>() {
+                                    @Override
+                                    public void done(Denounce denounce) {
+                                        Toast.makeText(WarningActivity.this, R.string.denounce_success, Toast.LENGTH_SHORT).show();
+                                    }
+                                }).fail(new FailHandler<Void>() {
+                                    @Override
+                                    public void fail(Void aVoid) {
+                                        Toast.makeText(WarningActivity.this, R.string.denounce_fail, Toast.LENGTH_SHORT).show();
+                                    }
+                                }).always(new AlwaysHandler() {
+                                    @Override
+                                    public void always() {
+                                        progressDialog.dismiss();
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
                 AlertDialog dialog = builder.create();
