@@ -41,10 +41,10 @@ public class AuthenticationFragment extends Fragment {
         textView = (TextView) rootView.findViewById(R.id.textViewName);
         textView.setText(verification.getSKU().getSPU().getName());
         textView = (TextView) rootView.findViewById(R.id.textViewVendorName);
-        textView.setText(verification.getSKU().getSPU().getVendorName());
+        textView.setText(verification.getSKU().getSPU().getVendor().getName());
         textView = (TextView) rootView.findViewById(R.id.textViewManufactureDate);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Const.DATE_FORMAT);
-        textView.setText(simpleDateFormat.format(verification.getSKU().getManufactureDate()));
+        textView.setText(simpleDateFormat.format(verification.getSKU().getProductionDate()));
         textView = (TextView) rootView.findViewById(R.id.textViewExpiredDate);
         textView.setText(simpleDateFormat.format(verification.getSKU().getExpireDate()));
 

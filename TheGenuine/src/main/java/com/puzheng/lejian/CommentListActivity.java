@@ -148,7 +148,7 @@ public class CommentListActivity extends AppCompatActivity implements RefreshInt
             }
             ViewHolder viewHolder;
             if (convertView.getTag() == null) {
-                viewHolder = new ViewHolder((ImageView) convertView.findViewById(R.id.imageView),
+                viewHolder = new ViewHolder((ImageView) convertView.findViewById(R.id.imageViewVerified),
                         (TextView) convertView.findViewById(R.id.textViewEmail),
                         (RatingBar) convertView.findViewById(R.id.ratingBar),
                         (TextView) convertView.findViewById(R.id.textViewContent),

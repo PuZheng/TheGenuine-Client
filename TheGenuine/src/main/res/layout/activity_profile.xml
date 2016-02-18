@@ -37,7 +37,7 @@
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:id="@+id/imageView"
+                android:id="@+id/imageViewVerified"
                 android:src="@drawable/navigation_next_item"
                 android:layout_column="16" />
         </TableRow>

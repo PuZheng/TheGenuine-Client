@@ -1,6 +1,5 @@
 package com.puzheng.lejian;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.ComponentName;
@@ -18,30 +17,34 @@ import android.nfc.tech.Ndef;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.Window;
 import android.widget.Toast;
+
 import com.puzheng.lejian.model.Verification;
-import com.puzheng.lejian.netutils.WebService;
 import com.puzheng.lejian.util.Misc;
 import com.puzheng.lejian.util.PoliteBackgroundTask;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
-public class NFCAuthenticationActivity extends Activity implements BackPressedInterface {
+public class AuthenticationActivity extends AppCompatActivity implements BackPressedInterface {
     public static final String TAG_PRODUCT_RESPONSE = "PRODUCT_RESPONSE";
-    public static final String TAG_TAG_ID = "TOKEN_ID";
-    public static final String TAG_VERIFICATION_FINISHED = "VERIFICATION_FINISHED";
-    public static final String TAG_VERIFICATION_INFO = "VERIFICATION_INFO";
+    public static final String TAG_TOKEN = "TOKEN_ID";
+    public static final String TAG_VERIFICATION_METHOD = "VERIFICATION_FINISHED";
+    public static final String TAG_SKU = "VERIFICATION_INFO";
     private static final String MIME_TEXT_PLAIN = "text/plain";
     public static boolean isNfcEnabled = true;
     private BackPressedHandle backPressedHandle = new BackPressedHandle();
 
+    @Override
     public void doBackPressed() {
         super.onBackPressed();
     }
+
+    enum VerificationMethod { QR, NFC };
 
     @Override
     public void onBackPressed() {
@@ -58,7 +61,6 @@ public class NFCAuthenticationActivity extends Activity implements BackPressedIn
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
         isNfcEnabled = NfcAdapter.getDefaultAdapter(this) != null;
@@ -91,7 +93,7 @@ public class NFCAuthenticationActivity extends Activity implements BackPressedIn
 
     private void enableGPS() {
         MyApp.isGPSSettingDialogShowed = true;
-        AlertDialog.Builder builder = new AlertDialog.Builder(NFCAuthenticationActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(AuthenticationActivity.this);
         builder.setTitle(R.string.GPS_setting).setMessage(R.string.enable_gps).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -110,7 +112,7 @@ public class NFCAuthenticationActivity extends Activity implements BackPressedIn
 
     private void enableNetwork() {
         MyApp.isNetworkSettingDialogShowed = true;
-        AlertDialog.Builder builder = new AlertDialog.Builder(NFCAuthenticationActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(AuthenticationActivity.this);
         builder.setTitle(R.string.network_setting).setMessage(R.string.setting_network).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
             @Override
@@ -155,7 +157,7 @@ public class NFCAuthenticationActivity extends Activity implements BackPressedIn
             if (MIME_TEXT_PLAIN.equals(type)) {
                 tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             } else {
-                Toast.makeText(NFCAuthenticationActivity.this, "Wrong mime type: " + type, Toast.LENGTH_SHORT).show();
+                Toast.makeText(AuthenticationActivity.this, "Wrong mime type: " + type, Toast.LENGTH_SHORT).show();
             }
         } else if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
             tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -169,7 +171,7 @@ public class NFCAuthenticationActivity extends Activity implements BackPressedIn
                 }
             }
             if (!hit) {
-                Toast.makeText(NFCAuthenticationActivity.this, getString(R.string.NFC_message_error), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AuthenticationActivity.this, getString(R.string.NFC_message_error), Toast.LENGTH_SHORT).show();
                 tag = null;
             }
         }
@@ -190,7 +192,7 @@ public class NFCAuthenticationActivity extends Activity implements BackPressedIn
                         try {
                             return readText(ndefRecord);
                         } catch (UnsupportedEncodingException e) {
-                            Toast.makeText(NFCAuthenticationActivity.this, "Unsupported Encoding" + e, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AuthenticationActivity.this, "Unsupported Encoding" + e, Toast.LENGTH_SHORT).show();
                         }
                     } else if (Arrays.equals(ndefRecord.getType(), NdefRecord.RTD_URI)) {
                         return readURI(ndefRecord);
@@ -198,7 +200,7 @@ public class NFCAuthenticationActivity extends Activity implements BackPressedIn
                 }
             }
         } else {
-            Toast.makeText(NFCAuthenticationActivity.this, getString(R.string.NFC_message_error), Toast.LENGTH_SHORT).show();
+            Toast.makeText(AuthenticationActivity.this, getString(R.string.NFC_message_error), Toast.LENGTH_SHORT).show();
         }
         return null;
     }
@@ -211,7 +213,7 @@ public class NFCAuthenticationActivity extends Activity implements BackPressedIn
 //            builder.run(new PoliteBackgroundTask.XRunnable<Verification>() {
 //                @Override
 //                public Verification run() throws Exception {
-//                    return WebService.getInstance(NFCAuthenticationActivity.this).verify(code);
+//                    return WebService.getInstance(AuthenticationActivity.this).verify(code);
 //                }
 //            });
             builder.after(new PoliteBackgroundTask.OnAfter<Verification>() {
@@ -220,12 +222,12 @@ public class NFCAuthenticationActivity extends Activity implements BackPressedIn
                 public void onAfter(Verification verification) {
                     Intent intent;
                     if (verification != null) {
-                        intent = new Intent(NFCAuthenticationActivity.this, SPUActivity.class);
-                        intent.putExtra(TAG_VERIFICATION_INFO, verification);
-                        intent.putExtra(TAG_VERIFICATION_FINISHED, true);
+                        intent = new Intent(AuthenticationActivity.this, SPUActivity.class);
+                        intent.putExtra(TAG_SKU, verification);
+                        intent.putExtra(TAG_VERIFICATION_METHOD, VerificationMethod.NFC);
                     } else {
-                        intent = new Intent(NFCAuthenticationActivity.this, CounterfeitActivity.class);
-                        intent.putExtra(TAG_TAG_ID, code);
+                        intent = new Intent(AuthenticationActivity.this, WarningActivity.class);
+                        intent.putExtra(TAG_TOKEN, code);
                     }
                     startActivity(intent);
                 }
@@ -234,11 +236,11 @@ public class NFCAuthenticationActivity extends Activity implements BackPressedIn
                 @Override
                 public void run(Exception e) {
                     if (Misc.isNetworkException(e)) {
-                        Toast.makeText(NFCAuthenticationActivity.this, R.string.httpError, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AuthenticationActivity.this, R.string.httpError, Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(NFCAuthenticationActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AuthenticationActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-                    NFCAuthenticationActivity.this.onResume();
+                    AuthenticationActivity.this.onResume();
                 }
             });
             builder.create().start();

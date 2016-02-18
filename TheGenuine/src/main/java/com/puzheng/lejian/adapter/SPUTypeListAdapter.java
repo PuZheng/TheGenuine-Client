@@ -47,7 +47,7 @@ public class SPUTypeListAdapter extends BaseAdapter {
         }
         ViewHolder viewHolder;
         if (convertView.getTag() == null) {
-            viewHolder = new ViewHolder((ImageView) convertView.findViewById(R.id.imageView));
+            viewHolder = new ViewHolder((ImageView) convertView.findViewById(R.id.imageViewVerified));
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();

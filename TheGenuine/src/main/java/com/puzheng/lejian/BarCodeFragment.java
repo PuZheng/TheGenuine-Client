@@ -2,6 +2,7 @@ package com.puzheng.lejian;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -20,16 +22,20 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
+import com.orhanobut.logger.Logger;
+import com.puzheng.deferred.AlwaysHandler;
+import com.puzheng.deferred.DoneHandler;
+import com.puzheng.deferred.FailHandler;
 import com.puzheng.lejian.camera.AmbientLightManager;
 import com.puzheng.lejian.camera.CameraManager;
-import com.puzheng.lejian.model.Verification;
+import com.puzheng.lejian.model.SKU;
 import com.puzheng.lejian.decoding.CaptureActivityHandler;
 import com.puzheng.lejian.decoding.InactivityTimer;
-import com.puzheng.lejian.netutils.WebService;
-import com.puzheng.lejian.util.Misc;
-import com.puzheng.lejian.util.PoliteBackgroundTask;
+import com.puzheng.lejian.store.LocationStore;
+import com.puzheng.lejian.store.SKUStore;
 import com.puzheng.lejian.view.ViewfinderView;
 
 import java.io.IOException;
@@ -59,7 +65,7 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
     private boolean playBeep;
     private boolean vibrate;
     private AmbientLightManager ambientLightManager;
-    private View mRootView;
+    private View rootView;
 
     public void drawViewfinder() {
         viewfinderView.drawViewfinder();
@@ -74,68 +80,102 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
         return viewfinderView;
     }
 
-    public void handleDecode(Result result, Bitmap barcode) {
+    public void handleDecode(final Result result, Bitmap barcode) {
         inactivityTimer.onActivity();
         playBeepSoundAndVibrate();
         final String resultString = result.getText();
         if (TextUtils.isEmpty(resultString)) {
-            Toast.makeText(this.getActivity(), "Scan failed!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.getActivity(), R.string.scan_failed, Toast.LENGTH_SHORT).show();
         } else {
             //显示
-            onPause();
-            PoliteBackgroundTask.Builder<Verification> builder = new PoliteBackgroundTask.Builder<Verification>(this.getActivity());
-            builder.msg(getString(R.string.verifying));
+
+            Logger.i("result text: " + result.getText());
+            final ProgressDialog pd = new ProgressDialog(getActivity());
+            pd.setMessage(getString(R.string.verifying));
+            pd.show();
+            LocationStore.getInstance().getLocation().done(new DoneHandler<Pair<Double, Double>>() {
+                @Override
+                public void done(Pair<Double, Double> lnglat) {
+                    SKUStore.getInstance().verify(result.getText(), lnglat).done(new DoneHandler<SKU>() {
+                        @Override
+                        public void done(SKU sku) {
+                            onPause();
+                            Logger.json(new Gson().toJson(sku));
+                            Intent intent = new Intent(BarCodeFragment.this.getActivity(), SPUActivity.class);
+                            intent.putExtra(AuthenticationActivity.TAG_SKU, sku);
+                            intent.putExtra(AuthenticationActivity.TAG_VERIFICATION_METHOD,
+                                    AuthenticationActivity.VerificationMethod.QR);
+                            startActivity(intent);
+                        }
+                    }).fail(new FailHandler<Void>() {
+                        @Override
+                        public void fail(Void aVoid) {
+                            Intent intent = new Intent(BarCodeFragment.this.getActivity(), WarningActivity.class);
+                            intent.putExtra(AuthenticationActivity.TAG_TOKEN, resultString);
+                            startActivity(intent);
+                        }
+                    }).always(new AlwaysHandler() {
+                        @Override
+                        public void always() {
+                            pd.cancel();
+                        }
+                    });
+                }
+            });
+
+//            PoliteBackgroundTask.Builder<Verification> builder = new PoliteBackgroundTask.Builder<Verification>(this.getActivity());
+//            builder.msg(getString(R.string.verifying));
 //            builder.run(new PoliteBackgroundTask.XRunnable<Verification>() {
 //                @Override
 //                public Verification run() throws Exception {
 //                    return WebService.getInstance(BarCodeFragment.this.getActivity()).verify(resultString);
 //                }
 //            });
-            builder.after(new PoliteBackgroundTask.OnAfter<Verification>() {
-
-                @Override
-                public void onAfter(Verification verification) {
-                    Intent intent;
-                    if (verification != null) {
-                        intent = new Intent(BarCodeFragment.this.getActivity(), SPUActivity.class);
-                        intent.putExtra(NFCAuthenticationActivity.TAG_VERIFICATION_INFO, verification);
-                        intent.putExtra(NFCAuthenticationActivity.TAG_VERIFICATION_FINISHED, false);
-                    } else {
-                        intent = new Intent(BarCodeFragment.this.getActivity(), CounterfeitActivity.class);
-                        intent.putExtra(NFCAuthenticationActivity.TAG_TAG_ID, resultString);
-                    }
-                    startActivity(intent);
-                }
-            });
-            builder.exceptionHandler(new PoliteBackgroundTask.ExceptionHandler() {
-                @Override
-                public void run(Exception e) {
-                    if (Misc.isNetworkException(e)) {
-                        Toast.makeText(getActivity(), R.string.httpError, Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                    BarCodeFragment.this.onResume();
-                }
-            });
-            builder.create().start();
+//            builder.after(new PoliteBackgroundTask.OnAfter<Verification>() {
+//
+//                @Override
+//                public void onAfter(Verification verification) {
+//                    Intent intent;
+//                    if (verification != null) {
+//                        intent = new Intent(BarCodeFragment.this.getActivity(), SPUActivity.class);
+//                        intent.putExtra(AuthenticationActivity.TAG_SKU, verification);
+//                        intent.putExtra(AuthenticationActivity.TAG_VERIFICATION_METHOD, false);
+//                    } else {
+//                        intent = new Intent(BarCodeFragment.this.getActivity(), WarningActivity.class);
+//                        intent.putExtra(AuthenticationActivity.TAG_TOKEN, resultString);
+//                    }
+//                    startActivity(intent);
+//                }
+//            });
+//            builder.exceptionHandler(new PoliteBackgroundTask.ExceptionHandler() {
+//                @Override
+//                public void run(Exception e) {
+//                    if (Misc.isNetworkException(e)) {
+//                        Toast.makeText(getActivity(), R.string.httpError, Toast.LENGTH_SHORT).show();
+//                    }else{
+//                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+//                    }
+//                    BarCodeFragment.this.onResume();
+//                }
+//            });
+//            builder.create().start();
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_barcode, container, false);
+        rootView = inflater.inflate(R.layout.fragment_barcode, container, false);
         CameraManager.init(this.getActivity());
 
         ambientLightManager = new AmbientLightManager(this.getActivity());
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this.getActivity());
 
-        ImageButton imageButton = (ImageButton) mRootView.findViewById(R.id.imageButton);
-        if (!NFCAuthenticationActivity.isNfcEnabled) {
-            mRootView.findViewById(R.id.imageButtonLayout).setVisibility(View.GONE);
+        ImageButton imageButton = (ImageButton) rootView.findViewById(R.id.imageButton);
+        if (!AuthenticationActivity.isNfcEnabled) {
+            rootView.findViewById(R.id.imageButtonLayout).setVisibility(View.GONE);
         } else {
-            mRootView.findViewById(R.id.imageButtonLayout).setVisibility(View.VISIBLE);
+            rootView.findViewById(R.id.imageButtonLayout).setVisibility(View.VISIBLE);
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -147,7 +187,7 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
         }
 
 
-        return mRootView;
+        return rootView;
     }
 
     @Override
@@ -171,7 +211,7 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
     public void onResume() {
         super.onResume();
         ambientLightManager.start(CameraManager.get());
-        SurfaceView surfaceView = (SurfaceView) mRootView.findViewById(R.id.preview_view);
+        SurfaceView surfaceView = (SurfaceView) rootView.findViewById(R.id.preview_view);
         SurfaceHolder surfaceHolder = surfaceView.getHolder();
         if (hasSurface) {
             initCamera(surfaceHolder);
@@ -188,7 +228,7 @@ public class BarCodeFragment extends Fragment implements SurfaceHolder.Callback 
         }
         initBeepSound();
         vibrate = true;
-        viewfinderView = (ViewfinderView) mRootView.findViewById(R.id.viewfinder_view);
+        viewfinderView = (ViewfinderView) rootView.findViewById(R.id.viewfinder_view);
     }
 
     @Override

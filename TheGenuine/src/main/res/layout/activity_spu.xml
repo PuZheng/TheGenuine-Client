@@ -34,7 +34,7 @@
                     android:layout_width="128dp"
                     android:layout_height="97dp"
                     android:src="@drawable/real"
-                    android:id="@+id/imageView"
+                    android:id="@+id/imageViewVerified"
                     android:layout_gravity="center" />
 
                 <com.viewpagerindicator.CirclePageIndicator
@@ -211,5 +211,5 @@
         android:weightSum="6"
         android:id="@+id/navBar"
         android:layout_alignParentBottom="true"
-        app:enabledTab="go_home" />
+        app:enabledTab="genuines" />
 </RelativeLayout>

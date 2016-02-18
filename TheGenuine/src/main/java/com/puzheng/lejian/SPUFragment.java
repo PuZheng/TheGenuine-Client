@@ -38,7 +38,7 @@ public class SPUFragment extends Fragment {
         textView = (TextView) rootView.findViewById(R.id.textViewName);
         textView.setText(spu.getName());
         textView = (TextView) rootView.findViewById(R.id.textViewVendorName);
-        textView.setText(spu.getVendorName());
+        textView.setText(spu.getVendor().getName());
         textView = (TextView) rootView.findViewById(R.id.textViewVendorAddress);
         textView.setText(spu.getVendor().getAddr());
 

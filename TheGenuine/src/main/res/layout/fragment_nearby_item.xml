@@ -13,7 +13,7 @@
     <ImageView
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:id="@+id/imageView"
+        android:id="@+id/imageViewVerified"
         android:scaleType="fitCenter"
         android:layout_gravity="center_vertical"
         android:src="@drawable/content_picture"
@@ -27,7 +27,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/imageView"
+        android:layout_toRightOf="@id/imageViewVerified"
         android:paddingLeft="15dp"
         android:paddingRight="15dp">
 

@@ -13,27 +13,34 @@ import java.util.Date;
 public class SKU implements Parcelable {
 
     private int id;
-    private SPU spu;
-    @SerializedName("manufacture_time")
-    private Date manufactureDate;
-    @SerializedName("expire_time")
-    private Date expireDate;
-
+    private String token;
     private String checksum;
-    public SKU(int id, SPU spu, Date manufactureDate, Date expireDate) {
-        this.id = id;
-        this.spu = spu;
-        this.manufactureDate = manufactureDate;
-        this.expireDate = expireDate;
+    private int verifyCount;
+    private Date lastVerifiedAt;
+    private Date productionDate;
+    private Date expireDate;
+    private SPU spu;
+
+    public SKU(Parcel in) {
+        id = in.readInt();
+        token = in.readString();
+        checksum = in.readString();
+        verifyCount = in.readInt();
+        lastVerifiedAt = new Date(in.readLong());
+        productionDate = new Date(in.readLong());
+        expireDate = new Date(in.readLong());
+        spu = in.readParcelable(SPU.class.getClassLoader());
     }
 
-    public SKU(Parcel source) {
-        id = source.readInt();
-        //spu = source.readParcelable(SPU.class.getClassLoader());
-        spu = new SPU(source);
-        manufactureDate = new Date(source.readLong());
-        expireDate = new Date(source.readLong());
-        checksum = source.readString();
+    public SKU(int id, String token, String checksum, int verifyCount, Date lastVerifiedAt, Date productionDate, Date expireDate, SPU spu) {
+        this.id = id;
+        this.token = token;
+        this.checksum = checksum;
+        this.verifyCount = verifyCount;
+        this.lastVerifiedAt = lastVerifiedAt;
+        this.productionDate = productionDate;
+        this.expireDate = expireDate;
+        this.spu = spu;
     }
 
 
@@ -45,10 +52,13 @@ public class SKU implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
-        spu.writeToParcel(dest, flags);
-        dest.writeLong(manufactureDate.getTime());
-        dest.writeLong(expireDate.getTime());
+        dest.writeString(token);
         dest.writeString(checksum);
+        dest.writeInt(verifyCount);
+        dest.writeLong(lastVerifiedAt.getTime());
+        dest.writeLong(productionDate.getTime());
+        dest.writeLong(expireDate.getTime());
+        dest.writeParcelable(spu, 0);
     }
 
     public static final Creator<SKU> CREATOR = new Creator<SKU>() {
@@ -67,8 +77,8 @@ public class SKU implements Parcelable {
         return spu;
     }
 
-    public Date getManufactureDate() {
-        return manufactureDate;
+    public Date getProductionDate() {
+        return productionDate;
     }
 
     public Date getExpireDate() {
@@ -81,5 +91,72 @@ public class SKU implements Parcelable {
 
     public String getChecksum() {
         return checksum;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public int getVerifyCount() {
+        return verifyCount;
+    }
+
+    public Date getLastVerifiedAt() {
+        return lastVerifiedAt;
+    }
+
+    public static class Builder {
+        private int id;
+        private String token;
+        private String checksum;
+        private int verifyCount;
+        private Date lastVerifiedAt;
+        private Date productionDate;
+        private Date expireDate;
+        private SPU spu;
+
+        public Builder id(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder token(String token) {
+            this.token = token;
+            return this;
+        }
+
+        public Builder checksum(String checksum) {
+            this.checksum = checksum;
+            return this;
+        }
+
+        public Builder verifyCount(int verifyCount) {
+            this.verifyCount = verifyCount;
+            return this;
+        }
+
+        public Builder lastVerifiedAt(Date lastVerifiedAt) {
+            this.lastVerifiedAt = lastVerifiedAt;
+            return this;
+        }
+
+        public Builder productionDate(Date productionDate) {
+            this.productionDate = productionDate;
+            return this;
+        }
+
+        public Builder expireDate(Date expireDate) {
+            this.expireDate = expireDate;
+            return this;
+        }
+
+        public Builder spu(SPU spu) {
+            this.spu = spu;
+            return this;
+        }
+
+        public SKU build() {
+            return new SKU(id, token, checksum, verifyCount, lastVerifiedAt, productionDate, expireDate, spu);
+        }
     }
 }

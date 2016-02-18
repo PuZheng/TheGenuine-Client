@@ -242,13 +242,6 @@ public class SPU implements Parcelable {
         return vendor;
     }
 
-    public int getVendorId() {
-        return vendor.getId();
-    }
-
-    public String getVendorName() {
-        return vendor.getName();
-    }
 
     public SPUType getSpuType() {
         return spuType;
